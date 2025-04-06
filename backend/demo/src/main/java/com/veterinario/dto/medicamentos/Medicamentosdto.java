@@ -1,22 +1,23 @@
-package com.veterinario.dto.consulta;
+package com.veterinario.dto.medicamentos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class consultasdto {
+public class Medicamentosdto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
-    private String escrito;
+    @NotBlank(message = "Informe o nome do Medicamento")
+    private String nome;
 
-    private Date data;
+    private int quantidade;
 
-//    private Veterinario veterinario;
+    private String descricao;
+
 }

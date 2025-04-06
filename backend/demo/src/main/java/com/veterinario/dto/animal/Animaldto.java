@@ -1,6 +1,7 @@
 package com.veterinario.dto.animal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.veterinario.dto.cliente.ClienteSimpleDto;
 import com.veterinario.enums.Genero;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,21 +14,29 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class animaldto {
+public class Animaldto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
-    @NotBlank(message = "Esse valor não pode ser vazio")
+
+    @NotBlank(message = "Informe o seu nome")
     private String nome;
-    @NotNull(message = "Esse valor não pode ser vazio")
+
+    @NotBlank(message = "Informe o cliente dono do animal")
+    private ClienteSimpleDto cliente;
+
+    @NotNull(message = "Informe a sua idade")
     private int idade;
 
-    private int peso;
     @Enumerated(EnumType.STRING)
+    @NotBlank(message = "Informe o gênero do animal")
     private Genero genero;
-    @NotBlank(message = "Esse valor não pode ser vazio")
+
+    @NotBlank(message = "INforme a especie desse animal")
     private String especie;
 
     private int altura;
+
+    private int peso;
 
     private int largura;
 
