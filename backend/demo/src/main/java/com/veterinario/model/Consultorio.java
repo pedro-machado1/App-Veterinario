@@ -7,28 +7,21 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "cliente")
-public class Cliente {
-
+@Table(name = "consultorio")
+public class Consultorio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int cpf;
-
     private String nome;
-
-    private String email;
 
     private String endereco;
 
     private String telefone;
 
-    @ManyToMany
-    private List<Animal> animais;
+    private String descricao;
 
-    @ManyToMany
+    @OneToMany
     private List<Veterinario> veterinarios;
-
 
 }

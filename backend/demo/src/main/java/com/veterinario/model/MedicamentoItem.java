@@ -3,11 +3,10 @@ package com.veterinario.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
 @Data
 @Entity
-@Table(name = "medicamento")
-public class Medicamento {
+@Table(name = "medicamento_item")
+public class MedicamentoItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -16,4 +15,8 @@ public class Medicamento {
 
     private String descricao;
 
+    private int quantidade;
+
+    @ManyToOne
+    private Consulta consulta;
 }
