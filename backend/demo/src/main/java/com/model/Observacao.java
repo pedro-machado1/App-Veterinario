@@ -20,9 +20,7 @@ public class Observacao {
 
     private LocalDateTime dataAlteracao;
 
-    @ManyToOne
-    @JoinColumn(name = "veterinario_id")
-    private Veterinario veterinario;
+
 
     @ManyToOne
     @JoinColumn(name = "animal_id")

@@ -1,6 +1,7 @@
 package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.veterinario.VeterinarioSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Clientedto {
+public class ClienteDto {
     @NotNull(message = "Informe o seu CPF")
     private int cpf;
 
@@ -27,6 +28,8 @@ public class Clientedto {
 
     private String telefone;
 
-    private List<AnimalSimpleDto> animais;
+    private List<AnimalSimpleDto> animal;
+
+    private List<VeterinarioSimpleDto> veterinario;
 
 }

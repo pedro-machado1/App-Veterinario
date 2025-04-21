@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Animaldto {
+public class AnimalDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
@@ -36,8 +36,20 @@ public class Animaldto {
 
     private int altura;
 
+    private int comprimento;
+
     private int peso;
 
-    private int largura;
+    private int observacao;
+
+    private int vacina;
+
+    private int doenca;
+
+    private int alergia;
+
+    private int raca;
+
+
 
 }

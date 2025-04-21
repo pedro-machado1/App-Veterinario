@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Medicamentodto {
+public class MedicamentoDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 

@@ -1,4 +1,0 @@
-Olhar:
-Atualizar sql
-
-Tipo de loading no Model (LAZY, EAGER)

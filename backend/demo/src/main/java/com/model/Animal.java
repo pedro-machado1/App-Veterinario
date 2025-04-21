@@ -46,4 +46,7 @@ public class Animal {
     @OneToOne (mappedBy = "animal", cascade = CascadeType.ALL)
     private VacinaItem vacina;
 
+//    @ManyToMany(mappedBy = "veterinario")
+//    private List<Veterinario> veterinario;
+
 }

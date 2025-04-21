@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 
@@ -19,8 +20,6 @@ public class Vacina {
 
     private String descricao;
 
-    private LocalDateTime dataAplicacao;
-
-    private LocalDateTime dataValidade;
+    private int validade;
 
 }

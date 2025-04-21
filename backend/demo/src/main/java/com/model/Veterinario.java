@@ -13,7 +13,10 @@ import java.util.List;
 @Table(name = "tb_veterinario")
 public class Veterinario {
     @Id
-    private int cpf;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private String cpf;
 
     private int CRVM;
 
@@ -28,8 +31,7 @@ public class Veterinario {
 
     private String endereco;
 
-    @OneToMany (mappedBy = "veterinario")
-    private List<Observacao> observacao;
+
 
     @OneToMany(mappedBy = "veterinario")
     private List<Consulta> consulta;
