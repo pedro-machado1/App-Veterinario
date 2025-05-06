@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteSimpleDto {
+        private long id;
         private int cpf;
         private String nome;
 
