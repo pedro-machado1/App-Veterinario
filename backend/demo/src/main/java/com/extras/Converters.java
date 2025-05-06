@@ -10,8 +10,14 @@ public class Converters {
     public static <D, E> D convertToDto(E entity, Class<D> dtoClass) {
         return modelMapper.map(entity, dtoClass);
     }
+
     public static <D, E> E convertToEntity(D dto, Class<E> entityClass) {
         return modelMapper.map(dto, entityClass);
     }
+
+    public static <D, E> void convertToEntityVoid(D dto, E entityClass) {
+        modelMapper.map(dto, entityClass);
+    }
+
 
 }

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -28,8 +30,12 @@ public class ClienteDto {
 
     @NotBlank(message = "Informe o seu endereço")
     private String endereco;
-
+    @NotBlank(message = "Informe o seu telefone")
     private String telefone;
+
+    private LocalDate dataDeCriacao;
+
+    private LocalDate dataDeAlteracao;
 
     private List<AnimalSimpleDto> animal;
 
