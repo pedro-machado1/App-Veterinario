@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ObservacoesDto {
+public class ObservacaoDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 

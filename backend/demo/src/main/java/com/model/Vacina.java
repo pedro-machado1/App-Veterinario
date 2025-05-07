@@ -1,12 +1,11 @@
 package com.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.dto.vacinaItemdto.VacinaItemSimpleDto;
+import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -21,5 +20,8 @@ public class Vacina {
     private String descricao;
 
     private int validade;
+
+    @OneToMany(mappedBy = "vacina",cascade = CascadeType.ALL)
+    private List<VacinaItem> vacina;
 
 }

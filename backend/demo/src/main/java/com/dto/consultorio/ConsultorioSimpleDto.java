@@ -1,4 +1,4 @@
-package com.dto.veterinario;
+package com.dto.consultorio;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VeterinarioSimpleDto {
-    private long id;
-    private int cpf;
-    private String CRVM;
+public class ConsultorioSimpleDto {
     private String nome;
+    private String endereco;
+    private String descricao;
 }

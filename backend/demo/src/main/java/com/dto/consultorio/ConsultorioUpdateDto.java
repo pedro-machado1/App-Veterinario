@@ -8,17 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ConsultorioDto {
-    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private int id;
-
+@NoArgsConstructor
+public class ConsultorioUpdateDto {
     @NotBlank(message = "Informe o nome do consultorio")
     private String nome;
 
@@ -31,7 +26,6 @@ public class ConsultorioDto {
     @NotBlank(message = "Informe a descrição do consultorio")
     private String descricao;
 
-    private LocalDate dataDeFundacao;
-
     private List<VeterinarioSimpleDto> veterinario;
+
 }

@@ -35,5 +35,8 @@ public class Cliente {
     @ManyToMany (mappedBy = "cliente")
     private List<Veterinario> veterinario;
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Consulta> consulta;
+
 
 }

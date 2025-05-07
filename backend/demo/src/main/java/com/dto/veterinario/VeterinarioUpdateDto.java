@@ -6,18 +6,20 @@ import com.dto.consultorio.ConsultorioDto;
 import com.dto.medicamento.MedicamentoDto;
 import com.dto.observacoes.ObservacaoDto;
 import com.enums.Estado;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public class VeterinarioDto {
-    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private long id;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class VeterinarioUpdateDto {
     @NotNull(message = "Informe o CPF de veterinario")
     private int cpf;
 
@@ -48,4 +50,5 @@ public class VeterinarioDto {
     private List<ConsultaDto> consulta;
 
     private List<ClienteSimpleDto> clietes;
+
 }

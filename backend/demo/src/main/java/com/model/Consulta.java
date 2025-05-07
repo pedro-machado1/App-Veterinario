@@ -3,7 +3,7 @@ package com.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -14,19 +14,24 @@ public class Consulta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String titulo;
+
     private String texto;
 
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     private List<MedicamentoItem> medicamentoItem;
 
-    @ManyToOne
-    @JoinColumn(name = "animal_id")
-    private Animal animal;
+    @ManyToMany(mappedBy = "consulta")
+    private List<Animal> animal;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "veterinario_id")
     private Veterinario veterinario;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
 }

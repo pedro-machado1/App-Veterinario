@@ -19,7 +19,11 @@ public class VacinaItem {
 
     private LocalDateTime dataValidade;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "animal_id")
     private Animal animal;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vacina_id")
+    private Vacina vacina;
 }

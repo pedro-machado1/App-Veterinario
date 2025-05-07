@@ -1,15 +1,12 @@
 package com.dto.medicamentoItemdto;
 
 import com.dto.consulta.ConsultaDto;
-import com.dto.medicamento.MedicamentoDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class MedicamentoItemDto {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
+public class MedicamentoItemUpdateDto {
     @NotBlank(message = "Informe o nome do Medicamento")
     private String nome;
     @NotNull(message = "Informe a quantidade do Medicamento")
@@ -18,4 +15,5 @@ public class MedicamentoItemDto {
     private String descricao;
     private MedicamentoSimpleDto medicamento;
     private ConsultaDto consulta;
+
 }

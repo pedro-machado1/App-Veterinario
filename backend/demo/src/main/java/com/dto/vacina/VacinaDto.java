@@ -1,6 +1,6 @@
-package com.dto.medicamento;
+package com.dto.vacina;
 
-import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
+import com.dto.vacinaItemdto.VacinaItemSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,18 +10,21 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class MedicamentoDto {
+@AllArgsConstructor
+public class VacinaDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
-    @NotBlank(message = "Informe o nome do Medicamento")
+    @NotBlank(message = "Informe o nome da vacina")
     private String nome;
 
-    @NotBlank(message = "Informe a descrição do Medicamento")
+    @NotBlank(message = "Informe a descricao da vacina")
     private String descricao;
 
-    private List<MedicamentoItemSimpleDto> medicamento;
+    @NotBlank(message = "Informe a validade da vacina")
+    private int validade;
+
+    private List<VacinaItemSimpleDto> vacinaItem;
 
 }

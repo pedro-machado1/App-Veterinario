@@ -1,5 +1,6 @@
-package com.dto.veterinario;
+package com.dto.medicamento;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VeterinarioSimpleDto {
+public class MedicamentoSimpleDto {
     private long id;
-    private int cpf;
-    private String CRVM;
     private String nome;
+    private String descricao;
+
 }

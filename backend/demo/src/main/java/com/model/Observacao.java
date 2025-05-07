@@ -20,7 +20,7 @@ public class Observacao {
 
     private LocalDateTime dataAlteracao;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "animal_id")
     private Animal animal;
 }

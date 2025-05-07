@@ -33,7 +33,7 @@ public class Veterinario {
 
 
 
-    @OneToMany(mappedBy = "veterinario")
+    @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private List<Consulta> consulta;
 
     @ManyToMany

@@ -4,8 +4,12 @@ import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteUpdateDto;
 import com.model.Cliente;
 import com.repository.ClienteRepository;
+import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +18,7 @@ import java.util.Optional;
 
 import static com.extras.Converters.*;
 
-
+// Fazer exception;
 @Service
 public class ClienteService {
     @Autowired
@@ -35,14 +39,16 @@ public class ClienteService {
                           return Optional.of(convertToDto(cliente, ClienteDto.class));
     }
 
-    // findAll
+    @Transactional
+    public Page<ClienteDto> findAll(Pageable pages){
+        Page<Cliente> clientes = clienteRepository.findAll(pages);
+        return clientes.map(cliente -> convertToDto(cliente, ClienteDto.class));
+    }
 
-    // fazer exceptions;
-
-    // id ta criando outro usuario
 
     @Transactional
     public ClienteDto update(Long id, ClienteUpdateDto clienteDto){
+        existsById(id);
         Cliente cliente = clienteRepository.getReferenceById(id);
         cliente.setDataDeAlteracao(LocalDate.now());
         convertToEntityVoid(clienteDto, cliente);
@@ -50,6 +56,23 @@ public class ClienteService {
         return convertToDto(cliente, ClienteDto.class);
     }
 
-    // remove
+    @Transactional
+    public void delete(Long id) {
+        existsById(id);
+        try {
+            clienteRepository.deleteById(id);
+        }catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Não foi possível excluir este cliente devido a ele tem uma relação em outra tabela.");
+        }catch (Exception e){
+            throw new DataBaseException("Erro inesperado ao deletar o cliente");
+        }
+    }
+
+    @Transactional
+    public void existsById(Long id){
+        if(!clienteRepository.existsById(id)){
+            throw new ResourceNotFoundException("Id não encontrado: " + id);
+        }
+    }
 
 }

@@ -1,13 +1,10 @@
 package com.dto.consulta;
 
-import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalSimpleDto;
-import com.dto.medicamento.MedicamentoDto;
-import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
-import com.dto.observacoes.ObservacaoDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.dto.cliente.ClienteSimpleDto;
+import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,9 +17,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConsultaDto {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
+public class ConsultaUpdateDto {
     @NotBlank(message = "Informe o título da consulta")
     private String titulo;
     @NotBlank(message = "Informe o texto da consulta")

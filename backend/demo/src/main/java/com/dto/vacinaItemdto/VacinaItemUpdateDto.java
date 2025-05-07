@@ -1,9 +1,6 @@
 package com.dto.vacinaItemdto;
 
 import com.dto.animal.AnimalSimpleDto;
-import com.dto.vacina.VacinaSimpleDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,11 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VacinaItemDto {
-    @Id
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
-
+public class VacinaItemUpdateDto {
     @NotBlank(message = "Informe o nome da vacina")
     private String nome;
 
@@ -34,6 +27,4 @@ public class VacinaItemDto {
     @NotNull(message = "Informe o animal que essa vacina foi aplicada")
     private AnimalSimpleDto animal;
 
-    @NotNull
-    private VacinaSimpleDto vacina;
 }

@@ -1,5 +1,6 @@
 package com.dto.cliente;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteSimpleDto {
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private long id;
         private int cpf;
         private String nome;

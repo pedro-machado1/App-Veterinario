@@ -1,17 +1,17 @@
 package com.controller;
 
 import com.dto.cliente.ClienteDto;
-import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
 import com.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Validated
@@ -22,10 +22,8 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clientService;
-    @Autowired
-    private ClienteService clienteService;
 
-    @PostMapping("/post")
+    @PostMapping()
     public ResponseEntity<ClienteDto> insert(@Validated @RequestBody ClienteDto cliente) {
         ClienteDto newClientDto = clientService.insert(cliente);
         URI uri = ServletUriComponentsBuilder
@@ -35,15 +33,28 @@ public class ClienteController {
                 .toUri();
         return ResponseEntity.created(uri).body(newClientDto);
     }
-    @GetMapping("/post/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Optional<ClienteDto>> findById(@PathVariable Long id){
         Optional<ClienteDto> clienteDto =clientService.findById(id);
         return ResponseEntity.ok(clienteDto);
     }
-    @PutMapping("/update/{id}")
+
+    // look into changing page size and changing to PageModel;
+
+    @GetMapping()
+    public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages){
+         Page<ClienteDto> responsePages =clientService.findAll(pages);
+        return ResponseEntity.ok().body(responsePages);
+    }
+    @PutMapping("{id}")
     public ResponseEntity<ClienteDto> update(@PathVariable Long id, @Validated @RequestBody ClienteUpdateDto clienteUpdateDto){
        ClienteDto clienteDto = clientService.update(id, clienteUpdateDto);
        return ResponseEntity.ok(clienteDto);
+    }
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        clientService.delete(id);
+        return ResponseEntity.ok().body("o cliente " + id + " foi removido");
     }
 
 

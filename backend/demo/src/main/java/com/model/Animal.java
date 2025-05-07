@@ -1,6 +1,7 @@
 package com.model;
 
 
+import com.enums.Genero;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,11 +21,16 @@ public class Animal {
 
     private int idade;
 
-    private int peso;
+    @Enumerated(EnumType.STRING)
+    private Genero genero;
 
     private int altura;
 
     private int comprimento;
+
+    private int peso;
+
+    private String texto;
 
     private String doenca;
 
@@ -44,9 +50,14 @@ public class Animal {
     private List<Observacao> observacao;
 
     @OneToOne (mappedBy = "animal", cascade = CascadeType.ALL)
-    private VacinaItem vacina;
+    private VacinaItem vacinaItem;
 
-//    @ManyToMany(mappedBy = "veterinario")
-//    private List<Veterinario> veterinario;
+    @ManyToMany
+    @JoinTable(
+            name = "tb_animal_consulta",
+            joinColumns = @JoinColumn(name = "animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "consulta_id")
+    )
+    private List<Consulta> consulta;
 
 }

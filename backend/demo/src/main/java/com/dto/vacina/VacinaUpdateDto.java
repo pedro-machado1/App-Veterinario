@@ -1,18 +1,14 @@
-package com.dto.vacinadto;
+package com.dto.vacina;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class VacinaDto {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
-
+@NoArgsConstructor
+public class VacinaUpdateDto {
     @NotBlank(message = "Informe o nome da vacina")
     private String nome;
 
@@ -21,5 +17,4 @@ public class VacinaDto {
 
     @NotBlank(message = "Informe a validade da vacina")
     private int validade;
-
 }

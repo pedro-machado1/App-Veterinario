@@ -1,11 +1,7 @@
 package com.dto.animal;
 
-import com.dto.consulta.ConsultaDto;
-import com.dto.medicamento.MedicamentoDto;
-import com.dto.vacinaItemdto.VacinaItemSimpleDto;
-import com.enums.Genero;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.dto.cliente.ClienteSimpleDto;
+import com.enums.Genero;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -16,19 +12,16 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-// atualizar BD
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnimalDto {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
+public class AnimalUpdateDto {
 
     @NotBlank(message = "Informe o seu nome")
     private String nome;
 
-    @NotBlank(message = "Informe a especie desse animal")
-    private String especie;
+    @NotBlank(message = "Informe o cliente dono do animal")
+    private List<ClienteSimpleDto> cliente;
 
     @NotNull(message = "Informe a sua idade")
     private int idade;
@@ -37,13 +30,18 @@ public class AnimalDto {
     @NotBlank(message = "Informe o gênero do animal")
     private Genero genero;
 
+    @NotBlank(message = "INforme a especie desse animal")
+    private String especie;
+
     private int altura;
 
     private int comprimento;
 
     private int peso;
 
-    private String texto;
+    private int observacao;
+
+    private int vacina;
 
     private int doenca;
 
@@ -51,14 +49,8 @@ public class AnimalDto {
 
     private int raca;
 
-    @NotBlank(message = "Informe o cliente dono do animal")
-    private List<ClienteSimpleDto> cliente;
-
     private List<AnimalSimpleDto> animal;
 
-    private List<ConsultaDto> consulta;
-
-    private List<MedicamentoDto> medicamento;
-
-    private List<VacinaItemSimpleDto> vacina;
 }
+
+

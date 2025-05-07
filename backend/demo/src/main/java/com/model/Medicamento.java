@@ -16,4 +16,7 @@ public class Medicamento {
 
     private String descricao;
 
+    @OneToMany(mappedBy = "medicamento", cascade = CascadeType.ALL)
+    private List<MedicamentoItem> medicamento;
+
 }
