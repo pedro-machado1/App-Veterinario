@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,15 +29,14 @@ public class ConsultaDto {
     @NotBlank(message = "Informe o texto da consulta")
     private String texto;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     private VeterinarioSimpleDto veterinario;
 
-    @NotNull(message = "Informe o cliente dessa consulta")
-    private ClienteSimpleDto cliente;
+//    @NotNull(message = "Informe o cliente dessa consulta")
+    private List<ClienteSimpleDto> cliente;
 
     private List<AnimalSimpleDto> animal;
 
-    private List<MedicamentoItemSimpleDto> medicamento;
+    private List<MedicamentoItemSimpleDto> medicamentoItem;
 }

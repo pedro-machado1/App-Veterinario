@@ -33,8 +33,8 @@ public class Veterinario {
 
 
 
-    @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
-    private List<Consulta> consulta;
+    @OneToOne(mappedBy = "veterinario", cascade = CascadeType.ALL)
+    private Consulta consulta;
 
     @ManyToMany
     @JoinTable(
@@ -57,7 +57,7 @@ public class Veterinario {
     @JoinTable(
             name = "tb_veterinario_cliente",
             joinColumns = @JoinColumn(name = "veterinario_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_id")
+            inverseJoinColumns = @JoinColumn(name = "cliente_id")
     )
     private List<Cliente> cliente;
 }

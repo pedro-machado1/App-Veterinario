@@ -1,5 +1,6 @@
 package com.dto.observacoes;
 
+import com.dto.veterinario.VeterinarioSimpleDto;
 import com.model.Veterinario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ObservacaoSimpleDto {
     private long id;
     private String texto;
-    private Veterinario veterinario;
+    private VeterinarioSimpleDto veterinario;
 
 }

@@ -1,7 +1,7 @@
 package com.dto.animal;
 
-import com.dto.consulta.ConsultaDto;
-import com.dto.medicamento.MedicamentoDto;
+import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.vacinaItemdto.VacinaItemSimpleDto;
 import com.enums.Genero;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,7 +34,6 @@ public class AnimalDto {
     private int idade;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Informe o gênero do animal")
     private Genero genero;
 
     private int altura;
@@ -45,20 +44,19 @@ public class AnimalDto {
 
     private String texto;
 
-    private int doenca;
+    private String doenca;
 
-    private int alergia;
+    private String alergia;
 
-    private int raca;
+    private String raca;
 
-    @NotBlank(message = "Informe o cliente dono do animal")
     private List<ClienteSimpleDto> cliente;
 
     private List<AnimalSimpleDto> animal;
 
-    private List<ConsultaDto> consulta;
+    private List<ConsultaSimpleDto> consulta;
 
-    private List<MedicamentoDto> medicamento;
+    private List<MedicamentoSimpleDto> medicamento;
 
     private List<VacinaItemSimpleDto> vacina;
 }

@@ -2,18 +2,28 @@ package com.dto.veterinario;
 
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consultorio.ConsultorioDto;
+import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.medicamento.MedicamentoDto;
+import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.observacoes.ObservacaoDto;
+import com.dto.observacoes.ObservacaoSimpleDto;
 import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class VeterinarioDto {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private long id;
@@ -39,13 +49,13 @@ public class VeterinarioDto {
 
     private String endereco;
 
-    private ConsultorioDto consultorio;
+    private ConsultorioSimpleDto consultorio;
 
-    private List<ObservacaoDto> observacao;
+    private List<ObservacaoSimpleDto> observacao;
 
-    private List<MedicamentoDto> medicamento;
+    private List<MedicamentoSimpleDto> medicamento;
 
-    private List<ConsultaDto> consulta;
+    private List<ConsultaSimpleDto> consulta;
 
     private List<ClienteSimpleDto> clietes;
 }

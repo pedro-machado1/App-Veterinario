@@ -49,8 +49,8 @@ public class Animal {
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
     private List<Observacao> observacao;
 
-    @OneToOne (mappedBy = "animal", cascade = CascadeType.ALL)
-    private VacinaItem vacinaItem;
+    @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
+    private List<VacinaItem> vacinaItem;
 
     @ManyToMany
     @JoinTable(

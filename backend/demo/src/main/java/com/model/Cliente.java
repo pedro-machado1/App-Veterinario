@@ -35,7 +35,7 @@ public class Cliente {
     @ManyToMany (mappedBy = "cliente")
     private List<Veterinario> veterinario;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Consulta> consulta;
 
 

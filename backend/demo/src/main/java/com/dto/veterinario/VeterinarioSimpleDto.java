@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VeterinarioSimpleDto {
     private long id;
-    private int cpf;
-    private String CRVM;
     private String nome;
 }

@@ -1,6 +1,7 @@
 package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,5 +41,7 @@ public class ClienteDto {
     private List<AnimalSimpleDto> animal;
 
     private List<VeterinarioSimpleDto> veterinario;
+
+    private List<ConsultaSimpleDto> consulta;
 
 }

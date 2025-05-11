@@ -2,6 +2,7 @@ package com.dto.medicamento;
 
 import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.MedicamentoItem;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,6 @@ public class MedicamentoDto {
     @NotBlank(message = "Informe a descrição do Medicamento")
     private String descricao;
 
-    private List<MedicamentoItemSimpleDto> medicamento;
+    private List<MedicamentoItem> medicamentoItem;
 
 }

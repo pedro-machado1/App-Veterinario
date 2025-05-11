@@ -1,6 +1,7 @@
 package com.dto.vacinaItemdto;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.vacina.VacinaSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,7 @@ public class VacinaItemUpdateDto {
 
     @NotNull(message = "Informe o animal que essa vacina foi aplicada")
     private AnimalSimpleDto animal;
+
+    private VacinaSimpleDto vacina;
 
 }

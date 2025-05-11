@@ -34,6 +34,6 @@ public class VacinaItemDto {
     @NotNull(message = "Informe o animal que essa vacina foi aplicada")
     private AnimalSimpleDto animal;
 
-    @NotNull
+    @NotNull(message = "Informe a que foi aplicada")
     private VacinaSimpleDto vacina;
 }

@@ -3,6 +3,7 @@ package com.service;
 import com.dto.consulta.ConsultaDto;
 import com.dto.consulta.ConsultaUpdateDto;
 import com.model.Consulta;
+import com.repository.ClienteRepository;
 import com.repository.ConsultaRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -22,16 +23,19 @@ import static com.extras.Converters.*;
 public class ConsultaService {
 
 
-        @Autowired
-        private ConsultaRepository consultaRepository;
+    @Autowired
+    private ConsultaRepository consultaRepository;
 
-        @Transactional
-        public ConsultaDto insert(ConsultaDto consultaDTO) {
-            Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
-            consulta.setDataCriacao(LocalDate.now());
-            consulta = consultaRepository.save(consulta);
-            return convertToDto(consulta, ConsultaDto.class);
-        }
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Transactional
+    public ConsultaDto insert(ConsultaDto consultaDTO) {
+        Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
+        consulta.setDataCriacao(LocalDate.now());
+        consulta = consultaRepository.save(consulta);
+        return convertToDto(consulta, ConsultaDto.class);
+    }
     @Transactional(readOnly = true)
     public Optional<ConsultaDto> findById(Long id){
         Consulta consulta = consultaRepository.findById(id)

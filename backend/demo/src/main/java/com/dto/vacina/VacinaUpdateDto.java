@@ -1,9 +1,12 @@
 package com.dto.vacina;
 
+import com.dto.vacinaItemdto.VacinaItemSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +20,6 @@ public class VacinaUpdateDto {
 
     @NotBlank(message = "Informe a validade da vacina")
     private int validade;
+
+    private List<VacinaItemSimpleDto> vacinaItem;
 }
