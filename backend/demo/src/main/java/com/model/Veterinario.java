@@ -33,8 +33,8 @@ public class Veterinario {
 
 
 
-    @OneToOne(mappedBy = "veterinario", cascade = CascadeType.ALL)
-    private Consulta consulta;
+    @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
+    private List<Consulta> consulta;
 
     @ManyToMany
     @JoinTable(

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VacinaSimpleDto {
+    private long id;
     private String nome;
     private String descricao;
     private int validade;

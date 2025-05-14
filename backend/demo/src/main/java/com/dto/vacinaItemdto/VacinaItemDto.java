@@ -25,15 +25,15 @@ public class VacinaItemDto {
 
     private String descricao;
 
-    @NotBlank(message = "Informe a data que a vacina foi aplicada vacina")
+    @NotNull(message = "Informe a data que a vacina foi aplicada vacina")
     private Date dataAplicacao;
 
-    @NotBlank(message = "Informe at[e que data a vacina é válida")
+    @NotNull(message = "Informe at[e que data a vacina é válida")
     private Date dataValidade;
 
-    @NotNull(message = "Informe o animal que essa vacina foi aplicada")
+//    @NotNull(message = "Informe o animal que essa vacina foi aplicada")
     private AnimalSimpleDto animal;
 
-    @NotNull(message = "Informe a que foi aplicada")
+//    @NotNull(message = "Informe a vacina que foi aplicada")
     private VacinaSimpleDto vacina;
 }

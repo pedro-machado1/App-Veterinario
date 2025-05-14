@@ -2,6 +2,7 @@ package com.dto.vacina;
 
 import com.dto.vacinaItemdto.VacinaItemSimpleDto;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class VacinaUpdateDto {
     @NotBlank(message = "Informe a descricao da vacina")
     private String descricao;
 
-    @NotBlank(message = "Informe a validade da vacina")
+    @NotNull(message = "Informe a validade da vacina")
     private int validade;
 
     private List<VacinaItemSimpleDto> vacinaItem;

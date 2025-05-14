@@ -1,7 +1,5 @@
 package com.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,13 +23,12 @@ public class Consulta {
     private LocalDate dataAlteracao;
 
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<MedicamentoItem> medicamentoItem;
 
     @ManyToMany(mappedBy = "consulta")
     private List<Animal> animal;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "veterinario_id")
     private Veterinario veterinario;
 

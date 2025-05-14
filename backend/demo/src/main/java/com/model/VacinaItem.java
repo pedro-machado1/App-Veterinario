@@ -1,9 +1,11 @@
 package com.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "tb_vacina_item")
 public class VacinaItem {
@@ -19,11 +21,11 @@ public class VacinaItem {
 
     private LocalDateTime dataValidade;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "animal_id")
     private Animal animal;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "vacina_id")
     private Vacina vacina;
 }

@@ -46,7 +46,7 @@ public class MedicamentoItemService {
         medicamentoItem.setNome(medicamentoItemDto.getNome());
         medicamentoItem.setDescricao(medicamentoItemDto.getDescricao());
         medicamentoItem.setQuantidade(medicamentoItemDto.getQuantidade());
-        medicamentoItem.setConsulta(consultaEntity);         
+        medicamentoItem.setConsulta(consultaEntity);
         medicamentoItem.setMedicamento(medicamentoEntity);
 
         medicamentoItemRepository.save(medicamentoItem);
@@ -89,9 +89,9 @@ public class MedicamentoItemService {
         try {
             medicamentoItemRepository.deleteById(id);
         }catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Não foi possível excluir este cliente devido a ele tem uma relação em outra tabela.");
+            throw new DataBaseException("Não foi possível excluir este medicamento devido a ele tem uma relação em outra tabela.");
         }catch (Exception e){
-            throw new DataBaseException("Erro inesperado ao deletar o cliente");
+            throw new DataBaseException("Erro inesperado ao deletar o medicamento");
         }
     }
     @Transactional

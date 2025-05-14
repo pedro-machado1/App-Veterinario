@@ -7,7 +7,7 @@ public enum Genero {
     M("Masculino"),
     N("NAO INFORMADO");
 
-    final private String genero;
+    private final String genero;
 
     Genero(String genero) {this.genero = genero;}
 

@@ -34,7 +34,7 @@ public class ConsultaDto {
     private VeterinarioSimpleDto veterinario;
 
 //    @NotNull(message = "Informe o cliente dessa consulta")
-    private List<ClienteSimpleDto> cliente;
+    private ClienteSimpleDto cliente;
 
     private List<AnimalSimpleDto> animal;
 
