@@ -1,6 +1,6 @@
 package com.dto.vacina;
 
-import com.dto.vacinaItemdto.VacinaItemSimpleDto;
+import com.dto.vacinaItem.VacinaItemSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

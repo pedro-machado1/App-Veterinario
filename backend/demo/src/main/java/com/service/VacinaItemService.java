@@ -1,9 +1,8 @@
 package com.service;
 
-import com.dto.medicamentoItemdto.MedicamentoItemDto;
 import com.dto.vacina.VacinaSimpleDto;
-import com.dto.vacinaItemdto.VacinaItemDto;
-import com.dto.vacinaItemdto.VacinaItemUpdateDto;
+import com.dto.vacinaItem.VacinaItemDto;
+import com.dto.vacinaItem.VacinaItemUpdateDto;
 import com.model.Vacina;
 import com.model.VacinaItem;
 import com.repository.VacinaItemRepository;
@@ -36,7 +35,7 @@ public class VacinaItemService {
 
         Vacina vacina = vacinaRepository.findById(vacinaItemDto.getVacina().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId()));
-        VacinaSimpleDto vacinasimples = convertToDto(vacina , VacinaSimpleDto.class);
+        VacinaSimpleDto vacinasimples = convertToDto(vacina ,VacinaSimpleDto.class);
 
         vacinaItemAux.setVacina(vacinasimples);
         VacinaItem vacinaItem = convertToEntity(vacinaItemDto, VacinaItem.class);
@@ -62,12 +61,12 @@ public class VacinaItemService {
         existsById(id);
         VacinaItem vacinaItem = vacinaItemRepository.getReferenceById(id);
 
-        Optional<Vacina> vacina = vacinaRepository.findById(vacinaItemDto.getVacina().getId());
-        if (vacina.isEmpty()) {throw new ResourceNotFoundException("Vacina Not Found");}
-        VacinaSimpleDto vacinaSimpleDto = convertToDto(vacina, VacinaSimpleDto.class);
-        vacinaItemDto.setVacina(vacinaSimpleDto);
+        Vacina vacina = vacinaRepository.findById(vacinaItemDto.getVacina().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Vacina Not Found"));
+        vacinaItem.setVacina(vacina);
 
         convertToEntityVoid(vacinaItemDto, vacinaItem);
+
         vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);
     }

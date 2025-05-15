@@ -1,8 +1,7 @@
 package com.controller;
 
-import com.dto.medicamentoItemdto.MedicamentoItemDto;
-import com.dto.medicamentoItemdto.MedicamentoItemUpdateDto;
-import com.model.MedicamentoItem;
+import com.dto.medicamentoItem.MedicamentoItemDto;
+import com.dto.medicamentoItem.MedicamentoItemUpdateDto;
 import com.service.MedicamentoItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

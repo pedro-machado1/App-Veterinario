@@ -1,9 +1,7 @@
 package com.service;
 
-import com.dto.consulta.ConsultaSimpleDto;
-import com.dto.medicamento.MedicamentoSimpleDto;
-import com.dto.medicamentoItemdto.MedicamentoItemDto;
-import com.dto.medicamentoItemdto.MedicamentoItemUpdateDto;
+import com.dto.medicamentoItem.MedicamentoItemDto;
+import com.dto.medicamentoItem.MedicamentoItemUpdateDto;
 import com.model.Consulta;
 import com.model.Medicamento;
 import com.model.MedicamentoItem;
@@ -68,17 +66,15 @@ public class MedicamentoItemService {
     public MedicamentoItemDto update(Long id, MedicamentoItemUpdateDto medicamentoItemDto) {
         existsById(id);
         MedicamentoItem medicamentoItem = medicamentoItemRepository.getReferenceById(id);
-        
-        Optional<Medicamento> medicamento = medicamentoRepository.findById(medicamentoItemDto.getMedicamento().getId());
-        if (medicamento.isEmpty()) {throw new ResourceNotFoundException("Medicamento Not Found");}
-        MedicamentoSimpleDto medicamentoSimpleDto = convertToDto(medicamento, MedicamentoSimpleDto.class);
-        medicamentoItemDto.setMedicamento(medicamentoSimpleDto);
 
-        Optional<Consulta> consulta = consultaRepository.findById(medicamentoItemDto.getConsulta().getId());
-        if (consulta.isEmpty()) {throw new ResourceNotFoundException("Consulta Not Found");}
-        ConsultaSimpleDto consultaSimpleDto = convertToDto(consulta, ConsultaSimpleDto.class);
-        medicamentoItemDto.setConsulta(consultaSimpleDto);
-        
+        Medicamento medicamento = medicamentoRepository.findById(medicamentoItemDto.getMedicamento().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found"));
+        medicamentoItem.setMedicamento(medicamento);
+
+        Consulta consulta = consultaRepository.findById(medicamentoItemDto.getConsulta().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta Not Found"));
+        medicamentoItem.setConsulta(consulta);
+
         convertToEntityVoid(medicamentoItemDto, medicamentoItem);
         medicamentoItemRepository.save(medicamentoItem);
         return convertToDto(medicamentoItem, MedicamentoItemDto.class);

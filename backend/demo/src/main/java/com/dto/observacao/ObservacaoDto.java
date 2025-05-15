@@ -1,9 +1,10 @@
-package com.dto.observacoes;
+package com.dto.observacao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,10 @@ public class ObservacaoDto {
     @NotBlank(message = "Informe o texto da observação")
     private String texto;
 
-    @NotBlank(message = "Informe o veterinario que fez a observação")
+//    @NotNull(message = "Informe o veterinario que fez a observação")
     private VeterinarioSimpleDto veterinario;
 
-    @NotBlank(message = "Informe o animal da observação")
+//    @NotNull(message = "Informe o animal da observação")
     private AnimalSimpleDto animal;
 
 }

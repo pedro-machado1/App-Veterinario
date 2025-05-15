@@ -1,7 +1,7 @@
 package com.controller;
 
-import com.dto.vacinaItemdto.VacinaItemDto;
-import com.dto.vacinaItemdto.VacinaItemUpdateDto;
+import com.dto.vacinaItem.VacinaItemDto;
+import com.dto.vacinaItem.VacinaItemUpdateDto;
 import com.service.VacinaItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

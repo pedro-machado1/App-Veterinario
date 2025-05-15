@@ -1,7 +1,8 @@
-package com.dto.medicamentoItemdto;
+package com.dto.medicamentoItem;
 
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicamentoItemUpdateDto {
+public class MedicamentoItemDto {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private long id;
     @NotBlank(message = "Informe o nome do Medicamento")
     private String nome;
     @NotNull(message = "Informe a quantidade do Medicamento")
@@ -20,5 +23,4 @@ public class MedicamentoItemUpdateDto {
     private String descricao;
     private MedicamentoSimpleDto medicamento;
     private ConsultaSimpleDto consulta;
-
 }

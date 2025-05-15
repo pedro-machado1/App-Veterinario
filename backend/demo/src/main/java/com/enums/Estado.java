@@ -1,6 +1,8 @@
 package com.enums;
 
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Estado {
 
     AC("Acre"),
@@ -35,6 +37,7 @@ public enum Estado {
 
     Estado(String estado) {this.estado = estado;}
 
+    @JsonValue
     public String getEstado() {return estado;}
 
 }

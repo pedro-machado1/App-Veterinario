@@ -1,11 +1,8 @@
 package com.model;
 
-import com.dto.vacinaItemdto.VacinaItemSimpleDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,7 +19,7 @@ public class Vacina {
 
     private int validade;
 
-    @OneToMany(mappedBy = "vacina")
+    @OneToMany(mappedBy = "vacina", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<VacinaItem> vacinaItem;
 
 }

@@ -1,4 +1,4 @@
-package com.dto.medicamentoItemdto;
+package com.dto.medicamentoItem;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -4,7 +4,7 @@ import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaDto;
 import com.dto.consultorio.ConsultorioDto;
 import com.dto.medicamento.MedicamentoDto;
-import com.dto.observacoes.ObservacaoDto;
+import com.dto.observacao.ObservacaoDto;
 import com.enums.Estado;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

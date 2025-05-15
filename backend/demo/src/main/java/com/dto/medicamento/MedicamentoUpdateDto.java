@@ -1,6 +1,6 @@
 package com.dto.medicamento;
 
-import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

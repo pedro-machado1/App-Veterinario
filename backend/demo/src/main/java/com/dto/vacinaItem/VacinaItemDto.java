@@ -1,4 +1,4 @@
-package com.dto.vacinaItemdto;
+package com.dto.vacinaItem;
 
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.vacina.VacinaSimpleDto;

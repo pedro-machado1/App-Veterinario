@@ -2,7 +2,7 @@ package com.dto.consulta;
 
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteSimpleDto;
-import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

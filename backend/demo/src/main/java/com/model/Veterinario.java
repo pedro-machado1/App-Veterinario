@@ -1,9 +1,8 @@
 package com.model;
 
 
-import com.enums.Genero;
+import com.enums.Estado;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class Veterinario {
     private String telefone;
 
     @Enumerated(EnumType.STRING)
-    private Genero estado;
+    private Estado estado;
 
     private String endereco;
 

@@ -1,14 +1,10 @@
 package com.dto.veterinario;
 
 import com.dto.cliente.ClienteSimpleDto;
-import com.dto.consulta.ConsultaDto;
 import com.dto.consulta.ConsultaSimpleDto;
-import com.dto.consultorio.ConsultorioDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
-import com.dto.medicamento.MedicamentoDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
-import com.dto.observacoes.ObservacaoDto;
-import com.dto.observacoes.ObservacaoSimpleDto;
+import com.dto.observacao.ObservacaoSimpleDto;
 import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
@@ -37,7 +33,7 @@ public class VeterinarioDto {
     @NotNull(message = "Informe o CRVM")
     private int CRVM;
 
-    @NotNull(message = "Informe o estado em atua")
+    @NotNull(message = "Informe o estado em atual")
     @Enumerated(EnumType.STRING)
     private Estado estado;
 

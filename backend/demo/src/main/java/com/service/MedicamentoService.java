@@ -1,14 +1,8 @@
 package com.service;
 
-import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.medicamento.MedicamentoDto;
-import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.medicamento.MedicamentoUpdateDto;
-import com.dto.medicamentoItemdto.MedicamentoItemDto;
-import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
-import com.model.Consulta;
 import com.model.Medicamento;
-import com.model.MedicamentoItem;
 import com.repository.MedicamentoRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -19,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.extras.Converters.*;

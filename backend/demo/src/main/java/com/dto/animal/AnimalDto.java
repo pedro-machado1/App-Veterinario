@@ -2,7 +2,7 @@ package com.dto.animal;
 
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
-import com.dto.vacinaItemdto.VacinaItemSimpleDto;
+import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.enums.Genero;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.dto.cliente.ClienteSimpleDto;

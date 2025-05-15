@@ -1,6 +1,6 @@
 package com.dto.medicamento;
 
-import com.dto.medicamentoItemdto.MedicamentoItemSimpleDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,6 @@
-package com.dto.observacoes;
+package com.dto.observacao;
 
 import com.dto.veterinario.VeterinarioSimpleDto;
-import com.model.Veterinario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
