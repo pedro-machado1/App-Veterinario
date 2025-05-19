@@ -31,7 +31,6 @@ public class Veterinario {
     private String endereco;
 
 
-
     @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private List<Consulta> consulta;
 
@@ -59,4 +58,7 @@ public class Veterinario {
             inverseJoinColumns = @JoinColumn(name = "cliente_id")
     )
     private List<Cliente> cliente;
+
+    @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
+    private List<Observacao> observacao;
 }

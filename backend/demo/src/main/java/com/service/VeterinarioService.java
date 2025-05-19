@@ -4,7 +4,6 @@ package com.service;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
 import com.model.*;
-import com.repository.ConsultaRepository;
 import com.repository.VeterinarioRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -26,18 +25,17 @@ public class VeterinarioService {
     private VeterinarioRepository veterinarioRepository;
 
     @Autowired
-    private ConsultaRepository cosultorioRepository;
+    private ConsultorioService cosultorioRepository;
+
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private AnimalService animalService;
 
     @Transactional
     public VeterinarioDto insert(VeterinarioDto veterinarioDto){
         Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
-
-//        Optional<Consulta> consulta = cosultorioRepository.findById(veterinarioDto.getConsulta().getId());
-//        if (consulta.isEmpty()) {throw new ResourceNotFoundException("Consulta Not Found");}
-//        ConsultaSimpleDto consultaSimpleDto = convertToDto(consulta, ConsultaSimpleDto.class);
-//        veterinarioDto.setConsulta(consultaSimpleDto);
-
-
         veterinario = veterinarioRepository.save(veterinario);
         return convertToDto(veterinario, VeterinarioDto.class);
 

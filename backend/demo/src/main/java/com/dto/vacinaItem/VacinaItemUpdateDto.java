@@ -14,20 +14,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VacinaItemUpdateDto {
-    @NotBlank(message = "Informe o nome da vacina")
     private String nome;
 
     private String descricao;
 
-//    @NotNull(message = "Informe a data que a vacina foi aplicada vacina")
     private Date dataAplicacao;
 
-//    @NotNull(message = "Informe at[e que data a vacina é válida")
     private Date dataValidade;
 
-//    @NotNull(message = "Informe o animal que essa vacina foi aplicada")
     private AnimalSimpleDto animal;
-    @NotNull(message = "Informe a vacina que foi aplicada")
     private VacinaSimpleDto vacina;
 
 }

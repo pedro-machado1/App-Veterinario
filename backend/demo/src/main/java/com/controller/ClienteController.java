@@ -23,7 +23,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clientService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ClienteDto> insert(@Validated @RequestBody ClienteDto cliente) {
         ClienteDto newClientDto = clientService.insert(cliente);
         URI uri = ServletUriComponentsBuilder

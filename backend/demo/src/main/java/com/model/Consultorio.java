@@ -24,6 +24,8 @@ public class Consultorio {
 
     private LocalDateTime dataCriacao;
 
+    private LocalDateTime datadeCadastro;
+
     @ManyToMany(mappedBy = "consultorio")
     private List<Veterinario> veterinario;
 

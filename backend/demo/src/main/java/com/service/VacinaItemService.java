@@ -1,6 +1,5 @@
 package com.service;
 
-import com.dto.vacina.VacinaSimpleDto;
 import com.dto.vacinaItem.VacinaItemDto;
 import com.dto.vacinaItem.VacinaItemUpdateDto;
 import com.model.Vacina;
@@ -31,14 +30,11 @@ public class VacinaItemService {
 
     @Transactional
     public VacinaItemDto insert(VacinaItemDto vacinaItemDto){
-        VacinaItemDto vacinaItemAux = convertToDto(vacinaItemDto, VacinaItemDto.class);
+        VacinaItem vacinaItem = convertToDto(vacinaItemDto, VacinaItem.class);
 
         Vacina vacina = vacinaRepository.findById(vacinaItemDto.getVacina().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId()));
-        VacinaSimpleDto vacinasimples = convertToDto(vacina ,VacinaSimpleDto.class);
-
-        vacinaItemAux.setVacina(vacinasimples);
-        VacinaItem vacinaItem = convertToEntity(vacinaItemDto, VacinaItem.class);
+        vacinaItem.setVacina(vacina);
         vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);
 
@@ -66,7 +62,6 @@ public class VacinaItemService {
         vacinaItem.setVacina(vacina);
 
         convertToEntityVoid(vacinaItemDto, vacinaItem);
-
         vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);
     }

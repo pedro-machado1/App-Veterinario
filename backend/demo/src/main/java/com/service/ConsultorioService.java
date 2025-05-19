@@ -2,8 +2,12 @@ package com.service;
 
 import com.dto.consultorio.ConsultorioDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
+import com.dto.veterinario.VeterinarioDto;
+import com.dto.veterinario.VeterinarioSimpleDto;
 import com.model.Consultorio;
+import com.model.Veterinario;
 import com.repository.ConsultorioRepository;
+import com.repository.VeterinarioRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +18,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.extras.Converters.*;
 import static com.extras.Converters.convertToDto;
 
+
+// fazer API pra add and remove
 
 @Service
 public class ConsultorioService {
@@ -26,9 +35,14 @@ public class ConsultorioService {
     @Autowired
     private ConsultorioRepository consultorioRepository;
 
+    @Autowired
+    private VeterinarioService veterinarioService;
+
     @Transactional
     public ConsultorioDto insert(ConsultorioDto consultorioDto) {
         Consultorio consultorio= convertToEntity(consultorioDto, Consultorio.class);
+        insertOrupdateVeterinario(consultorioDto.getVeterinario(), consultorio);
+        consultorio.setDatadeCadastro(LocalDateTime.now());
         consultorio = consultorioRepository.save(consultorio);
         return convertToEntity(consultorio, ConsultorioDto.class);
     }
@@ -51,6 +65,7 @@ public class ConsultorioService {
     public ConsultorioDto update(Long id, ConsultorioUpdateDto consultorioDto){
         existsById(id);
         Consultorio consultorio = consultorioRepository.getReferenceById(id);
+        insertOrupdateVeterinario(consultorioDto.getVeterinario(), consultorio);
         convertToEntityVoid(consultorioDto, consultorio);
         consultorio = consultorioRepository.save(consultorio);
         return convertToDto(consultorio, ConsultorioDto.class);
@@ -74,4 +89,18 @@ public class ConsultorioService {
             throw new ResourceNotFoundException("Id não encontrado: " + id);
         }
     }
+
+
+    private void insertOrupdateVeterinario(List<VeterinarioSimpleDto> veterinarioDto, Consultorio consultorio){
+        if (Objects.isNull(veterinarioDto)){
+            return;
+        }
+        if (Objects.nonNull(consultorio) && Objects.nonNull(consultorio.getVeterinario())){
+            consultorio.getVeterinario().clear();
+        }
+        veterinarioDto.forEach(veterinariodto -> {
+            Veterinario veterinarioEntity = convertToEntity(veterinarioService.findById(veterinariodto.getId()), Veterinario.class);
+            consultorio.getVeterinario().add(veterinarioEntity);
+        });
     }
+}

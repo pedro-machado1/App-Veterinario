@@ -20,23 +20,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VeterinarioUpdateDto {
-    @NotNull(message = "Informe o CPF de veterinario")
     private int cpf;
 
-    @NotBlank(message = "Informe o nome")
     private String nome;
 
-    @NotNull(message = "Informe o CRVM")
     private int CRVM;
 
-    @NotNull(message = "Informe o estado em atua")
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @NotBlank(message = "Informe o seu email")
     private String email;
 
-    @NotBlank(message = "Informe o seu telefone")
     private String telefone;
 
     private String endereco;

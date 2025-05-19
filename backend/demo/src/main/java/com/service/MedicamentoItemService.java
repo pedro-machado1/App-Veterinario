@@ -2,9 +2,11 @@ package com.service;
 
 import com.dto.medicamentoItem.MedicamentoItemDto;
 import com.dto.medicamentoItem.MedicamentoItemUpdateDto;
+import com.model.Animal;
 import com.model.Consulta;
 import com.model.Medicamento;
 import com.model.MedicamentoItem;
+import com.repository.AnimalRepository;
 import com.repository.ConsultaRepository;
 import com.repository.MedicamentoItemRepository;
 import com.repository.MedicamentoRepository;
@@ -33,6 +35,9 @@ public class MedicamentoItemService {
     @Autowired
     private ConsultaRepository consultaRepository;
 
+    @Autowired
+    private AnimalRepository animalRepository;
+
     public MedicamentoItemDto insert(MedicamentoItemDto medicamentoItemDto) {
         Consulta consultaEntity = consultaRepository.findById(medicamentoItemDto.getConsulta().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta Not Found"));
@@ -40,12 +45,13 @@ public class MedicamentoItemService {
         Medicamento medicamentoEntity = medicamentoRepository.findById(medicamentoItemDto.getMedicamento().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found"));
 
-        MedicamentoItem medicamentoItem = new MedicamentoItem();
-        medicamentoItem.setNome(medicamentoItemDto.getNome());
-        medicamentoItem.setDescricao(medicamentoItemDto.getDescricao());
-        medicamentoItem.setQuantidade(medicamentoItemDto.getQuantidade());
+        Animal animal = animalRepository.findById(medicamentoItemDto.getAnimal().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Animal Not Found"));
+
+        MedicamentoItem medicamentoItem =convertToEntity(medicamentoItemDto, MedicamentoItem.class);
         medicamentoItem.setConsulta(consultaEntity);
         medicamentoItem.setMedicamento(medicamentoEntity);
+        medicamentoItem.setAnimal(animal);
 
         medicamentoItemRepository.save(medicamentoItem);
         return convertToDto(medicamentoItem, MedicamentoItemDto.class);
@@ -92,7 +98,7 @@ public class MedicamentoItemService {
     }
     @Transactional
     public void existsById(Long id){
-        if(!medicamentoRepository.existsById(id)){
+        if(!medicamentoItemRepository.existsById(id)){
             throw new ResourceNotFoundException("Id não encontrado: " + id);
         }
     }

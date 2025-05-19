@@ -3,6 +3,7 @@ package com.dto.cliente;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteDto {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @NotNull(message = "Informe o id")
     private long id;
     
@@ -34,9 +36,9 @@ public class ClienteDto {
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
 
-    private LocalDate dataDeCriacao;
+    private LocalDateTime dataDeCriacao;
 
-    private LocalDate dataDeAlteracao;
+    private LocalDateTime dataDeAlteracao;
 
     private List<AnimalSimpleDto> animal;
 

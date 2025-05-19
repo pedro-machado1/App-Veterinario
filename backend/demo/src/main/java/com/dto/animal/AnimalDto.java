@@ -2,6 +2,8 @@ package com.dto.animal;
 
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
+import com.dto.observacao.ObservacaoSimpleDto;
 import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.enums.Genero;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -52,11 +54,11 @@ public class AnimalDto {
 
     private List<ClienteSimpleDto> cliente;
 
-    private List<AnimalSimpleDto> animal;
+    private List<ObservacaoSimpleDto> observacao;
 
     private List<ConsultaSimpleDto> consulta;
 
-    private List<MedicamentoSimpleDto> medicamento;
+    private List<MedicamentoItemSimpleDto> medicamentoItem;
 
     private List<VacinaItemSimpleDto> vacina;
 }

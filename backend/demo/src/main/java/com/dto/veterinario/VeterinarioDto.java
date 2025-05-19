@@ -45,7 +45,7 @@ public class VeterinarioDto {
 
     private String endereco;
 
-    private ConsultorioSimpleDto consultorio;
+    private List<ConsultorioSimpleDto> consultorio;
 
     private List<ObservacaoSimpleDto> observacao;
 

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteSimpleDto {
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private long id;
         private int cpf;
         private String nome;

@@ -5,7 +5,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Converters {
-    private static final ModelMapper modelMapper = new ModelMapper();
+    private static final ModelMapper modelMapper;
+
+    static {
+        modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setSkipNullEnabled(true); //  THIS IS THE KEY CHANGE
+    }
 
     public static <D, E> D convertToDto(E entity, Class<D> dtoClass) {
         return modelMapper.map(entity, dtoClass);
