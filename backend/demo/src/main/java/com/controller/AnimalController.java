@@ -2,6 +2,8 @@ package com.controller;
 
 import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalUpdateDto;
+import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,4 +57,38 @@ public class AnimalController {
         animalService.delete(id);
         return ResponseEntity.ok().body("o animal " + id + " foi removido");
     }
+    @PutMapping("/{id}/addcliente/{idCliente}")
+    public ResponseEntity<AnimalDto> addCliente(@PathVariable Long id, @PathVariable Long idCliente) {
+        AnimalDto animalDto = animalService.addCliente(id, idCliente);
+        return ResponseEntity.ok(animalDto);
+    }
+    @DeleteMapping("/{id}/removecliente/{idCliente}")
+    public ResponseEntity<String> removeCliente(@PathVariable Long id, @PathVariable Long idCliente) {
+        animalService.removeCliente(id, idCliente);
+        return ResponseEntity.ok().body("o cliente foi removido");
+    }
+
+    @GetMapping("{id}/cliente")
+    public ResponseEntity<Page<ClienteSimpleDto>> findAllCliente(@PathVariable Long id, Pageable pages) {
+        Page<ClienteSimpleDto> clientesPage = animalService.findAllCliente(id, pages);
+        return ResponseEntity.ok().body(clientesPage);
+    }
+
+    @PutMapping("/{id}/addconsulta/{idConsulta}")
+    public ResponseEntity<AnimalDto> addConsultorio(@PathVariable Long id, @PathVariable Long idConsulta) {
+        AnimalDto animalDto = animalService.addConsulta(id, idConsulta);
+        return ResponseEntity.ok(animalDto);
+    }
+    @DeleteMapping("/{id}/removeconsulta/{idConsulta}")
+    public ResponseEntity<String> removeConsultorio(@PathVariable Long id, @PathVariable Long idConsulta) {
+        animalService.removeConsulta(id, idConsulta);
+        return ResponseEntity.ok().body("o consultório foi removido");
+    }
+
+    @GetMapping("{id}/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsultorio(@PathVariable Long id, Pageable pages) {
+        Page<ConsultaSimpleDto> consulta = animalService.findALlConsulta(id, pages);
+        return ResponseEntity.ok().body(consulta);
+    }
 }
+

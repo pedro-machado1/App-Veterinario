@@ -1,7 +1,12 @@
 package com.dto.animal;
 
 import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.observacao.ObservacaoSimpleDto;
+import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.enums.Genero;
+import com.model.Consulta;
+import com.model.MedicamentoItem;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -17,20 +22,13 @@ import java.util.List;
 @NoArgsConstructor
 public class AnimalUpdateDto {
 
-    @NotBlank(message = "Informe o seu nome")
     private String nome;
 
-    @NotBlank(message = "Informe o cliente dono do animal")
-    private List<ClienteSimpleDto> cliente;
-
-    @NotNull(message = "Informe a sua idade")
     private int idade;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Informe o gênero do animal")
     private Genero genero;
 
-    @NotBlank(message = "INforme a especie desse animal")
     private String especie;
 
     private int altura;
@@ -38,8 +36,6 @@ public class AnimalUpdateDto {
     private int comprimento;
 
     private int peso;
-
-    private int observacao;
 
     private int vacina;
 
@@ -49,7 +45,15 @@ public class AnimalUpdateDto {
 
     private int raca;
 
-    private List<AnimalSimpleDto> animal;
+    private List<MedicamentoItem> medicamentoItem;
+
+    private List<ClienteSimpleDto> cliente;
+
+    private List<ConsultaSimpleDto> consulta;
+
+    private List<VacinaItemSimpleDto> vacinaItem;
+
+    private List<ObservacaoSimpleDto> observacao;
 
 }
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,9 +19,9 @@ public class Consulta {
 
     private String texto;
 
-    private LocalDate dataCriacao;
+    private LocalDateTime dataCriacao;
 
-    private LocalDate dataAlteracao;
+    private LocalDateTime dataAlteracao;
 
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     private List<MedicamentoItem> medicamentoItem;
@@ -32,7 +33,7 @@ public class Consulta {
     @JoinColumn(name = "veterinario_id")
     private Veterinario veterinario;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 

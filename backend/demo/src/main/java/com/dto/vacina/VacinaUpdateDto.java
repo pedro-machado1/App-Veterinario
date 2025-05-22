@@ -13,13 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VacinaUpdateDto {
-    @NotBlank(message = "Informe o nome da vacina")
     private String nome;
 
-    @NotBlank(message = "Informe a descricao da vacina")
     private String descricao;
 
-    @NotNull(message = "Informe a validade da vacina")
     private int validade;
 
     private List<VacinaItemSimpleDto> vacinaItem;

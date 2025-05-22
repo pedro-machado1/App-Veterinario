@@ -23,9 +23,6 @@ public class MedicamentoService {
     @Autowired
     private MedicamentoRepository medicamentoRepository;
 
-    @Autowired
-    private MedicamentoItemService medicamentoItemService;
-
     @Transactional
     public MedicamentoDto insert(MedicamentoDto medicamentoDto){
         Medicamento medicamento = convertToEntity(medicamentoDto, Medicamento.class);
@@ -50,18 +47,6 @@ public class MedicamentoService {
     public MedicamentoDto update(Long id, MedicamentoUpdateDto medicamentoDto){
         existsById(id);
         Medicamento medicamento = medicamentoRepository.getReferenceById(id);
-
-        // avaliar se é necessario haver um update pelo lado do medicamento
-
-//        List<MedicamentoItem> ListOfMedicamentoItemDto = new ArrayList<>();
-//        for (MedicamentoItemSimpleDto medicamentoItem : medicamentoDto.getMedicamentoItem()) {
-//            Optional<MedicamentoItemDto> medicamentoNove = medicamentoItemService.findById(medicamentoItem.getId());
-//            if (medicamentoNove.isEmpty()) {continue;}
-//            MedicamentoItem med = convertToEntity(medicamentoNove, MedicamentoItem.class);
-//            ListOfMedicamentoItemDto.add(med);
-//        }
-//        medicamento.setMedicamentoItem(ListOfMedicamentoItemDto);
-
         convertToEntityVoid(medicamentoDto, medicamento);
         medicamento = medicamentoRepository.save(medicamento);
         return convertToDto(medicamento, MedicamentoDto.class);

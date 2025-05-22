@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -25,9 +26,9 @@ public class Cliente {
 
     private String telefone;
 
-    private LocalDate dataDeCriacao;
+    private LocalDateTime dataDeCriacao;
 
-    private LocalDate dataDeAlteracao;
+    private LocalDateTime dataDeAlteracao;
 
     @ManyToMany (mappedBy = "cliente")
     private List<Animal> animal;

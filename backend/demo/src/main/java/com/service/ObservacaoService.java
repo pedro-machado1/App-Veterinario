@@ -2,7 +2,9 @@ package com.service;
 
 import com.dto.observacao.ObservacaoDto;
 import com.dto.observacao.ObservacaoUpdateDto;
+import com.model.Animal;
 import com.model.Observacao;
+import com.model.Veterinario;
 import com.repository.ObservacaoRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -24,9 +26,24 @@ public class ObservacaoService {
     @Autowired
     private ObservacaoRepository observacaoRepository;
 
+    @Autowired
+    private AnimalService animalService;
+
+    @Autowired
+    private VeterinarioService veterinarioService;
+
     @Transactional
     public ObservacaoDto insert(ObservacaoDto observacaoDTO){
+        Animal animal = convertToEntity(animalService.findById(observacaoDTO.getAnimal().getId())
+                .orElseThrow( () -> new ResourceNotFoundException("id do animal não encontrado" + observacaoDTO.getAnimal().getId())),
+                Animal.class);
+        Veterinario veterinario = convertToEntity(veterinarioService.findById(observacaoDTO.getVeterinario().getId())
+                .orElseThrow( () -> new ResourceNotFoundException("id do veterinário não encontrado" + observacaoDTO.getVeterinario().getId()))
+                ,Veterinario.class);
+
         Observacao observacao= convertToEntity(observacaoDTO, Observacao.class);
+        observacao.setAnimal(animal);
+        observacao.setVeterinario(veterinario);
         observacao = observacaoRepository.save(observacao);
         return convertToDto(observacao, ObservacaoDto.class);
     }

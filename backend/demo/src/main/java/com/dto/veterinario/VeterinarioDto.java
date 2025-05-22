@@ -16,12 +16,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class VeterinarioDto {
-    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
     @NotNull(message = "Informe o CPF de veterinario")
@@ -45,7 +46,7 @@ public class VeterinarioDto {
 
     private String endereco;
 
-    private ConsultorioSimpleDto consultorio;
+    private Set<ConsultorioSimpleDto> consultorio;
 
     private List<ObservacaoSimpleDto> observacao;
 
@@ -53,5 +54,5 @@ public class VeterinarioDto {
 
     private List<ConsultaSimpleDto> consulta;
 
-    private List<ClienteSimpleDto> clietes;
+    private Set<ClienteSimpleDto> cliente;
 }

@@ -14,18 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsultorioUpdateDto {
-    @NotBlank(message = "Informe o nome do consultorio")
     private String nome;
 
-    @NotNull(message = "Informe a idade do consultorio")
     private String endereco;
 
-    @NotNull(message = "Informe o telefone do consultorio")
     private String telefone;
 
-    @NotBlank(message = "Informe a descrição do consultorio")
     private String descricao;
 
     private List<VeterinarioSimpleDto> veterinario;
-
 }

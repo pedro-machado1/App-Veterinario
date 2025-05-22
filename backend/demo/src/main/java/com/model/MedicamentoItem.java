@@ -3,7 +3,6 @@ package com.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
 
 @Data
 @Entity
@@ -19,11 +18,15 @@ public class MedicamentoItem {
 
     private int quantidade;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "medicamento_id")
     private Medicamento medicamento;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "consulta_id")
     private Consulta consulta;
+
+    @ManyToOne
+    @JoinColumn(name = "animal_id")
+    private Animal animal;
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private String nome;
 
@@ -52,6 +52,9 @@ public class Animal {
     @OneToMany (mappedBy = "animal", cascade = CascadeType.ALL)
     private List<VacinaItem> vacinaItem;
 
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
+    private List<MedicamentoItem> medicamentoItem;
+
     @ManyToMany
     @JoinTable(
             name = "tb_animal_consulta",
@@ -59,5 +62,6 @@ public class Animal {
             inverseJoinColumns = @JoinColumn(name = "consulta_id")
     )
     private List<Consulta> consulta;
+
 
 }

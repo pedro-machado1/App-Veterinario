@@ -18,9 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsultaUpdateDto {
-    @NotBlank(message = "Informe o título da consulta")
     private String titulo;
-    @NotBlank(message = "Informe o texto da consulta")
+
     private String texto;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -28,7 +27,6 @@ public class ConsultaUpdateDto {
 
     private VeterinarioSimpleDto veterinario;
 
-    @NotNull(message = "Informe o cliente dessa consulta")
     private ClienteSimpleDto cliente;
 
     private List<AnimalSimpleDto> animal;
