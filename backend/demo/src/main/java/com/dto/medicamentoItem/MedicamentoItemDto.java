@@ -1,5 +1,6 @@
 package com.dto.medicamentoItem;
 
+import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,5 +25,5 @@ public class MedicamentoItemDto {
     private String descricao;
     private MedicamentoSimpleDto medicamento;
     private ConsultaSimpleDto consulta;
-    private Animal animal;
+    private AnimalSimpleDto animal;
 }

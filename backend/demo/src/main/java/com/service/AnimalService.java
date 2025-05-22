@@ -8,6 +8,7 @@ import com.model.*;
 import com.repository.AnimalRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
+import org.antlr.v4.runtime.misc.Array2DHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.extras.Converters.*;
@@ -86,7 +87,7 @@ public class AnimalService {
 
         AnimalDto animalDto = convertToDto( animalRepository.getReferenceById(idAnimal), AnimalDto.class);
         if (animalDto.getCliente() == null) {
-            animalDto.setCliente(new HashSet<>());
+            animalDto.setCliente(new ArrayList<>());
         }
         if (animalDto.getCliente().contains(cliente)) {
             throw new DataBaseException("Cliente já está cadastrado no Animal");
@@ -134,7 +135,7 @@ public class AnimalService {
 
         AnimalDto animalDto = convertToDto( animalRepository.getReferenceById(idAnimal), AnimalDto.class);
         if (animalDto.getCliente() == null) {
-            animalDto.setCliente(new HashSet<>());
+            animalDto.setCliente(new ArrayList<>());
         }
         if (animalDto.getConsulta().contains(consulta)) {
             throw new DataBaseException("Consulta já está cadastrado no veterinário");

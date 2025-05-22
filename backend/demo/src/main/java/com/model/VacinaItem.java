@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -17,9 +18,9 @@ public class VacinaItem {
 
     private String descricao;
 
-    private LocalDateTime dataAplicacao;
+    private Date dataAplicacao;
 
-    private LocalDateTime dataValidade;
+    private Date dataValidade;
 
     @ManyToOne
     @JoinColumn(name = "animal_id")

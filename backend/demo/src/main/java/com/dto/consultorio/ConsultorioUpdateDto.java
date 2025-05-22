@@ -22,5 +22,4 @@ public class ConsultorioUpdateDto {
 
     private String descricao;
 
-    private List<VeterinarioSimpleDto> veterinario;
 }

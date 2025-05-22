@@ -1,7 +1,6 @@
 package com.dto.animal;
 
 import com.dto.consulta.ConsultaSimpleDto;
-import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
 import com.dto.observacao.ObservacaoSimpleDto;
 import com.dto.vacinaItem.VacinaItemSimpleDto;
@@ -17,7 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 // atualizar BD
 @Data
@@ -53,11 +51,11 @@ public class AnimalDto {
 
     private String raca;
 
-    private Set<ClienteSimpleDto> cliente;
+    private List<ClienteSimpleDto> cliente;
 
     private List<ObservacaoSimpleDto> observacao;
 
-    private Set<ConsultaSimpleDto> consulta;
+    private List<ConsultaSimpleDto> consulta;
 
     private List<MedicamentoItemSimpleDto> medicamentoItem;
 

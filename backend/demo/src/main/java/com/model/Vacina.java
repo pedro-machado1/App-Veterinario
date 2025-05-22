@@ -19,7 +19,7 @@ public class Vacina {
 
     private int validade;
 
-    @OneToMany(mappedBy = "vacina", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vacina", cascade = CascadeType.ALL)
     private List<VacinaItem> vacinaItem;
 
 }

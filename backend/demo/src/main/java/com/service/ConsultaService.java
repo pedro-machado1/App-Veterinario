@@ -1,7 +1,10 @@
 package com.service;
 
+import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaDto;
 import com.dto.consulta.ConsultaUpdateDto;
+import com.dto.veterinario.VeterinarioDto;
+import com.dto.veterinario.VeterinarioSimpleDto;
 import com.model.Cliente;
 import com.model.Consulta;
 import com.model.Veterinario;
@@ -39,19 +42,18 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaDto insert(ConsultaDto consultaDTO) {
-        Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
-        consulta.setDataCriacao(LocalDateTime.now());
 
-        Cliente cliente = convertToEntity(clienteService.findById(consultaDTO.getCliente().getId())
+        ClienteSimpleDto cliente = convertToDto(clienteService.findById(consultaDTO.getCliente().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaDTO.getCliente().getId() + " não foi encontrado."))
-                , Cliente.class);
-
-        Veterinario veterinario = convertToEntity(veterinarioService.findById(consultaDTO.getVeterinario().getId())
+                , ClienteSimpleDto.class);
+        VeterinarioSimpleDto veterinario = convertToDto(veterinarioService.findById(consultaDTO.getVeterinario().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o veterinário da consulta" + consultaDTO.getVeterinario().getId() + " não foi encontrado."))
-                , Veterinario.class);
+                , VeterinarioSimpleDto.class);
 
-        consulta.setCliente(cliente);
-        consulta.setVeterinario(veterinario);
+        consultaDTO.setDataCriacao(LocalDateTime.now());
+        consultaDTO.setCliente(cliente);
+        consultaDTO.setVeterinario(veterinario);
+        Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
         consulta = consultaRepository.save(consulta);
         return convertToDto(consulta, ConsultaDto.class);
     }
@@ -71,19 +73,19 @@ public class ConsultaService {
     @Transactional
     public ConsultaDto update(Long id, ConsultaUpdateDto consultaDto){
         existsById(id);
+
+        ClienteSimpleDto cliente = convertToDto(clienteService.findById(consultaDto.getCliente().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaDto.getCliente().getId() + " não foi encontrado."))
+                , ClienteSimpleDto.class);
+
+        VeterinarioSimpleDto veterinario = convertToDto(veterinarioService.findById(consultaDto.getVeterinario().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o veterinário da consulta" + consultaDto.getVeterinario().getId() + " não foi encontrado."))
+                , VeterinarioSimpleDto.class);
+
+        consultaDto.setVeterinario(veterinario);
+        consultaDto.setCliente(cliente);
+        consultaDto.setDataAlteracao(LocalDateTime.now());
         Consulta consultaaux = convertToEntity(consultaRepository.getReferenceById(id), Consulta.class);
-
-        Cliente cliente = convertToEntity(clienteService.findById(consultaaux.getCliente().getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaaux.getCliente().getId() + " não foi encontrado."))
-                , Cliente.class);
-
-        Veterinario veterinario = convertToEntity(veterinarioService.findById(consultaaux.getVeterinario().getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o veterinário da consulta" + consultaaux.getVeterinario().getId() + " não foi encontrado."))
-                , Veterinario.class);
-
-        consultaaux.setVeterinario(veterinario);
-        consultaaux.setCliente(cliente);
-        consultaaux.setDataAlteracao(LocalDateTime.now());
         Consulta consulta =convertToEntity(consultaaux, Consulta.class);
 
         convertToEntityVoid(consultaDto, consulta);

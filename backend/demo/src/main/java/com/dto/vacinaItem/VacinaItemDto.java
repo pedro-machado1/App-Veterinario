@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -26,7 +28,7 @@ public class VacinaItemDto {
     private String descricao;
 
     @NotNull(message = "Informe a data que a vacina foi aplicada vacina")
-    private Date dataAplicacao;
+    private LocalDateTime dataAplicacao;
 
     @NotNull(message = "Informe at[e que data a vacina é válida")
     private Date dataValidade;

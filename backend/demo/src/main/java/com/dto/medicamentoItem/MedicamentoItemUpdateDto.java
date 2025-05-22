@@ -1,5 +1,6 @@
 package com.dto.medicamentoItem;
 
+import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
 import com.model.Animal;
@@ -18,7 +19,7 @@ public class MedicamentoItemUpdateDto {
     private String descricao;
     private MedicamentoSimpleDto medicamento;
     private ConsultaSimpleDto consulta;
-    private Animal animal;
+    private AnimalSimpleDto animal;
 
 
 }

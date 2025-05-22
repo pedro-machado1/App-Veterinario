@@ -1,5 +1,8 @@
 package com.service;
 
+import com.dto.animal.AnimalSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.medicamentoItem.MedicamentoItemDto;
 import com.dto.medicamentoItem.MedicamentoItemUpdateDto;
 import com.model.Animal;
@@ -36,21 +39,21 @@ public class MedicamentoItemService {
     private AnimalService animalService;
 
     public MedicamentoItemDto insert(MedicamentoItemDto medicamentoItemDto) {
-        Consulta consultaEntity = convertToEntity(consultaService.findById(medicamentoItemDto.getConsulta().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta Not Found")), Consulta.class);
+        ConsultaSimpleDto consultaEntity = convertToDto(consultaService.findById(medicamentoItemDto.getConsulta().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta Not Found")), ConsultaSimpleDto.class);
 
-        Medicamento medicamentoEntity = convertToEntity(medicamentoService.findById(medicamentoItemDto.getMedicamento().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found")), Medicamento.class );
+        MedicamentoSimpleDto medicamentoEntity = convertToDto(medicamentoService.findById(medicamentoItemDto.getMedicamento().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found")), MedicamentoSimpleDto.class );
 
-        Animal animal = convertToEntity(animalService.findById(medicamentoItemDto.getAnimal().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Animal Not Found")), Animal.class);
+        AnimalSimpleDto animal = convertToDto(animalService.findById(medicamentoItemDto.getAnimal().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Animal Not Found")), AnimalSimpleDto.class);
 
+        medicamentoItemDto.setConsulta(consultaEntity);
+        medicamentoItemDto.setMedicamento(medicamentoEntity);
+        medicamentoItemDto.setAnimal(animal);
         MedicamentoItem medicamentoItem =convertToEntity(medicamentoItemDto, MedicamentoItem.class);
-        medicamentoItem.setConsulta(consultaEntity);
-        medicamentoItem.setMedicamento(medicamentoEntity);
-        medicamentoItem.setAnimal(animal);
 
-        medicamentoItemRepository.save(medicamentoItem);
+        medicamentoItem =medicamentoItemRepository.save(medicamentoItem);
         return convertToDto(medicamentoItem, MedicamentoItemDto.class);
 
     }
@@ -68,20 +71,20 @@ public class MedicamentoItemService {
     @Transactional
     public MedicamentoItemDto update(Long id, MedicamentoItemUpdateDto medicamentoItemDto) {
         existsById(id);
+
+        MedicamentoSimpleDto medicamento = convertToDto(medicamentoService.findById(medicamentoItemDto.getMedicamento().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found")), MedicamentoSimpleDto.class );
+        medicamentoItemDto.setMedicamento(medicamento);
+
+        ConsultaSimpleDto consulta = convertToDto(consultaService.findById(medicamentoItemDto.getConsulta().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta Not Found")), ConsultaSimpleDto.class);
+        medicamentoItemDto.setConsulta(consulta);
+
+        AnimalSimpleDto animal = convertToDto(animalService.findById(medicamentoItemDto.getAnimal().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Animal Not Found")), AnimalSimpleDto.class);
+        medicamentoItemDto.setAnimal(animal);
+
         MedicamentoItem medicamentoItem = medicamentoItemRepository.getReferenceById(id);
-
-        Medicamento medicamento = convertToEntity(medicamentoService.findById(medicamentoItemDto.getMedicamento().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found")), Medicamento.class );
-        medicamentoItem.setMedicamento(medicamento);
-
-        Consulta consulta = convertToEntity(consultaService.findById(medicamentoItemDto.getConsulta().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta Not Found")), Consulta.class);
-        medicamentoItem.setConsulta(consulta);
-
-        Animal animal = convertToEntity(animalService.findById(medicamentoItemDto.getAnimal().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Animal Not Found")), Animal.class);
-        medicamentoItem.setAnimal(animal);
-
         convertToEntityVoid(medicamentoItemDto, medicamentoItem);
         medicamentoItemRepository.save(medicamentoItem);
         return convertToDto(medicamentoItem, MedicamentoItemDto.class);

@@ -1,5 +1,6 @@
 package com.service;
 
+import com.dto.vacina.VacinaSimpleDto;
 import com.dto.vacinaItem.VacinaItemDto;
 import com.dto.vacinaItem.VacinaItemUpdateDto;
 import com.model.Vacina;
@@ -8,6 +9,7 @@ import com.repository.VacinaItemRepository;
 import com.repository.VacinaRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.extras.Converters.*;
@@ -30,12 +34,14 @@ public class VacinaItemService {
 
     @Transactional
     public VacinaItemDto insert(VacinaItemDto vacinaItemDto){
-        VacinaItem vacinaItem = convertToDto(vacinaItemDto, VacinaItem.class);
 
-        Vacina vacina = convertToEntity( vacinaService.findById(vacinaItemDto.getVacina().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId())), Vacina.class);
-        vacinaItem.setVacina(vacina);
-        vacinaItemRepository.save(vacinaItem);
+        VacinaSimpleDto vacina = convertToDto( vacinaService.findById(vacinaItemDto.getVacina().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId()))
+                ,VacinaSimpleDto.class);
+        vacinaItemDto.setVacina(vacina);
+        vacinaItemDto.setDataAplicacao(LocalDateTime.now());
+        VacinaItem vacinaItem = convertToEntity(vacinaItemDto, VacinaItem.class);
+        vacinaItem =vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);
 
     }
@@ -55,12 +61,12 @@ public class VacinaItemService {
     @Transactional
     public VacinaItemDto update(Long id, VacinaItemUpdateDto vacinaItemDto){
         existsById(id);
+
+        VacinaSimpleDto vacina = convertToDto( vacinaService.findById(vacinaItemDto.getVacina().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId())), VacinaSimpleDto.class);
+        vacinaItemDto.setVacina(vacina);
+
         VacinaItem vacinaItem = vacinaItemRepository.getReferenceById(id);
-
-        Vacina vacina = convertToEntity( vacinaService.findById(vacinaItemDto.getVacina().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId())), Vacina.class);
-        vacinaItem.setVacina(vacina);
-
         convertToEntityVoid(vacinaItemDto, vacinaItem);
         vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);

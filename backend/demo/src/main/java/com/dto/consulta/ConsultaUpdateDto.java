@@ -25,6 +25,9 @@ public class ConsultaUpdateDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime dataCriacao;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime dataAlteracao;
+
     private VeterinarioSimpleDto veterinario;
 
     private ClienteSimpleDto cliente;

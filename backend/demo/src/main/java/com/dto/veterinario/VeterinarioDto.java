@@ -16,7 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -46,7 +45,7 @@ public class VeterinarioDto {
 
     private String endereco;
 
-    private Set<ConsultorioSimpleDto> consultorio;
+    private List<ConsultorioSimpleDto> consultorio;
 
     private List<ObservacaoSimpleDto> observacao;
 
@@ -54,5 +53,5 @@ public class VeterinarioDto {
 
     private List<ConsultaSimpleDto> consulta;
 
-    private Set<ClienteSimpleDto> cliente;
+    private List<ClienteSimpleDto> cliente;
 }

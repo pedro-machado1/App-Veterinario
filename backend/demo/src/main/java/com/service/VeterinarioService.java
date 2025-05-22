@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.extras.Converters.*;
@@ -92,7 +92,7 @@ public class VeterinarioService {
 
         VeterinarioDto veterinarioDto = convertToDto( veterinarioRepository.getReferenceById(idVeterinario), VeterinarioDto.class);
         if (veterinarioDto.getCliente() == null) {
-            veterinarioDto.setCliente(new HashSet<>());
+            veterinarioDto.setCliente(new ArrayList<>());
         }
         if (veterinarioDto.getCliente().contains(cliente)) {
             throw new DataBaseException("Cliente já está cadastrado no veterinário");
@@ -142,7 +142,7 @@ public class VeterinarioService {
 
         VeterinarioDto veterinarioDto = convertToDto( veterinarioRepository.getReferenceById(idVeterinario), VeterinarioDto.class);
         if (veterinarioDto.getCliente() == null) {
-            veterinarioDto.setCliente(new HashSet<>());
+            veterinarioDto.setCliente(new ArrayList<>());
         }
         if (veterinarioDto.getConsultorio().contains(consultorio)) {
             throw new DataBaseException("Consultório já está cadastrado no veterinário");
