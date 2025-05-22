@@ -35,13 +35,9 @@ public class ConsultorioService {
     @Autowired
     private ConsultorioRepository consultorioRepository;
 
-    @Autowired
-    private VeterinarioService veterinarioService;
-
     @Transactional
     public ConsultorioDto insert(ConsultorioDto consultorioDto) {
         Consultorio consultorio= convertToEntity(consultorioDto, Consultorio.class);
-        insertOrupdateVeterinario(consultorioDto.getVeterinario(), consultorio);
         consultorio.setDatadeCadastro(LocalDateTime.now());
         consultorio = consultorioRepository.save(consultorio);
         return convertToEntity(consultorio, ConsultorioDto.class);
@@ -65,7 +61,6 @@ public class ConsultorioService {
     public ConsultorioDto update(Long id, ConsultorioUpdateDto consultorioDto){
         existsById(id);
         Consultorio consultorio = consultorioRepository.getReferenceById(id);
-        insertOrupdateVeterinario(consultorioDto.getVeterinario(), consultorio);
         convertToEntityVoid(consultorioDto, consultorio);
         consultorio = consultorioRepository.save(consultorio);
         return convertToDto(consultorio, ConsultorioDto.class);
@@ -90,17 +85,4 @@ public class ConsultorioService {
         }
     }
 
-
-    private void insertOrupdateVeterinario(List<VeterinarioSimpleDto> veterinarioDto, Consultorio consultorio){
-        if (Objects.isNull(veterinarioDto)){
-            return;
-        }
-        if (Objects.nonNull(consultorio) && Objects.nonNull(consultorio.getVeterinario())){
-            consultorio.getVeterinario().clear();
-        }
-        veterinarioDto.forEach(veterinariodto -> {
-            Veterinario veterinarioEntity = convertToEntity(veterinarioService.findById(veterinariodto.getId()), Veterinario.class);
-            consultorio.getVeterinario().add(veterinarioEntity);
-        });
-    }
 }

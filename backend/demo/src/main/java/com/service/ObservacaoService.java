@@ -34,13 +34,14 @@ public class ObservacaoService {
 
     @Transactional
     public ObservacaoDto insert(ObservacaoDto observacaoDTO){
-        Observacao observacao= convertToEntity(observacaoDTO, Observacao.class);
         Animal animal = convertToEntity(animalService.findById(observacaoDTO.getAnimal().getId())
                 .orElseThrow( () -> new ResourceNotFoundException("id do animal não encontrado" + observacaoDTO.getAnimal().getId())),
                 Animal.class);
         Veterinario veterinario = convertToEntity(veterinarioService.findById(observacaoDTO.getVeterinario().getId())
                 .orElseThrow( () -> new ResourceNotFoundException("id do veterinário não encontrado" + observacaoDTO.getVeterinario().getId()))
                 ,Veterinario.class);
+
+        Observacao observacao= convertToEntity(observacaoDTO, Observacao.class);
         observacao.setAnimal(animal);
         observacao.setVeterinario(veterinario);
         observacao = observacaoRepository.save(observacao);

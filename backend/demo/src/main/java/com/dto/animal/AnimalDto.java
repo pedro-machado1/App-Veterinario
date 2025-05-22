@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 // atualizar BD
 @Data
@@ -52,11 +53,11 @@ public class AnimalDto {
 
     private String raca;
 
-    private List<ClienteSimpleDto> cliente;
+    private Set<ClienteSimpleDto> cliente;
 
     private List<ObservacaoSimpleDto> observacao;
 
-    private List<ConsultaSimpleDto> consulta;
+    private Set<ConsultaSimpleDto> consulta;
 
     private List<MedicamentoItemSimpleDto> medicamentoItem;
 

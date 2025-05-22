@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -43,6 +44,6 @@ public class VeterinarioUpdateDto {
 
     private List<ConsultaDto> consulta;
 
-    private List<ClienteSimpleDto> clietes;
+    private Set<ClienteSimpleDto> cliente;
 
 }

@@ -3,7 +3,6 @@ package com.service;
 import com.dto.vacina.VacinaDto;
 import com.dto.vacina.VacinaUpdateDto;
 import com.model.Vacina;
-import com.repository.MedicamentoItemRepository;
 import com.repository.VacinaRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -23,9 +22,6 @@ public class VacinaService {
 
     @Autowired
     private VacinaRepository vacinaRepository;
-
-    @Autowired
-    private MedicamentoItemRepository medicamentoItemRepository;
 
     @Transactional
     public VacinaDto insert(VacinaDto vacinaDto){

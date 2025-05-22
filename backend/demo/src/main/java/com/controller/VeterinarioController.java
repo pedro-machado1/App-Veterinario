@@ -1,5 +1,7 @@
 package com.controller;
 
+import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
 import com.service.VeterinarioService;
@@ -54,5 +56,39 @@ public class VeterinarioController {
         veterinarioService.delete(id);
         return ResponseEntity.ok().body("o veterinario " + id + " foi removido");
     }
+    @PutMapping("/{id}/addcliente/{idCliente}")
+    public ResponseEntity<VeterinarioDto> addCliente(@PathVariable Long id, @PathVariable Long idCliente) {
+        VeterinarioDto veterinarioDto = veterinarioService.addCliente(id, idCliente);
+        return ResponseEntity.ok(veterinarioDto);
+    }
+    @DeleteMapping("/{id}/removecliente/{idCliente}")
+    public ResponseEntity<String> removeCliente(@PathVariable Long id, @PathVariable Long idCliente) {
+        veterinarioService.removeCliente(id, idCliente);
+        return ResponseEntity.ok().body("o cliente foi removido");
+    }
 
+    @GetMapping("{id}/cliente")
+    public ResponseEntity<Page<ClienteSimpleDto>> findAllCliente(@PathVariable Long id, Pageable pages) {
+        Page<ClienteSimpleDto> clientesPage = veterinarioService.findAllCliente(id, pages);
+        return ResponseEntity.ok().body(clientesPage);
+    }
+
+    @PutMapping("/{id}/addconsultorio/{idConsultorio}")
+    public ResponseEntity<VeterinarioDto> addConsultorio(@PathVariable Long id, @PathVariable Long idConsultorio) {
+        VeterinarioDto veterinarioDto = veterinarioService.addConsultorio(id, idConsultorio);
+        return ResponseEntity.ok(veterinarioDto);
+    }
+    @DeleteMapping("/{id}/removeconsultorio/{idConsultorio}")
+    public ResponseEntity<String> removeConsultorio(@PathVariable Long id, @PathVariable Long idConsultorio) {
+        veterinarioService.removeConsultorio(id, idConsultorio);
+        return ResponseEntity.ok().body("o consultório foi removido");
+    }
+
+    @GetMapping("{id}/consultorio")
+    public ResponseEntity<Page<ConsultorioSimpleDto>> findAllConsultorio(@PathVariable Long id, Pageable pages) {
+        Page<ConsultorioSimpleDto> consultorio = veterinarioService.findAllConsultorio(id, pages);
+        return ResponseEntity.ok().body(consultorio);
+    }
 }
+
+

@@ -26,14 +26,14 @@ public class VacinaItemService {
     private VacinaItemRepository vacinaItemRepository;
 
     @Autowired
-    private VacinaRepository vacinaRepository;
+    private VacinaService vacinaService;
 
     @Transactional
     public VacinaItemDto insert(VacinaItemDto vacinaItemDto){
         VacinaItem vacinaItem = convertToDto(vacinaItemDto, VacinaItem.class);
 
-        Vacina vacina = vacinaRepository.findById(vacinaItemDto.getVacina().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId()));
+        Vacina vacina = convertToEntity( vacinaService.findById(vacinaItemDto.getVacina().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId())), Vacina.class);
         vacinaItem.setVacina(vacina);
         vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);
@@ -57,8 +57,8 @@ public class VacinaItemService {
         existsById(id);
         VacinaItem vacinaItem = vacinaItemRepository.getReferenceById(id);
 
-        Vacina vacina = vacinaRepository.findById(vacinaItemDto.getVacina().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Vacina Not Found"));
+        Vacina vacina = convertToEntity( vacinaService.findById(vacinaItemDto.getVacina().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId())), Vacina.class);
         vacinaItem.setVacina(vacina);
 
         convertToEntityVoid(vacinaItemDto, vacinaItem);
