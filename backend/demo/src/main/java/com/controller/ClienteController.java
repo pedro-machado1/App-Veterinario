@@ -1,7 +1,11 @@
 package com.controller;
 
+import com.dto.animal.AnimalDto;
+import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
+import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.model.Cliente;
 import com.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,6 +59,22 @@ public class ClienteController {
     public ResponseEntity<String> delete(@PathVariable Long id){
         clientService.delete(id);
         return ResponseEntity.ok().body("o cliente " + id + " foi removido");
+    }
+    @PutMapping("/{id}/addanimal/{idAnimal}")
+    public ResponseEntity<ClienteDto> addCliente(@PathVariable Long id, @PathVariable Long idAnimal) {
+        ClienteDto clienteDto = clientService.addAnimal(id, idAnimal);
+        return ResponseEntity.ok(clienteDto);
+    }
+    @DeleteMapping("/{id}/removeanimal/{idAnimal}")
+    public ResponseEntity<String> removeCliente(@PathVariable Long id, @PathVariable Long idAnimal) {
+        clientService.removeAnimal(id, idAnimal);
+        return ResponseEntity.ok().body("o animal foi removido");
+    }
+
+    @GetMapping("{id}/animal")
+    public ResponseEntity<Page<AnimalSimpleDto>> findAllCliente(@PathVariable Long id, Pageable pages) {
+        Page<AnimalSimpleDto> animalPage = clientService.findAllAnimal(id, pages);
+        return ResponseEntity.ok().body(animalPage);
     }
 
 

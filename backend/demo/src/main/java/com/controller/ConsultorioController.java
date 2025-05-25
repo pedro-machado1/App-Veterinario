@@ -1,7 +1,10 @@
 package com.controller;
 
 import com.dto.consultorio.ConsultorioDto;
+import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
+import com.dto.veterinario.VeterinarioDto;
+import com.dto.veterinario.VeterinarioSimpleDto;
 import com.service.ConsultorioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +41,6 @@ public class ConsultorioController {
         return ResponseEntity.ok(consultorioDto);
     }
 
-
     @GetMapping()
     public ResponseEntity<Page<ConsultorioDto>> findAll(Pageable pages){
         Page<ConsultorioDto> responsePages =consultorioService.findAll(pages);
@@ -53,6 +55,22 @@ public class ConsultorioController {
     public ResponseEntity<String> delete(@PathVariable Long id){
         consultorioService.delete(id);
         return ResponseEntity.ok().body("o consultorio " + id + " foi removido");
+    }
+    @PutMapping("/{id}/addveterinario/{idVeterinario}")
+    public ResponseEntity<ConsultorioDto> addVeterinario(@PathVariable Long id, @PathVariable Long idVeterinario) {
+        ConsultorioDto consultorioDto = consultorioService.addVeterinario(id, idVeterinario);
+        return ResponseEntity.ok(consultorioDto);
+    }
+    @DeleteMapping("/{id}/removeveterinario/{idVeterinario}")
+    public ResponseEntity<String> removeVeterinaro(@PathVariable Long id, @PathVariable Long idVeterinario) {
+        consultorioService.removeVeterinario(id, idVeterinario);
+        return ResponseEntity.ok().body("o consultório foi removido");
+    }
+
+    @GetMapping("{id}/veterinario")
+    public ResponseEntity<Page<VeterinarioSimpleDto>> findAllConsultorio(@PathVariable Long id, Pageable pages) {
+        Page<VeterinarioSimpleDto> veterinario = consultorioService.findAllVeterinario(id, pages);
+        return ResponseEntity.ok().body(veterinario);
     }
 
 

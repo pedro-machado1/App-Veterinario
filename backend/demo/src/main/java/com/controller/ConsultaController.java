@@ -1,6 +1,9 @@
 package com.controller;
 
+import com.dto.animal.AnimalDto;
+import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consulta.ConsultaUpdateDto;
 import com.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,6 @@ import java.lang.module.ResolutionException;
 import java.net.URI;
 import java.util.Optional;
 
-import static com.extras.Converters.convertToDto;
-import static com.extras.Converters.convertToEntity;
-import static org.springframework.web.servlet.function.ServerResponse.created;
 
 @Validated
 @RestController
@@ -60,5 +60,22 @@ public class ConsultaController {
     public ResponseEntity<String> delete(@PathVariable Long id){
         consultaService.delete(id);
         return ResponseEntity.ok().body("o consulta " + id + " foi removido");
+    }
+
+    @PutMapping("/{id}/addanimal/{idAnimal}")
+    public ResponseEntity<ConsultaDto> addAnimal(@PathVariable Long id, @PathVariable Long idAnimal) {
+        ConsultaDto consultaDto = consultaService.addAnimal(id, idAnimal);
+        return ResponseEntity.ok(consultaDto);
+    }
+    @DeleteMapping("/{id}/removeanimal/{idAnimal}")
+    public ResponseEntity<String> removeAnimal(@PathVariable Long id, @PathVariable Long idAnimal) {
+        consultaService.removeAnimal(id, idAnimal);
+        return ResponseEntity.ok().body("o animal foi removido");
+    }
+
+    @GetMapping("{id}/animal")
+    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(@PathVariable Long id, Pageable pages) {
+        Page<AnimalSimpleDto> animal = consultaService.findALlAnimal(id, pages);
+        return ResponseEntity.ok().body(animal);
     }
 }

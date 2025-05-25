@@ -3,7 +3,6 @@ package com.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +25,12 @@ public class Consulta {
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     private List<MedicamentoItem> medicamentoItem;
 
-    @ManyToMany(mappedBy = "consulta")
+    @ManyToMany
+    @JoinTable(
+            name = "tb_consulta_animal",
+            joinColumns = @JoinColumn(name = "consulta_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_id")
+    )
     private List<Animal> animal;
 
     @ManyToOne
