@@ -1,8 +1,8 @@
 package com.security;
 
-import com.repository.UsersRepository;
 import com.security.dto.AuthenticationDto;
 import com.security.dto.RegisterDto;
+import com.security.service.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +21,22 @@ public class AuthController {
 
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDto data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.getLogin(), data.getPassword());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((Users) auth.getPrincipal());
+
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDto registerDto){
-        if(usersRepository.findByLogin(registerDto.getLogin()) != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterDto registerDto){
+        if(usersRepository.findByLogin(registerDto.getLogin()) != null) return ResponseEntity.badRequest().body("Login já cadastrado");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
         Users newUser = new Users(registerDto.getLogin(), encryptedPassword, registerDto.getRole());
