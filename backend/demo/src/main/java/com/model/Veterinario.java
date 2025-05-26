@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -41,7 +40,7 @@ public class Veterinario {
             joinColumns = @JoinColumn(name = "veterinario_id"),
             inverseJoinColumns = @JoinColumn(name = "consultorio_id")
     )
-    private Set<Consultorio> consultorio;
+    private List<Consultorio> consultorio;
 
     @ManyToMany
     @JoinTable(
@@ -49,7 +48,7 @@ public class Veterinario {
             joinColumns = @JoinColumn(name = "veterinario_id"),
             inverseJoinColumns = @JoinColumn(name = "cliente_id")
     )
-    private Set<Cliente> cliente;
+    private List<Cliente> cliente;
 
     @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private List<Observacao> observacao;

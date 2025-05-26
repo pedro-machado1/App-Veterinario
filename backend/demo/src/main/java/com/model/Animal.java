@@ -38,12 +38,7 @@ public class Animal {
 
     private String raca;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tb_animal_cliente",
-            joinColumns = @JoinColumn(name = "animal_id"),
-            inverseJoinColumns = @JoinColumn(name = "cliente_id")
-    )
+    @ManyToMany(mappedBy = "animal")
     private List<Cliente> cliente;
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
@@ -55,12 +50,7 @@ public class Animal {
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
     private List<MedicamentoItem> medicamentoItem;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tb_animal_consulta",
-            joinColumns = @JoinColumn(name = "animal_id"),
-            inverseJoinColumns = @JoinColumn(name = "consulta_id")
-    )
+    @ManyToMany(mappedBy = "animal")
     private List<Consulta> consulta;
 
 

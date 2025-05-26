@@ -45,16 +45,6 @@ public class AnimalUpdateDto {
 
     private int raca;
 
-    private List<MedicamentoItem> medicamentoItem;
-
-    private List<ClienteSimpleDto> cliente;
-
-    private List<ConsultaSimpleDto> consulta;
-
-    private List<VacinaItemSimpleDto> vacinaItem;
-
-    private List<ObservacaoSimpleDto> observacao;
-
 }
 
 

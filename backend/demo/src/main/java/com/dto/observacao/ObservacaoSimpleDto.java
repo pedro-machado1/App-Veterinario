@@ -11,6 +11,4 @@ import lombok.NoArgsConstructor;
 public class ObservacaoSimpleDto {
     private long id;
     private String texto;
-    private VeterinarioSimpleDto veterinario;
-
 }

@@ -26,7 +26,12 @@ public class Consultorio {
 
     private LocalDateTime datadeCadastro;
 
-    @ManyToMany(mappedBy = "consultorio")
+    @ManyToMany
+    @JoinTable(
+            name = "tb_consultorio_veterinario",
+            joinColumns = @JoinColumn(name = "consultorio_id"),
+            inverseJoinColumns = @JoinColumn(name = "veterinario_id")
+    )
     private List<Veterinario> veterinario;
 
 }

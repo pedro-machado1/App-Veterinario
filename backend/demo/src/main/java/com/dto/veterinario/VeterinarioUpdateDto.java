@@ -36,14 +36,5 @@ public class VeterinarioUpdateDto {
 
     private String endereco;
 
-    private ConsultorioDto consultorio;
-
-    private List<ObservacaoDto> observacao;
-
-    private List<MedicamentoDto> medicamento;
-
-    private List<ConsultaDto> consulta;
-
-    private Set<ClienteSimpleDto> cliente;
 
 }

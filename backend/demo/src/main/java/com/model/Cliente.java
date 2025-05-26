@@ -30,13 +30,18 @@ public class Cliente {
 
     private LocalDateTime dataDeAlteracao;
 
-    @ManyToMany (mappedBy = "cliente")
+    @ManyToMany
+    @JoinTable(
+            name = "tb_cliente_animal",
+            joinColumns = @JoinColumn(name = "cliente_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_id")
+    )
     private List<Animal> animal;
 
     @ManyToMany (mappedBy = "cliente")
     private List<Veterinario> veterinario;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente")
     private List<Consulta> consulta;
 
 

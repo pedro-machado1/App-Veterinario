@@ -72,23 +72,6 @@ public class VeterinarioController {
         Page<ClienteSimpleDto> clientesPage = veterinarioService.findAllCliente(id, pages);
         return ResponseEntity.ok().body(clientesPage);
     }
-
-    @PutMapping("/{id}/addconsultorio/{idConsultorio}")
-    public ResponseEntity<VeterinarioDto> addConsultorio(@PathVariable Long id, @PathVariable Long idConsultorio) {
-        VeterinarioDto veterinarioDto = veterinarioService.addConsultorio(id, idConsultorio);
-        return ResponseEntity.ok(veterinarioDto);
-    }
-    @DeleteMapping("/{id}/removeconsultorio/{idConsultorio}")
-    public ResponseEntity<String> removeConsultorio(@PathVariable Long id, @PathVariable Long idConsultorio) {
-        veterinarioService.removeConsultorio(id, idConsultorio);
-        return ResponseEntity.ok().body("o consultório foi removido");
-    }
-
-    @GetMapping("{id}/consultorio")
-    public ResponseEntity<Page<ConsultorioSimpleDto>> findAllConsultorio(@PathVariable Long id, Pageable pages) {
-        Page<ConsultorioSimpleDto> consultorio = veterinarioService.findAllConsultorio(id, pages);
-        return ResponseEntity.ok().body(consultorio);
-    }
 }
 
 
