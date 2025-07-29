@@ -15,7 +15,6 @@ public class Observacao {
 
     private String texto;
 
-
     private LocalDateTime dataCriacao;
 
     private LocalDateTime dataAlteracao;

@@ -1,11 +1,8 @@
 package com.controller;
 
-import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
-import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
-import com.model.Cliente;
 import com.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
