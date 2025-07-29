@@ -1,5 +1,6 @@
-package com.security;
+package com.model;
 
+import com.security.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,12 +22,12 @@ public class Users implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String username;
-    private String login;
+    private String email;
     private String password;
     private Role role;
 
-    public Users (String login, String password, Role role) {
-        this.login = login;
+    public Users (String email, String password, Role role) {
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -39,7 +40,7 @@ public class Users implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 
     @Override
