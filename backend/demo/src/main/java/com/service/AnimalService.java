@@ -32,7 +32,7 @@ public class AnimalService {
     public AnimalDto insert(AnimalDto animalDto){
         Animal animal = convertToEntity(animalDto, Animal.class);
         animal = animalRepository.save(animal);
-        return convertToEntity(animal, AnimalDto.class);
+        return convertToDto(animal, AnimalDto.class);
     }
     @Transactional
     public Optional<AnimalDto> findById(long id){

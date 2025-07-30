@@ -4,6 +4,7 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteUpdateDto;
 import com.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public class ClienteController {
     private ClienteService clientService;
 
     @PostMapping
-    public ResponseEntity<ClienteDto> insert(@Validated @RequestBody ClienteDto cliente) {
+    public ResponseEntity<ClienteDto> insert( @Valid @RequestBody ClienteDto cliente) {
         ClienteDto newClientDto = clientService.insert(cliente);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
