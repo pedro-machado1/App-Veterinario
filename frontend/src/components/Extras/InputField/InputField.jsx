@@ -8,7 +8,7 @@ function InputField({
   name,
   value,
   onChange,
-  required = true,
+  required = false,
   onInvalid,
   idInput,
   Namediv,

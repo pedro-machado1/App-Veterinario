@@ -1,10 +1,11 @@
 import "./NewCliente.css";
 import { useState } from 'react';
-import InputField from "../InputField/InputField"; 
+import InputField from "../../Extras/InputField/InputField"; 
 import axios from "axios";
+import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
+import NewAnimal from "../Animal/NewAnimal";
+import { useNavigate } from "react-router-dom";
 
-
-// formatar value do cpf e telefone
 const NewCliente = () => { 
 
     const [newName, setName] = useState("");
@@ -14,10 +15,13 @@ const NewCliente = () => {
     const [newdataDeNascimento, setdataDeNascimento] = useState("");
     const [newEndereco, setEndereco] = useState("");
     const [newImagem, setImagem] = useState("");
-    const [error, setError] = useState(null);
+    const [previewImg, setPreviewImg] = useState(null);
+    const [Error, setError] = useState(null);
+    const [Success, setSuccess] = useState(null);
     const [isLoading, setIsLoading] =  useState(false);
 
     const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
 
     const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -34,28 +38,34 @@ const NewCliente = () => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (emailRegex.test(email)) {
       setError(null);
+      return true;
     } else {
       setError('Formato de Email Inválido!');
-      return
+      return false;
     }
   }
 
-  const CheckPhone = (phone)=> {
-    const phoneRegex = /^(\(?\d{2}\)?[\s-]?(\d{4,5})[\s-]?(\d{4})|\d{4,5}-\d{4})$/;
-    if (phoneRegex.test(phone)) {
+  const CheckPhone = (phone) => {
+    const onlyDigits = phone.replace(/\D/g, '');
+    if (onlyDigits.length === 10 || onlyDigits.length === 11) {
       setError(null);
-    } else {
+      return true;
+    } 
+    else {
       setError('Formato de Telefone Inválido!');
+      return false;
     }
   }
 
-  const CheckCpf = (cpf)=> {
-    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(cpf)) {
-        setError(null);
+  const CheckCpf = (cpf) => {
+    const onlyDigits = cpf.replace(/\D/g, '');
+    console.log(onlyDigits);
+    if (onlyDigits.length === 11) {
+      setError(null);
+      return true;
     } else {
-        setError('Formato de Cpf Inválido!');
-        return;
+      setError('Formato de Cpf Inválido!');
+      return false;
     }
  }
 
@@ -64,9 +74,10 @@ const NewCliente = () => {
     const inputDate = new Date(date);
     if (inputDate > today) {
       setError('Data de Nascimento não pode ser futura!');
-      return;
+      return false;
     } else {
       setError(null);
+      return true; 
     }
   }
 
@@ -85,33 +96,85 @@ const NewCliente = () => {
         setdataDeNascimento("");
         setEndereco("");
         setImagem("");
+        setPreviewImg(null);
         setError(null);
+        setSuccess(null);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (
+          !CheckCpf(newCpf) ||
+          !CheckEmail(newEmail) ||
+          !CheckPhone(newPhone) ||
+          !CheckDate(newdataDeNascimento)
+        ) return;
+        
         console.log(newName, newCpf, newEmail, newPhone, newdataDeNascimento, newEndereco);
         const newClient = {
             nome: newName,
-            cpf: newCpf.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
+            cpf: parseInt(newCpf.replace(/\D/g, "")),
             email: newEmail,
-            telefone: newPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
+            telefone: parseInt(newPhone.replace(/\D/g, "")),
             dataDeNascimento: newdataDeNascimento,
             endereco: newEndereco
             // imagem: newImagem,
         };
+        if (!document.getElementById("formsNewClient").reportValidity()) {
+            setError("Preencha todos os campos!");
+            return;
+        }
+        setIsLoading(true);
         try {
             const response = await axios.post(
                 `${apiUrl}/api/cliente`, 
                 newClient
             );
             console.log('New Client:', response.data);
-        } catch (error) {
-            console.error('Error creating client:', error);
-        }
-
         handleReset();
+        setSuccess("Cliente adicionado com sucesso!");
+        setIsLoading(false);
+        if (onSubmitSuccess) {
+            onSubmitSuccess();
+        }
+        } catch (err) {
+            setIsLoading(false);
+            console.error(err);
+            if (err.response && err.response.data) {
+                setIsLoading(false);
+                setError(`${err.response.data.message}`);
+            } 
+        }
     };
+
+    function maskCpf(value) {
+        return value
+          .replace(/\D/g, '') 
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      }
+
+    function maskPhone(value) {
+        return value
+          .replace(/\D/g, '')
+          .replace(/(\d{2})(\d)/, '($1) $2')
+          .replace(/(\d{5})(\d)/, '$1-$2')
+          .slice(0, 15); 
+      }
+
+      const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImagem(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImg(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <div className="cliente-container ">
             <h1 className="title">
@@ -145,9 +208,9 @@ const NewCliente = () => {
                         classNameDiv="inputCpf"
                         value={newCpf}
                         onChange={(e) => {
-                            setCpf(e.target.value);
+                             const masked = maskCpf(e.target.value);
+                            setCpf(masked);
                             isValid(e);
-                            CheckCpf(newCpf);
                         }}
                         onInvalid={(e) => isInvalid(e)}
                         required
@@ -163,7 +226,6 @@ const NewCliente = () => {
                         value={newEmail}
                         onChange={(e) => {
                             setEmail(e.target.value);
-                            CheckEmail(newEmail);
                         }}
                         onInvalid={(e) => isInvalid(e)}
                         required
@@ -176,9 +238,9 @@ const NewCliente = () => {
                         classNameDiv="inputPhone"
                         value={newPhone}
                         onChange={(e) => {
-                            setPhone(e.target.value);
+                            const masked = maskPhone(e.target.value);
+                            setPhone(masked);
                             isValid(e);
-                            CheckPhone(newPhone);
                         }}
                         onInvalid={(e) => isInvalid(e)}
                         required
@@ -194,7 +256,6 @@ const NewCliente = () => {
                         onChange={(e) => {
                             setdataDeNascimento(e.target.value);
                             isValid(e);
-                            CheckDate(newdataDeNascimento);
                         }}
                         onInvalid={(e) => isInvalid(e)}
                         required
@@ -216,14 +277,27 @@ const NewCliente = () => {
                     />
                     <InputField
                         label="URL da Imagem"
-                        placeholder={"Digite a URL da imagem do cliente"}
+                        placeholder={"Coloque a Imagem de perfil do cliente"}
                         idInput="newImagem"
                         classNameDiv="inputImagem"
-                        value={newImagem}
-                        onChange={(e) => setImagem(e.target.value)}
+                        type="file"
+                        onChange={handleImageChange}
                     />
-                <div className="error-message">
-                    {error && <p className="error">{error}</p>}
+                    {previewImg && (
+                    <img 
+                      src={previewImg} 
+                      alt="Preview" 
+                      style={{ width: "150px", height: "auto", marginTop: "10px" }} 
+                    />
+                  ) }
+                  <button className="NovoAnimal" 
+                  type="button" 
+                  onClick={() => navigate('/newAnimal')}>
+                  Adicionar Animal</button>
+
+                <div className="errorsOrSuccess">
+                    <p style={{ color: "red" }}>{Error && Error}</p>
+                    <p style={{ color: "green" }}>{Success && Success}</p>
                 </div>
                     <button 
                     type="submit" 
@@ -239,6 +313,7 @@ const NewCliente = () => {
                     Cancelar
                 </button>
             </form>
+            {isLoading && <LoadingSpin/>}
         </div>
     );
 };

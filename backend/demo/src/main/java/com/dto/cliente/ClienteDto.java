@@ -24,8 +24,8 @@ public class ClienteDto {
     @NotNull(message = "Informe o id")
     private long id;
     
-    @NotNull(message = "Informe o seu CPF")
-    private int cpf;
+    @NotBlank(message = "Informe o seu CPF")
+    private String cpf;
 
     @NotBlank(message = "Informe o seu nome")
     private String nome;

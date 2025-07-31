@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ClienteUpdateDto {
 
-    private int cpf;
+    private String cpf;
 
     private String nome;
 
