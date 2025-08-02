@@ -14,6 +14,7 @@ const NewConsulta = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   
   const isInvalid = (e) => e.target.classList.add("isInvalid");
+  
   const isValid = (e) => {
     if (e.target.value && e.target.classList.contains("isInvalid")) {
       e.target.classList.remove("isInvalid");
@@ -41,7 +42,6 @@ const NewConsulta = () => {
     const newConsulta = {
       titulo,
       texto
-      // dataCriacao, dataAlteracao, and veterinario can be handled automatically server-side.
     };
     setIsLoading(true);
     try {

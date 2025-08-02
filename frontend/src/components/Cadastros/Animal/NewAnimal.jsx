@@ -2,14 +2,14 @@ import "./NewAnimal.css";
 import { useState } from "react";
 import InputField from "../../Extras/InputField/InputField"; 
 import axios from "axios";
+import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin.jsx";
 
 // arrumar
-const NewAnimal = () => { 
-    // States according to your DTO
+const NewAnimal = (Cliente) => { 
     const [nome, setNome] = useState("");
     const [especie, setEspecie] = useState("");
     const [idade, setIdade] = useState("");
-    const [genero, setGenero] = useState(""); // Use a select below to choose a value
+    const [genero, setGenero] = useState(""); 
     const [altura, setAltura] = useState("");
     const [comprimento, setComprimento] = useState("");
     const [peso, setPeso] = useState("");
@@ -35,8 +35,8 @@ const NewAnimal = () => {
     };
 
     const handleReset = () => {
-      const form = document.getElementById("formsNewAnimal");
-      const elements = form.getElementsByClassName("isInvalid");
+      let form = document.getElementById("formsNewAnimal");
+      let elements = form.getElementsByClassName("isInvalid");
       while (elements.length > 0) {
         elements[0].classList.remove("isInvalid");
       }
@@ -57,7 +57,6 @@ const NewAnimal = () => {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      // Basic validation could be added here or rely on HTML's reportValidity
       if (!document.getElementById("formsNewAnimal").reportValidity()) {
         setError("Preencha todos os campos!");
         return;
@@ -212,22 +211,7 @@ const NewAnimal = () => {
             />
           </div>
           <div className="line4">
-            <InputField
-              label="Descrição (Texto)"
-              placeholder="Alguma informação adicional"
-              name="texto"
-              idInput="newTexto"
-              classNameDiv="inputTexto"
-              value={texto}
-              onChange={(e) => {
-                setTexto(e.target.value);
-                isValid(e);
-              }}
-              onInvalid={(e) => isInvalid(e)}
-              required
-            />
-          </div>
-          <div className="line5">
+            
             <InputField
               label="Doença"
               placeholder="Informe a doença"
@@ -263,6 +247,22 @@ const NewAnimal = () => {
               value={raca}
               onChange={(e) => {
                 setRaca(e.target.value);
+                isValid(e);
+              }}
+              onInvalid={(e) => isInvalid(e)}
+              required
+            />
+          </div>
+          <div className="line5">
+            <InputField
+              label="Notas Adicionais"
+              placeholder="Alguma informação adicional"
+              name="texto"
+              idInput="newTexto"
+              classNameDiv="inputTexto"
+              value={texto}
+              onChange={(e) => {
+                setTexto(e.target.value);
                 isValid(e);
               }}
               onInvalid={(e) => isInvalid(e)}

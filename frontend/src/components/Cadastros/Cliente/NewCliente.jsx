@@ -59,7 +59,6 @@ const NewCliente = () => {
 
   const CheckCpf = (cpf) => {
     const onlyDigits = cpf.replace(/\D/g, '');
-    console.log(onlyDigits);
     if (onlyDigits.length === 11) {
       setError(null);
       return true;
@@ -134,9 +133,6 @@ const NewCliente = () => {
         handleReset();
         setSuccess("Cliente adicionado com sucesso!");
         setIsLoading(false);
-        if (onSubmitSuccess) {
-            onSubmitSuccess();
-        }
         } catch (err) {
             setIsLoading(false);
             console.error(err);
@@ -221,6 +217,7 @@ const NewCliente = () => {
                         label="E-mail"
                         placeholder={"Digite o e-mail do cliente"}
                         name={"email"}
+                        type="email"
                         idInput="newEmail"
                         classNameDiv="inputEmail"
                         value={newEmail}

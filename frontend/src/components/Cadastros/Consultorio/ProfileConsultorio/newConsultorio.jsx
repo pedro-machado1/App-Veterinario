@@ -1,9 +1,18 @@
+// fzr parte do perfil para concluir essa parte pois checaremos o id para ver se 
+// ele está na conta do consultorio com o id do perfil faremos adicionaremos o veterinario;
+
+
+// fzr update possivel
+
+// tela de visualização do consultório
+
+
 import "./newConsultorio.css";
 import { useState } from "react";
-import InputField from "../../Extras/InputField/InputField";
+import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
-import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
-import NewVeterinario from "../Veterinario/newVeterinario";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
+import NewVeterinario from "../../../Cadastros/Veterinario/addVeterinario/newVeterinario.jsx";
 
 const NewConsultorio = () => {
   const [nome, setNome] = useState("");
@@ -23,7 +32,7 @@ const NewConsultorio = () => {
       e.target.classList.remove("isInvalid");
     }
   };
-  
+
   const handleReset = () => {
     const form = document.getElementById("formsNewConsultorio");
     const elements = form.getElementsByClassName("isInvalid");
@@ -37,7 +46,7 @@ const NewConsultorio = () => {
     setError(null);
     setSuccess(null);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!document.getElementById("formsNewConsultorio").reportValidity()) {
@@ -48,7 +57,8 @@ const NewConsultorio = () => {
       nome,
       endereco,
       telefone,
-      descricao
+      descricao,
+      veterinario  
     };
     setIsLoading(true);
     try {
@@ -65,7 +75,9 @@ const NewConsultorio = () => {
       }
     }
   };
+
   
+
   return (
     <div className="consultorio-container">
       <h1 className="title">Registre um consultório</h1>
@@ -77,7 +89,7 @@ const NewConsultorio = () => {
           idInput="newNome"
           classNameDiv="inputNome"
           value={nome}
-          onChange={(e)=> { setNome(e.target.value); isValid(e); }}
+          onChange={(e)=> { setNome(e.target.value); isValid(e);}}
           onInvalid={(e)=> isInvalid(e)}
           required
         />
@@ -118,12 +130,11 @@ const NewConsultorio = () => {
         <button 
           type="button" 
           id="newVeterinarioButton"
-          className="cadastrarVeterinario" 
+          className="cadastrarVeterinario"
           onClick={() => setShowVeterinario(true)}
         >
           Novo Veterinário
         </button>
-        {showVeterinario && <div id="targetElement"><NewVeterinario /></div>}
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>
           <p style={{ color: "green" }}>{Success && Success}</p>
@@ -131,6 +142,13 @@ const NewConsultorio = () => {
         <button type="submit" className="submit">Enviar</button>
         <button type="reset" className="cancelar" onClick={handleReset}>Cancelar</button>
       </form>
+      {showVeterinario && (
+        <div id="targetElement">
+          <NewVeterinario 
+            onClose={() => setShowVeterinario(false)}
+          />
+        </div>
+      )}
       {isLoading && <LoadingSpin />}
     </div>
   );
