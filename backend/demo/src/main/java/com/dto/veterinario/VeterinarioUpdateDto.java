@@ -21,11 +21,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VeterinarioUpdateDto {
-    private int cpf;
+    private String cpf;
 
     private String nome;
 
-    private int CRVM;
+    private String CRVM;
 
     @Enumerated(EnumType.STRING)
     private Estado estado;

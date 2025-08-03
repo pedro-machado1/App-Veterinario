@@ -5,6 +5,7 @@ import com.enums.Estado;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -17,7 +18,7 @@ public class Veterinario {
 
     private String cpf;
 
-    private int CRVM;
+    private String CRVM;
 
     private String nome;
 
@@ -29,6 +30,8 @@ public class Veterinario {
     private Estado estado;
 
     private String endereco;
+
+    private LocalDate dataDeNascimento;
 
 
     @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)

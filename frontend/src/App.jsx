@@ -1,28 +1,39 @@
 import { useState } from 'react'
 import './App.css'
+import './assets/css/buttoms.css'
+import "./assets/css/text.css"
+import NewAnimal from './components/Cadastros/Animal/NewAnimal.jsx'
+import NewCliente from './components/Cadastros/Cliente/NewCliente.jsx'
+import NewConsulta from './components/Cadastros/Consulta/newConsulta.jsx'
+import NewConsultorio from './components/Cadastros/Consultorio/ProfileConsultorio/newConsultorio.jsx'
+import NewMedicamento from './components/Cadastros/Medicamento/newMedicamento.jsx'
+import NewMedicamentoItem from './components/Cadastros/MedicamentoItem/NewMedicamentoItem.jsx'
+import NewVacina from './components/Cadastros/Vacina/newVacina.jsx'
+import NewVacinaItem from './components/Cadastros/VacinaItem/newVacinaitem.jsx'
+import NewVeterinario from './components/Cadastros/Veterinario/addVeterinario/newVeterinario.jsx'
+import LoginComponents from './pages/Login/LoginComponents.jsx'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://react.dev" target="_blank">
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginComponents />} />
+      </Routes>
+      <Routes>
+        <Route path="/newConsulta" element={<NewConsulta />} />
+        <Route path="/newAnimal" element={<NewAnimal />} />
+        <Route path="/newCliente" element={<NewCliente />} />
+        <Route path="/newConsultorio" element={<NewConsultorio />} />
+        <Route path="/newMedicamento" element={<NewMedicamento />} />
+        <Route path="/newMedicamentoItem" element={<NewMedicamentoItem />} />
+        <Route path="/newVacina" element={<NewVacina />} />
+        <Route path="/newVacinaItem" element={<NewVacinaItem />} />
+        <Route path="/newVeterinario" element={<NewVeterinario />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

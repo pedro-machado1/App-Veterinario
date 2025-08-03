@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClienteSimpleDto {
         private long id;
-        private int cpf;
+        private String cpf;
         private String nome;
 
     }

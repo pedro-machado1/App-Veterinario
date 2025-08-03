@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -16,7 +17,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private int cpf;
+    private String cpf;
 
     private String nome;
 
@@ -26,9 +27,11 @@ public class Cliente {
 
     private String telefone;
 
-    private LocalDateTime dataDeCriacao;
+    private LocalDate dataDeNascimento;
 
-    private LocalDateTime dataDeAlteracao;
+    private LocalDate dataDeCriacao;
+
+    private LocalDate dataDeAlteracao;
 
     @ManyToMany
     @JoinTable(

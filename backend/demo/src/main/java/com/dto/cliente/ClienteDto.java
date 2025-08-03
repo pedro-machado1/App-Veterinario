@@ -10,8 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,8 +24,8 @@ public class ClienteDto {
     @NotNull(message = "Informe o id")
     private long id;
     
-    @NotNull(message = "Informe o seu CPF")
-    private int cpf;
+    @NotBlank(message = "Informe o seu CPF")
+    private String cpf;
 
     @NotBlank(message = "Informe o seu nome")
     private String nome;
@@ -36,9 +38,15 @@ public class ClienteDto {
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
 
-    private LocalDateTime dataDeCriacao;
+    @NotNull(message = "Informe a sua data de nascimento")
+    private LocalDate dataDeNascimento;
 
-    private LocalDateTime dataDeAlteracao;
+//    @NotBlank
+//    private Image imagem;
+
+    private LocalDate dataDeCriacao;
+
+    private LocalDate dataDeAlteracao;
 
     private List<AnimalSimpleDto> animal;
 

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -25,13 +26,13 @@ public class VeterinarioDto {
     private long id;
 
     @NotNull(message = "Informe o CPF de veterinario")
-    private int cpf;
+    private String cpf;
 
     @NotBlank(message = "Informe o nome")
     private String nome;
 
-    @NotNull(message = "Informe o CRVM")
-    private int CRVM;
+    @NotBlank(message = "Informe o CRVM")
+    private String CRVM;
 
     @NotNull(message = "Informe o estado em atual")
     @Enumerated(EnumType.STRING)
@@ -43,7 +44,11 @@ public class VeterinarioDto {
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
 
+    @NotNull(message = "Informe a sua data de nascimento")
+    private LocalDate dataDeNascimento;
+
     private String endereco;
+
 
     private List<ConsultorioSimpleDto> consultorio;
 

@@ -18,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ public class ClienteService {
     @Transactional
     public ClienteDto insert(ClienteDto clienteDTO){
         Cliente cliente= convertToEntity(clienteDTO, Cliente.class);
-        cliente.setDataDeCriacao(LocalDateTime.now());
+        cliente.setDataDeCriacao(LocalDate.now());
         cliente = clienteRepository.save(cliente);
         return convertToDto(cliente, ClienteDto.class);
     }
@@ -58,7 +58,7 @@ public class ClienteService {
     public ClienteDto update(Long id, ClienteUpdateDto clienteDto){
         existsById(id);
         Cliente cliente = clienteRepository.getReferenceById(id);
-        cliente.setDataDeAlteracao(LocalDateTime.now());
+        cliente.setDataDeAlteracao(LocalDate.now());
         convertToEntityVoid(clienteDto, cliente);
         cliente = clienteRepository.save(cliente);
         return convertToDto(cliente, ClienteDto.class);
