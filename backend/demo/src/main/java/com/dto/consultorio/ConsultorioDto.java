@@ -2,6 +2,7 @@ package com.dto.consultorio;
 
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.Users;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,4 +38,6 @@ public class ConsultorioDto {
     private LocalDateTime dataDeCadastro;
 
     private List<VeterinarioSimpleDto> veterinario;
+
+    private Users users;
 }

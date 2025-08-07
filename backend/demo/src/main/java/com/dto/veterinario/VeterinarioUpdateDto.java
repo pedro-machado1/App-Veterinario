@@ -25,7 +25,7 @@ public class VeterinarioUpdateDto {
 
     private String nome;
 
-    private String CRVM;
+    private String crvm;
 
     @Enumerated(EnumType.STRING)
     private Estado estado;

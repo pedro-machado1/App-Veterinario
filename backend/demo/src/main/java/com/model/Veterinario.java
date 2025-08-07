@@ -18,7 +18,7 @@ public class Veterinario {
 
     private String cpf;
 
-    private String CRVM;
+    private String crvm;
 
     private String nome;
 
@@ -55,4 +55,7 @@ public class Veterinario {
 
     @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private List<Observacao> observacao;
+//
+//    @OneToOne(mappedBy = "veterinario", cascade = CascadeType.ALL)
+//    private Users users;
 }

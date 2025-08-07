@@ -21,10 +21,26 @@ public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private String username;
+
     private String email;
+
     private String password;
+
     private Role role;
+
+//    @OneToOne
+//    @MapsId
+//    private Veterinario veterinario;
+//
+//    @OneToOne
+//    @MapsId
+//    private Cliente cliente;
+//
+//    @OneToOne
+//    @MapsId
+//    private Consultorio consultorio;
 
     public Users (String email, String password, Role role) {
         this.email = email;

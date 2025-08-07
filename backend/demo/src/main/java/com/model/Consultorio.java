@@ -26,6 +26,9 @@ public class Consultorio {
 
     private LocalDateTime datadeCadastro;
 
+//    @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
+//    private Users users;
+
     @ManyToMany
     @JoinTable(
             name = "tb_consultorio_veterinario",
@@ -33,5 +36,6 @@ public class Consultorio {
             inverseJoinColumns = @JoinColumn(name = "veterinario_id")
     )
     private List<Veterinario> veterinario;
+
 
 }

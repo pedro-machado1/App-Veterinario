@@ -7,6 +7,7 @@ import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.observacao.ObservacaoSimpleDto;
 import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.Users;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -25,14 +26,14 @@ public class VeterinarioDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
-    @NotNull(message = "Informe o CPF de veterinario")
+    @NotBlank(message = "Informe o CPF de veterinario")
     private String cpf;
 
     @NotBlank(message = "Informe o nome")
     private String nome;
 
     @NotBlank(message = "Informe o CRVM")
-    private String CRVM;
+    private String crvm;
 
     @NotNull(message = "Informe o estado em atual")
     @Enumerated(EnumType.STRING)
@@ -43,9 +44,9 @@ public class VeterinarioDto {
 
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
-
-    @NotNull(message = "Informe a sua data de nascimento")
-    private LocalDate dataDeNascimento;
+//
+//    @NotNull(message = "Informe a sua data de nascimento")
+//    private LocalDate dataDeNascimento;
 
     private String endereco;
 
@@ -59,4 +60,6 @@ public class VeterinarioDto {
     private List<ConsultaSimpleDto> consulta;
 
     private List<ClienteSimpleDto> cliente;
+
+    private Users users;
 }
