@@ -109,7 +109,6 @@ const NewCliente = () => {
           !CheckDate(newdataDeNascimento)
         ) return;
         
-        console.log(newName, newCpf, newEmail, newPhone, newdataDeNascimento, newEndereco);
         const newClient = {
             nome: newName,
             cpf: parseInt(newCpf.replace(/\D/g, "")),

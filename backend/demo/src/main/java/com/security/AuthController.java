@@ -2,11 +2,9 @@ package com.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.dto.Usersdto;
 import com.model.Users;
 import com.security.dto.AuthenticationDto;
 import com.security.dto.Newpassword;
-import com.security.dto.RegisterDto;
 import com.security.service.AuthenticationService;
 import com.security.service.TokenService;
 import jakarta.servlet.http.Cookie;
@@ -21,7 +19,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
@@ -104,12 +101,13 @@ public class AuthController {
     }
 
 
+    // só para cliente
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid RegisterDto registerDto){
+    public ResponseEntity<String> register(@RequestBody @Valid AuthenticationDto registerDto){
         if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
-        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, registerDto.getRole());
+        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CLIENTE);
 
         usersRepository.save(newUser);
         return ResponseEntity.ok().build();

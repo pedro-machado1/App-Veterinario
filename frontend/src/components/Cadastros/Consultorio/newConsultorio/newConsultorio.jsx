@@ -9,10 +9,10 @@
 
 import "./newConsultorio.css";
 import { useState } from "react";
-import InputField from "../../../Extras/InputField/InputField";
+import InputField from "../../../Extras/InputField/InputField.jsx";
 import axios from "axios";
-import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
-import NewVeterinario from "../../../Cadastros/Veterinario/addVeterinario/newVeterinario.jsx";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import NewVeterinario from "../../Veterinario/addVeterinario/newVeterinario.jsx";
 
 const NewConsultorio = () => {
   const [nome, setNome] = useState("");
