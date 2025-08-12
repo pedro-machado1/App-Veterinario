@@ -47,12 +47,12 @@ public class AuthenticationService implements UserDetailsManager {
 
     public void requestNewPassword(String email){
         Users user = usersRepository.findByEmail(email);
-        String token = tokenService.generateAccessToken(user.getId());
+        String token = tokenService.generateResetPasswordToken(user.getId());
         emailService.sendEmail(email, token);
     }
 
     public void resetPassword(String token, String newPassword){
-        tokenService.validateAccessToken(token);
+        tokenService.validateResetPasswordToken(token);
         long id = Long.parseLong(tokenService.getSubjectFromToken(token));
         Optional<Users> usersOptional = usersRepository.findById(id);
 

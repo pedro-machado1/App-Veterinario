@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import './assets/css/buttoms.css'
 import "./assets/css/text.css"
@@ -13,21 +12,22 @@ import NewVacinaItem from './components/Cadastros/VacinaItem/newVacinaitem.jsx'
 import NewVeterinario from './components/Cadastros/Veterinario/addVeterinario/newVeterinario.jsx'
 import RegisterComponent from './components/Security/Register/RegisterComponent.jsx'
 import LoginComponents from './components/Security/Login/LoginComponents.jsx'
+import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <BrowserRouter> 
       <Routes>
-        <Route path = '/reset-password' element= {<ResetPassword/>} />
+        <Route path = "/forgot-password" element = {<ForgotPasswordComponents/>} />
+        <Route path = "/reset-password" element= {<ResetPassword/>} />
         <Route path="/login" element={<LoginComponents />} />
+        <Route path ="/register" element = {<RegisterComponent/>}/> 
         <Route path="/newConsulta" element={<NewConsulta />} />
         <Route path="/newAnimal" element={<NewAnimal />} />
         <Route path="/newCliente" element={<NewCliente />} />
-        <Route path ="/register" element = {<RegisterComponent/>}/> 
         <Route path="/newConsultorio" element={<NewConsultorio />} />
         <Route path="/newMedicamento" element={<NewMedicamento />} />
         <Route path="/newMedicamentoItem" element={<NewMedicamentoItem />} />

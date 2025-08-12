@@ -20,7 +20,7 @@ public class EmailService {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime agora = LocalDateTime.now().plusMinutes(15);
 
-        String link = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        String link = "http://localhost:5173/reset-password?token=" + token;
         String subject ="Recuperação de senha";
         String body = "Olá, " + to + " Você tem até" + agora.format(formatador) + " para redefinir a sua senha.\n\n" +
                 "Clique no link abaixo para confirmar seu email:\n\n" +

@@ -88,8 +88,8 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody String email){
-        authenticationService.requestNewPassword(email);
+    public ResponseEntity<String> forgotPassword(@RequestBody AuthenticationDto dto){
+        authenticationService.requestNewPassword(dto.getEmail());
         return ResponseEntity.ok("Email enviado com sucesso. Verifique sua caixa de entrada para recuperar a senha.");
     }
 
