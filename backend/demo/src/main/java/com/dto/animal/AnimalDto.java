@@ -43,8 +43,6 @@ public class AnimalDto {
 
     private int peso;
 
-    private String texto;
-
     private String doenca;
 
     private String alergia;

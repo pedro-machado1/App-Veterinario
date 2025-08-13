@@ -30,10 +30,12 @@ public class AuthController {
 
     @Autowired
     private UsersRepository usersRepository;
+
     @Autowired
     private TokenService tokenService;
     @Autowired
     private AuthenticationService authenticationService;
+
     @Autowired
     private UsersRepository userRepository;
 
@@ -99,7 +101,6 @@ public class AuthController {
         return ResponseEntity.ok("Senha alterada com sucesso.");
 
     }
-
 
     // só para cliente
     @PostMapping("/register")

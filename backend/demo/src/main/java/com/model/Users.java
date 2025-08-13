@@ -34,10 +34,9 @@ public class Users implements UserDetails {
 //    @MapsId
 //    private Veterinario veterinario;
 //
-//    @OneToOne
-//    @MapsId
-//    private Cliente cliente;
-//
+    @OneToOne
+    private Cliente cliente;
+
 //    @OneToOne
 //    @MapsId
 //    private Consultorio consultorio;

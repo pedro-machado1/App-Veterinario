@@ -30,8 +30,6 @@ public class Animal {
 
     private int peso;
 
-    private String texto;
-
     private String doenca;
 
     private String alergia;

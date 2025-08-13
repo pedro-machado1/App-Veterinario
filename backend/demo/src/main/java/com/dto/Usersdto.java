@@ -1,5 +1,6 @@
 package com.dto;
 
+import com.dto.cliente.ClienteDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.security.Role;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,6 @@ public class Usersdto {
     private String password;
 
     private Role role;
+
+    private ClienteDto cliente;
 }

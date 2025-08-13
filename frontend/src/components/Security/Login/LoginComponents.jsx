@@ -2,12 +2,14 @@ import React from 'react';
 import axios from "axios";
 import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const LoginComponents = () => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
+
+    const navigate = useNavigate()
 
     const [newemail, setEmail] = useState('');
     const [newpassword, setPassword] = useState('');
@@ -75,9 +77,11 @@ const LoginComponents = () => {
                 loginData,
             );
             console.log("Dados", response.data);
+            localStorage.setItem('authToken', response.data);
             HandleReset();
             setSucess("Login realizado com Sucesso")
             setIsLoading(false)
+            navigate('/newCliente')
         } catch (err) {
             setIsLoading(false)
             HandleReset();
