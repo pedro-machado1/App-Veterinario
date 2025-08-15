@@ -1,5 +1,7 @@
 package com.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
@@ -9,6 +11,7 @@ import com.model.Animal;
 import com.model.Cliente;
 import com.repository.AnimalRepository;
 import com.repository.ClienteRepository;
+import com.security.UsersRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,6 @@ import java.util.Optional;
 
 import static com.extras.Converters.*;
 
-// Fazer exception;
 @Service
 public class ClienteService {
     @Autowired
@@ -33,12 +35,18 @@ public class ClienteService {
     @Autowired
     private AnimalService animalService;
 
+    @Autowired
+    private UsersService usersService;
+
+
     @Transactional
-    public ClienteDto insert(ClienteDto clienteDTO){
+    public ClienteDto insert(ClienteDto clienteDTO, String token){
         Cliente cliente= convertToEntity(clienteDTO, Cliente.class);
         cliente.setDataDeCriacao(LocalDate.now());
         cliente = clienteRepository.save(cliente);
-        return convertToDto(cliente, ClienteDto.class);
+        clienteDTO = convertToDto(cliente, ClienteDto.class);
+        usersService.addCliente(token, clienteDTO);
+        return clienteDTO;
     }
 
     @Transactional(readOnly = true)

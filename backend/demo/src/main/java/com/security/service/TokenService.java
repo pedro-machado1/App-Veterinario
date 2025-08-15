@@ -4,72 +4,95 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.model.Users;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret}")
-    private String secret;
+    @Value("${api.security.token.refresh}")
+    private String refreshToken;
+
+    @Value("${api.security.token.access}")
+    private String accessToken;
+
+    @Value("${api.security.token.reset}")
+    private String resetTokenSecret;
 
     private Instant lastPasswordChange;
 
-    public String generateToken(Users user){
+    public String generateRefreshToken(long id){
+        long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 30; // 30 dias
         try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create()
+            Algorithm algorithm = Algorithm.HMAC256(refreshToken);
+            return JWT.create()
+                    .withSubject(String.valueOf(id))
                     .withIssuer("API Veterinario")
-                    .withSubject(user.getEmail())
-                    .withExpiresAt(generateExpirationDate())
+                    .withIssuedAt(new Date(System.currentTimeMillis()))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                     .sign(algorithm);
-            return token;
         }catch (JWTCreationException exception){
             throw new RuntimeException("Erro ao gerar token JWT", exception);
-        }catch (TokenExpiredException exception){
-            throw new RuntimeException("Token expirado", exception);
         }
     }
 
-    public String validateToken(String token){
-        try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-             return JWT.require(algorithm)
-                    .withIssuer("API Veterinario")
-                    .build()
-                     .verify(token)
-                     .getSubject();
-
-        }catch (JWTVerificationException exception){
-            throw new RuntimeException("Token JWT inválido", exception);
-        }
+    public DecodedJWT validateRefreshToken(String token) throws JWTVerificationException {
+        Algorithm algorithm = Algorithm.HMAC256(refreshToken);
+        return JWT.require(algorithm)
+                .withIssuer("API Veterinario")
+                .build()
+                .verify(token);
     }
 
-    public String generateTokenWithEmail(String email){
+    public String generateAccessToken(long id){
+        long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutos
         try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create()
+            Algorithm algorithm = Algorithm.HMAC256(accessToken);
+            return JWT.create()
+                    .withSubject(String.valueOf(id))
                     .withIssuer("API Veterinario")
-                    .withSubject(email)
-                    .withExpiresAt(generateExpirationDate())
+                    .withIssuedAt(new Date(System.currentTimeMillis()))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                     .sign(algorithm);
-            return token;
-        }catch (JWTCreationException exception){
-            throw new RuntimeException("Erro ao gerar token JWT", exception);
-        }catch (TokenExpiredException exception){
-            throw new RuntimeException("Token expirado", exception);
+        }catch (JWTCreationException e){
+            throw new RuntimeException("Erro ao gerar token JWT", e);
         }
     }
 
-    private Instant generateExpirationDate(){
-        return LocalDateTime.now(ZoneOffset.UTC).plusHours(2).toInstant(ZoneOffset.UTC);
+    public DecodedJWT validateAccessToken(String token){
+        Algorithm algorithm = Algorithm.HMAC256(accessToken);
+        return JWT.require(algorithm)
+                .withIssuer("API Veterinario")
+                .build()
+                .verify(token);}
+
+    public String generateResetPasswordToken(long id) {
+        long RESET_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutos
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(resetTokenSecret);
+            return JWT.create()
+                    .withSubject(String.valueOf(id))
+                    .withIssuer("API Veterinario")
+                    .withIssuedAt(new Date(System.currentTimeMillis()))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + RESET_TOKEN_EXPIRATION))
+                    .sign(algorithm);
+        } catch (JWTCreationException e) {
+            throw new RuntimeException("Erro ao gerar token JWT de reset de senha", e);
+        }
+    }
+
+    // Novo: validar token de reset de senha (escopo/tipo específicos)
+    public DecodedJWT validateResetPasswordToken(String token) throws JWTVerificationException {
+        Algorithm algorithm = Algorithm.HMAC256(resetTokenSecret);
+        return JWT.require(algorithm)
+                .withIssuer("API Veterinario")
+                .build()
+                .verify(token);
     }
 
     public String getSubjectFromToken(String token) {

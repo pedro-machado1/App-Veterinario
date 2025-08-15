@@ -5,6 +5,7 @@ import axios from "axios";
 import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
 import NewAnimal from "../Animal/NewAnimal";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const NewCliente = () => { 
 
@@ -109,7 +110,6 @@ const NewCliente = () => {
           !CheckDate(newdataDeNascimento)
         ) return;
         
-        console.log(newName, newCpf, newEmail, newPhone, newdataDeNascimento, newEndereco);
         const newClient = {
             nome: newName,
             cpf: parseInt(newCpf.replace(/\D/g, "")),
@@ -121,12 +121,13 @@ const NewCliente = () => {
         };
         if (!document.getElementById("formsNewClient").reportValidity()) {
             setError("Preencha todos os campos!");
-            return;
+            return; 
         }
         setIsLoading(true);
+        let token =localStorage.getItem('authToken')
         try {
             const response = await axios.post(
-                `${apiUrl}/api/cliente`, 
+                `${apiUrl}/api/cliente?token=${token}`, 
                 newClient
             );
             console.log('New Client:', response.data);

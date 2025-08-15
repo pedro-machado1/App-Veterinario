@@ -4,6 +4,7 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.Users;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -53,5 +54,7 @@ public class ClienteDto {
     private List<VeterinarioSimpleDto> veterinario;
 
     private List<ConsultaSimpleDto> consulta;
+
+    private Users users;
 
 }

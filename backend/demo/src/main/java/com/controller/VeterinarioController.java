@@ -26,7 +26,7 @@ public class VeterinarioController {
     private VeterinarioService veterinarioService;
 
     @PostMapping
-    public ResponseEntity<VeterinarioDto> insert(@Validated @RequestBody VeterinarioDto veterinariodto){
+    public ResponseEntity<VeterinarioDto> insert( @RequestBody VeterinarioDto veterinariodto){
         VeterinarioDto veterinario = veterinarioService.insert(veterinariodto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
