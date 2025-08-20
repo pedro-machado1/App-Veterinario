@@ -95,7 +95,7 @@ const RegisterComponent = () => {
             setIsLoading(false)
             setTimeout(() => {
             }, 4000)
-            navigate('/newClient') 
+            navigate('/newCliente') 
 
         } catch (err) {
             setIsLoading(false)

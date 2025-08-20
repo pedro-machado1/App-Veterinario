@@ -3,13 +3,17 @@ package com.controller;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.security.SecurityFilter;
 import com.service.ClienteService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,10 +30,12 @@ public class ClienteController {
     @Autowired
     private ClienteService clientService;
 
-    @PostMapping
-    public ResponseEntity<ClienteDto> insert(@Valid @RequestBody ClienteDto cliente, @RequestParam String token) throws Exception {
+    @Autowired
+    private SecurityFilter securityFilter;
 
-        ClienteDto newClientDto = clientService.insert(cliente, token);
+    @PostMapping
+    public ResponseEntity<ClienteDto> insert(@Valid @RequestBody ClienteDto cliente, HttpServletRequest request) throws Exception {
+        ClienteDto newClientDto = clientService.insert(cliente);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

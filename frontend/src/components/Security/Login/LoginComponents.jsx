@@ -81,7 +81,7 @@ const LoginComponents = () => {
             HandleReset();
             setSucess("Login realizado com Sucesso")
             setIsLoading(false)
-            navigate('/newCliente')
+            navigate('/mainPage')
         } catch (err) {
             setIsLoading(false)
             HandleReset();

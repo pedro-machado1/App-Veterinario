@@ -2,6 +2,7 @@ package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.users.UsersSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Users;
@@ -31,15 +32,12 @@ public class ClienteDto {
     @NotBlank(message = "Informe o seu nome")
     private String nome;
 
-    @NotNull(message = "Informe o seu email")
-    private String email;
-
     @NotBlank(message = "Informe o seu endereço")
     private String endereco;
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
 
-    @NotNull(message = "Informe a sua data de nascimento")
+//    @NotNull(message = "Informe a sua data de nascimento")
     private LocalDate dataDeNascimento;
 
 //    @NotBlank
@@ -55,6 +53,6 @@ public class ClienteDto {
 
     private List<ConsultaSimpleDto> consulta;
 
-    private Users users;
+    private UsersSimpleDto users;
 
 }

@@ -1,4 +1,4 @@
-package com.dto;
+package com.dto.users;
 
 import com.dto.cliente.ClienteDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,6 +14,8 @@ public class Usersdto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
+
+    private String username;
 
     private String email;
 

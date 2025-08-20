@@ -38,7 +38,6 @@ public class AuthController {
 
     @Autowired
     private UsersRepository userRepository;
-
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid AuthenticationDto data, HttpServletResponse response) {
         try {
@@ -56,36 +55,16 @@ public class AuthController {
             refreshTokenCookie.setMaxAge(60 * 60 * 24 * 30);
             response.addCookie(refreshTokenCookie);
 
-            return ResponseEntity.ok(accessToken);
-        }catch (AuthenticationCredentialsNotFoundException e){
+            Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+            accessTokenCookie.setHttpOnly(true);
+            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setPath("/");
+            accessTokenCookie.setMaxAge(60* 15);
+            response.addCookie(accessTokenCookie);
+
+            return ResponseEntity.ok().build();
+        } catch (AuthenticationCredentialsNotFoundException e) {
             throw new AuthenticationCredentialsNotFoundException("Email ou senha inválidos");
-        }
-
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<String> refresh(HttpServletRequest request) {
-        String refreshToken = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        if (refreshToken == null) {
-            return ResponseEntity.status(403).body("Refresh token não encontrado");
-        }
-
-        try {
-            DecodedJWT decodedJWT = tokenService.validateRefreshToken(refreshToken);
-            long userId = Long.parseLong(decodedJWT.getSubject());
-            String newAccessToken = tokenService.generateAccessToken(userId);
-            return ResponseEntity.ok(newAccessToken);
-        } catch (JWTVerificationException e) {
-            return ResponseEntity.status(403).body("Refresh token inválido ou expirado");
         }
     }
 
@@ -102,15 +81,15 @@ public class AuthController {
 
     }
 
-    // só para cliente
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid AuthenticationDto registerDto){
+    public ResponseEntity<String> register(@RequestBody @Valid AuthenticationDto registerDto, HttpServletResponse response){
         if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
         Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CLIENTE);
 
         usersRepository.save(newUser);
+        login(registerDto, response);
         return ResponseEntity.ok().build();
     }
 }

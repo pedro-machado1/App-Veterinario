@@ -5,7 +5,6 @@ import axios from "axios";
 import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
 import NewAnimal from "../Animal/NewAnimal";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 
 const NewCliente = () => { 
 
@@ -124,10 +123,9 @@ const NewCliente = () => {
             return; 
         }
         setIsLoading(true);
-        let token =localStorage.getItem('authToken')
         try {
             const response = await axios.post(
-                `${apiUrl}/api/cliente?token=${token}`, 
+                `${apiUrl}/api/cliente`, 
                 newClient
             );
             console.log('New Client:', response.data);
