@@ -14,26 +14,30 @@ import RegisterComponent from './components/Security/Register/RegisterComponent.
 import LoginComponents from './components/Security/Login/LoginComponents.jsx'
 import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import ProtectedRoute from './components/Security/Others/ProtectRoute.jsx'
+import { useAuth } from './components/Security/Others/AuthContext.jsx'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 function App() {
 
+
   return (
     <BrowserRouter> 
+    
       <Routes>
         <Route path = "/forgot-password" element = {<ForgotPasswordComponents/>} />
         <Route path = "/reset-password" element= {<ResetPassword/>} />
         <Route path="/login" element={<LoginComponents />} />
-        <Route path ="/register" element = {<RegisterComponent/>}/> 
-        <Route path="/newConsulta" element={<NewConsulta />} />
-        <Route path="/newAnimal" element={<NewAnimal />} />
-        <Route path="/newCliente" element={<NewCliente />} />
-        <Route path="/newConsultorio" element={<NewConsultorio />} />
-        <Route path="/newMedicamento" element={<NewMedicamento />} />
-        <Route path="/newMedicamentoItem" element={<NewMedicamentoItem />} />
-        <Route path="/newVacina" element={<NewVacina />} />
-        <Route path="/newVacinaItem" element={<NewVacinaItem />} />
-        <Route path="/newVeterinario" element={<NewVeterinario />} />
+        <Route path="/register" element={<ProtectedRoute><RegisterComponent /></ProtectedRoute>} />
+        <Route path="/newConsulta" element={<ProtectedRoute><NewConsulta /></ProtectedRoute>} />
+        <Route path="/newAnimal" element={<ProtectedRoute><NewAnimal /></ProtectedRoute>} />
+        <Route path="/newCliente" element={<ProtectedRoute><NewCliente /></ProtectedRoute>} />
+        <Route path="/newConsultorio" element={<ProtectedRoute><NewConsultorio /></ProtectedRoute>} />
+        <Route path="/newMedicamento" element={<ProtectedRoute><NewMedicamento /></ProtectedRoute>} />
+        <Route path="/newMedicamentoItem" element={<ProtectedRoute><NewMedicamentoItem /></ProtectedRoute>} />
+        <Route path="/newVacina" element={<ProtectedRoute><NewVacina /></ProtectedRoute>} />
+        <Route path="/newVacinaItem" element={<ProtectedRoute><NewVacinaItem /></ProtectedRoute>} />
+        <Route path="/newVeterinario" element={<ProtectedRoute><NewVeterinario /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

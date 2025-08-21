@@ -28,13 +28,13 @@ public class AnimalController {
 
     @PostMapping()
     public ResponseEntity<AnimalDto> insert(@Validated @RequestBody AnimalDto animal) {
-        AnimalDto newClientDto = animalService.insert(animal);
+        AnimalDto newAnimalDto = animalService.insert(animal);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newClientDto.getId())
+                .buildAndExpand(newAnimalDto.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(newClientDto);
+        return ResponseEntity.created(uri).body(newAnimalDto);
     }
     @GetMapping("{id}")
     public ResponseEntity<Optional<AnimalDto>> findById(@PathVariable Long id){

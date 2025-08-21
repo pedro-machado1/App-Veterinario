@@ -46,6 +46,7 @@ public class ClienteController {
     @GetMapping("{id}")
     public ResponseEntity<Optional<ClienteDto>> findById(@PathVariable Long id){
         Optional<ClienteDto> clienteDto =clientService.findById(id);
+        clienteDto.get().getUsers().setPassword(null);
         return ResponseEntity.ok(clienteDto);
     }
 

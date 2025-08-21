@@ -1,14 +1,14 @@
 package com.security;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.dto.users.UsersSimpleDto;
+import com.dto.users.UsersWithoutPassword;
+import com.dto.users.Usersdto;
 import com.model.Users;
 import com.security.dto.AuthenticationDto;
 import com.security.dto.Newpassword;
 import com.security.service.AuthenticationService;
 import com.security.service.TokenService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import static com.extras.Converters.convertToDto;
 
 
 @RestController
@@ -50,14 +53,14 @@ public class AuthController {
 
             Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
             refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true);
+            refreshTokenCookie.setSecure(false);
             refreshTokenCookie.setPath("/");
             refreshTokenCookie.setMaxAge(60 * 60 * 24 * 30);
             response.addCookie(refreshTokenCookie);
 
             Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
             accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setSecure(false);
             accessTokenCookie.setPath("/");
             accessTokenCookie.setMaxAge(60* 15);
             response.addCookie(accessTokenCookie);
@@ -92,4 +95,40 @@ public class AuthController {
         login(registerDto, response);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/authentication")
+    public ResponseEntity<UsersWithoutPassword> authentication(){
+        try {
+            Object principal = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+            Users currentUser = (Users) principal;
+            UsersWithoutPassword dto = convertToDto(currentUser, UsersWithoutPassword.class);
+            return ResponseEntity.ok().body(dto);
+
+        }catch (Exception e){
+            return ResponseEntity.status(403).build();
+
+        }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response){
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0);
+        response.addCookie(refreshTokenCookie);
+
+        Cookie accessTokenCookie = new Cookie("accessToken", null);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(0);
+        response.addCookie(accessTokenCookie);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

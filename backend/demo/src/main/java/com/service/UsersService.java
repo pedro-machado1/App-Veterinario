@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.users.Usersdto;
 import com.dto.cliente.ClienteDto;
+import com.model.Cliente;
 import com.model.Users;
 import com.security.UsersRepository;
 import com.service.exceptions.DataBaseException;
@@ -39,19 +40,19 @@ public class UsersService {
     }
 
     @Transactional
-    public void addCliente(ClienteDto clienteDto) throws DataBaseException {
+    public Users addCliente(ClienteDto clienteDto) throws DataBaseException {
         Object principal = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
-        com.model.Users currentUser = (com.model.Users) principal;
+        Users currentUser = (Users) principal;
         long userId = currentUser.getId();
         Optional<Users> usuario = usersRepository.findById(userId);
         if(usuario.isEmpty())throw new DataBaseException("User not found");
         Users user = usuario.get();
-        Usersdto usersdto = convertToDto(user, Usersdto.class);
-        usersdto.setCliente(clienteDto);
-        convertToEntityVoid(usersdto, user);
+        Cliente cliente = convertToEntity(clienteDto, Cliente.class);
+        user.setCliente(cliente);
         usersRepository.save(user);
+        return user;
     }
 
     @Transactional

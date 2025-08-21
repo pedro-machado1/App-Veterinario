@@ -1,10 +1,8 @@
 package com.security;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.controller.ClienteController;
 import com.model.Users;
 import com.security.service.TokenService;
 import com.service.UsersService;
@@ -14,10 +12,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,18 +33,20 @@ public class SecurityFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String p = request.getServletPath();
-        return p.startsWith("/api/auth/");
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+        return path.startsWith("/api/auth/") && !path.equals("/api/auth/authentication");
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = getAcessToken(request);
 
         String userId = null;
         String jwtToken = null;
+        long id = 0;
+        String refreshToken = null;
         DecodedJWT decodedJWT = null;
 
 
@@ -58,7 +56,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 decodedJWT = tokenService.validateAccessToken(jwtToken);
                 userId = decodedJWT.getSubject();
             } catch (TokenExpiredException e) {
-                refresh(request);
+                refresh(request, response);
                 return;
             } catch (JWTVerificationException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -67,12 +65,24 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
         }
         else {
-            refresh(request);
-             return;
+            try {
+                refreshToken = refresh(request, response);
+                decodedJWT = tokenService.validateRefreshToken(refreshToken);
+                id = Long.parseLong(decodedJWT.getSubject());
+                String newAccessToken = tokenService.generateAccessToken(id);
+                userId = String.valueOf(id);
+                Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
+                accessTokenCookie.setHttpOnly(true);
+                accessTokenCookie.setSecure(true);
+                accessTokenCookie.setPath("/");
+                accessTokenCookie.setMaxAge(60* 15);
+                response.addCookie(accessTokenCookie);
+            } catch (JWTVerificationException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
         }
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
 
             Users userDetails = usersService.findById(Long.parseLong(userId));
 
@@ -107,29 +117,17 @@ public class SecurityFilter extends OncePerRequestFilter {
                 .orElse(null);
     }
 
-    public ResponseEntity<String> refresh(HttpServletRequest request) {
+    public String refresh(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = null;
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
-                    break;
+                    return refreshToken = cookie.getValue();
                 }
             }
         }
-
-        if (refreshToken == null) {
-            return ResponseEntity.status(403).body("Refresh token não encontrado");
-        }
-
-        try {
-            DecodedJWT decodedJWT = tokenService.validateRefreshToken(refreshToken);
-            long userId = Long.parseLong(decodedJWT.getSubject());
-            String newAccessToken = tokenService.generateAccessToken(userId);
-            return ResponseEntity.ok(newAccessToken);
-        } catch (JWTVerificationException e) {
-            return ResponseEntity.status(403).body("Refresh token inválido ou expirado");
-        }
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        return null;
     }
 
 }
