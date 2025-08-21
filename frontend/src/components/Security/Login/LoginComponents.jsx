@@ -4,10 +4,12 @@ import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../Others/AuthContext.jsx'; 
 
 const LoginComponents = () => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
+    const { login} = useAuth()
 
     const navigate = useNavigate()
 
@@ -72,25 +74,18 @@ const LoginComponents = () => {
         }
         setIsLoading(true)
         try { 
-            const response = await axios.post(
-                `${apiUrl}/api/auth/login`, 
-                loginData,
-            );
-            console.log("Dados", response.data);
-            localStorage.setItem('authToken', response.data);
+            const response = await login(loginData)
             HandleReset();
+            console.log(response)
             setSucess("Login realizado com Sucesso")
-            setIsLoading(false)
-            navigate('/newCliente')
         } catch (err) {
-            setIsLoading(false)
             HandleReset();
             console.error(err);
             if (err.response && err.response.data) {
-                setIsLoading(false);
                 setError(`${err.response.data.message}`);
             }
         }
+        setIsLoading(false)
     }
     
     return (

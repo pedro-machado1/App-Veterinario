@@ -31,14 +31,12 @@ public class Users implements UserDetails {
     private Role role;
 
 //    @OneToOne
-//    @MapsId
 //    private Veterinario veterinario;
 //
     @OneToOne
     private Cliente cliente;
 
 //    @OneToOne
-//    @MapsId
 //    private Consultorio consultorio;
 
     public Users (String email, String password, Role role) {

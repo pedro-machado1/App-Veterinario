@@ -40,12 +40,12 @@ public class ClienteService {
 
 
     @Transactional
-    public ClienteDto insert(ClienteDto clienteDTO, String token){
+    public ClienteDto insert(ClienteDto clienteDTO){
         Cliente cliente= convertToEntity(clienteDTO, Cliente.class);
         cliente.setDataDeCriacao(LocalDate.now());
         cliente = clienteRepository.save(cliente);
         clienteDTO = convertToDto(cliente, ClienteDto.class);
-        usersService.addCliente(token, clienteDTO);
+        usersService.addCliente(clienteDTO);
         return clienteDTO;
     }
 

@@ -4,7 +4,6 @@ import InputField from "../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin.jsx";
 
-// arrumar
 const NewAnimal = (Cliente) => { 
     const [nome, setNome] = useState("");
     const [especie, setEspecie] = useState("");

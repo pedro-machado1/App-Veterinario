@@ -8,9 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class TokenService {
@@ -23,8 +21,6 @@ public class TokenService {
 
     @Value("${api.security.token.reset}")
     private String resetTokenSecret;
-
-    private Instant lastPasswordChange;
 
     public String generateRefreshToken(long id){
         long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 30; // 30 dias
@@ -86,7 +82,7 @@ public class TokenService {
         }
     }
 
-    // Novo: validar token de reset de senha (escopo/tipo específicos)
+    // Novo: validar token de reset de senha
     public DecodedJWT validateResetPasswordToken(String token) throws JWTVerificationException {
         Algorithm algorithm = Algorithm.HMAC256(resetTokenSecret);
         return JWT.require(algorithm)

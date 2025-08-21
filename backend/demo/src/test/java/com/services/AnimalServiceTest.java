@@ -27,14 +27,13 @@ public class AnimalServiceTest {
 
     @Test
     void InserirAnimalSucesso() {
-        Animal animal = AnimalFixture.animalFixture();
 
+        Animal animal = AnimalFixture.animalFixture();
         when(animalRepository.save(any(Animal.class))).thenReturn(animal);
+
+        animalRepository.save(animal);
 
         assertNotNull(animal);
         assertEquals("Nina", animal.getNome());
-
     }
-
-
 }
