@@ -4,7 +4,7 @@ import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuth } from '../Others/AuthContext.jsx'; 
+import { useAuth } from '../Context/AuthContext.jsx'; 
 
 const LoginComponents = () => {
 

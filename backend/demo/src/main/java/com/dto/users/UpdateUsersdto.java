@@ -1,6 +1,7 @@
 package com.dto.users;
 
 import com.dto.cliente.ClienteDto;
+import com.dto.cliente.ClienteSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.security.Role;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,5 @@ public class UpdateUsersdto {
 
     private Role role;
 
-    private ClienteDto cliente;
+    private ClienteSimpleDto cliente;
 }

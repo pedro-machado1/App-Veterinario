@@ -1,6 +1,7 @@
 import './App.css'
 import './assets/css/buttoms.css'
 import "./assets/css/text.css"
+import MainPage from './pages/MainPage/mainPage.jsx'
 import NewAnimal from './components/Cadastros/Animal/NewAnimal.jsx'
 import NewCliente from './components/Cadastros/Cliente/NewCliente.jsx'
 import NewConsulta from './components/Cadastros/Consulta/newConsulta.jsx'
@@ -14,13 +15,12 @@ import RegisterComponent from './components/Security/Register/RegisterComponent.
 import LoginComponents from './components/Security/Login/LoginComponents.jsx'
 import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
-import ProtectedRoute from './components/Security/Others/ProtectRoute.jsx'
-import { useAuth } from './components/Security/Others/AuthContext.jsx'
+import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import UserProfile from './pages/UserProfile/UserProfile.jsx'
 
 function App() {
-
-
+  
   return (
     <BrowserRouter> 
     
@@ -38,6 +38,8 @@ function App() {
         <Route path="/newVacina" element={<ProtectedRoute><NewVacina /></ProtectedRoute>} />
         <Route path="/newVacinaItem" element={<ProtectedRoute><NewVacinaItem /></ProtectedRoute>} />
         <Route path="/newVeterinario" element={<ProtectedRoute><NewVeterinario /></ProtectedRoute>} />
+        <Route path="/userProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+        <Route path= "/home" element= {<ProtectedRoute><MainPage /></ProtectedRoute>}/>
       </Routes>
     </BrowserRouter>
   )

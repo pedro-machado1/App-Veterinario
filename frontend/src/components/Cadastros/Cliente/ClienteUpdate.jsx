@@ -1,12 +1,23 @@
-import "./NewCliente.css";
-import { useState } from 'react';
+// fzr com que vire um pop up na tela 
+
+
+import "./ClienteUpdate.css"
+import { useState, useEffect } from 'react';
 import InputField from "../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
-import NewAnimal from "../Animal/NewAnimal";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 
-const NewCliente = () => {
+const ClienteUpdate = ({ 
+    name,
+    cpf,
+    phone,
+    dataDeNascimento,
+    endereco,
+    imagem,
+    onClose,
+
+}) => {
 
   const [newName, setName] = useState("");
   const [newCpf, setCpf] = useState("");
@@ -22,6 +33,17 @@ const NewCliente = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+        if (name) setName(name);
+        if (cpf) setCpf(cpf);
+        if (phone) setPhone(phone);
+        if (dataDeNascimento) setdataDeNascimento(dataDeNascimento);
+        if (endereco) setEndereco(endereco);
+        if (imagem) setImagem(imagem);
+  },[name, cpf, phone, dataDeNascimento, endereco, imagem])
+
+
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
   };
@@ -33,8 +55,8 @@ const NewCliente = () => {
     }
   };
 
-  const CheckPhone = (phone) => {
-    const onlyDigits = phone.replace(/\D/g, '');
+  const CheckPhone = (PHONE) => {
+    const onlyDigits = PHONE.replace(/\D/g, '');
     if (onlyDigits.length === 10 || onlyDigits.length === 11) {
       setError(null);
       return true;
@@ -45,8 +67,8 @@ const NewCliente = () => {
     }
   }
 
-  const CheckCpf = (cpf) => {
-    const onlyDigits = cpf.replace(/\D/g, '');
+  const CheckCpf = (CPF) => {
+    const onlyDigits = CPF.replace(/\D/g, '');
     if (onlyDigits.length === 11) {
       setError(null);
       return true;
@@ -56,9 +78,9 @@ const NewCliente = () => {
     }
   }
 
-  const CheckDate = (date) => {
+  const CheckDate = (DATE) => {
     const today = new Date();
-    const inputDate = new Date(date);
+    const inputDate = new Date(DATE);
     if (inputDate > today) {
       setError('Data de Nascimento não pode ser futura!');
       return false;
@@ -87,7 +109,7 @@ const NewCliente = () => {
     setSuccess(null);
   }
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     if (
       !CheckCpf(newCpf) ||
@@ -109,9 +131,10 @@ const NewCliente = () => {
     }
     setIsLoading(true);
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `${apiUrl}/api/cliente`,
-        newClient
+        newClient,
+        {withCredentials : true}
       );
       console.log('New Client:', response.data);
       handleReset();
@@ -163,7 +186,7 @@ const NewCliente = () => {
       <form
         id="formsNewClient"
         onReset={handleReset}
-        onSubmit={handleSubmit}>
+        onSubmit={handleUpdate}>
 
         <div className="line1">
           <InputField
@@ -186,7 +209,7 @@ const NewCliente = () => {
             name={"cpf"}
             idInput="newCpf"
             classNameDiv="inputCpf"
-            value={newCpf}
+            value={maskCpf(newCpf)}
             onChange={(e) => {
               const masked = maskCpf(e.target.value);
               setCpf(masked);
@@ -203,7 +226,7 @@ const NewCliente = () => {
             name={"phone"}
             idInput="newPhone"
             classNameDiv="inputPhone"
-            value={newPhone}
+            value={maskPhone(newPhone)}
             onChange={(e) => {
               const masked = maskPhone(e.target.value);
               setPhone(masked);
@@ -268,9 +291,9 @@ const NewCliente = () => {
         </div>
         <button
           type="submit"
-          onClick={handleSubmit}
+          onClick={handleUpdate}
           className="submit">
-          Enviar
+          Atualizar
         </button>
         <button
           type="reset"
@@ -280,9 +303,16 @@ const NewCliente = () => {
           Cancelar
         </button>
       </form>
+        <button
+        type="buttom"
+        className="fechar"
+        onClick={onClose}>
+            Fechar
+        </button>
+
       {isLoading && <LoadingSpin />}
     </div>
   );
 };
 
-export default NewCliente;
+export default ClienteUpdate;

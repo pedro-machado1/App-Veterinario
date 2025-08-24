@@ -7,8 +7,10 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.dto.users.Usersdto;
 import com.model.Animal;
 import com.model.Cliente;
+import com.model.Users;
 import com.repository.AnimalRepository;
 import com.repository.ClienteRepository;
 import com.security.UsersRepository;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,16 +66,18 @@ public class ClienteService {
     }
 
     @Transactional
-    public ClienteDto update(Long id, ClienteUpdateDto clienteDto){
-        existsById(id);
-        Cliente cliente = clienteRepository.getReferenceById(id);
-        cliente.setDataDeAlteracao(LocalDate.now());
-        convertToEntityVoid(clienteDto, cliente);
-        cliente = clienteRepository.save(cliente);
-        return convertToDto(cliente, ClienteDto.class);
+    public ClienteDto update(ClienteUpdateDto clienteDto) {
+            Users user  =usersService.findUsers();
+            long id = user.getCliente().getId();
+            existsById(id);
+            Cliente cliente = clienteRepository.getReferenceById(id);
+            cliente.setDataDeAlteracao(LocalDate.now());
+            convertToEntityVoid(clienteDto, cliente);
+            cliente = clienteRepository.save(cliente);
+            return convertToDto(cliente, ClienteDto.class);
     }
 
-    @Transactional
+        @Transactional
     public void delete(Long id) {
         existsById(id);
         try {

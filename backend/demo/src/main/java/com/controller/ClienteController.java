@@ -57,9 +57,9 @@ public class ClienteController {
          Page<ClienteDto> responsePages =clientService.findAll(pages);
         return ResponseEntity.ok().body(responsePages);
     }
-    @PutMapping("{id}")
-    public ResponseEntity<ClienteDto> update(@PathVariable Long id, @Validated @RequestBody ClienteUpdateDto clienteUpdateDto){
-       ClienteDto clienteDto = clientService.update(id, clienteUpdateDto);
+    @PutMapping()
+    public ResponseEntity<ClienteDto> update(@Validated @RequestBody ClienteUpdateDto clienteUpdateDto){
+       ClienteDto clienteDto = clientService.update(clienteUpdateDto);
        return ResponseEntity.ok(clienteDto);
     }
     @DeleteMapping("{id}")

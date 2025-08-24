@@ -11,6 +11,7 @@ import com.security.service.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -19,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
@@ -96,15 +99,19 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/authentication")
-    public ResponseEntity<UsersWithoutPassword> authentication(){
+    @GetMapping("/authentication")
+    public ResponseEntity<Usersdto> authentication(){
         try {
             Object principal = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
             Users currentUser = (Users) principal;
-            UsersWithoutPassword dto = convertToDto(currentUser, UsersWithoutPassword.class);
-            return ResponseEntity.ok().body(dto);
+            Optional<Users> user = userRepository.findById(currentUser.getId());
+            if (user.isEmpty()) throw new Exception("User not found");
+            currentUser = user.get();
+            Usersdto usersdto=convertToDto(currentUser, Usersdto.class);
+            usersdto.setPassword(null);
+            return ResponseEntity.ok().body(usersdto);
 
         }catch (Exception e){
             return ResponseEntity.status(403).build();
@@ -130,5 +137,7 @@ public class AuthController {
 
         return ResponseEntity.ok().build();
     }
+
+
 
 }
