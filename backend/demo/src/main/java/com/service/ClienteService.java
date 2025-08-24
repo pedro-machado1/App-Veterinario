@@ -49,7 +49,7 @@ public class ClienteService {
         cliente = clienteRepository.save(cliente);
         clienteDTO = convertToDto(cliente, ClienteDto.class);
         usersService.addCliente(clienteDTO);
-        return clienteDTO;
+        return clienteDTO  ;
     }
 
     @Transactional(readOnly = true)
@@ -97,14 +97,15 @@ public class ClienteService {
     }
 
     @Transactional
-    public ClienteDto addAnimal(Long idCliente, Long idAnimal ) {
+    public ClienteDto addAnimal(Long idAnimal ) {
+        long idCliente =findClienteId();
         existsById(idCliente);
         AnimalSimpleDto animal = convertToDto(
                 animalService.findById(idAnimal)
                         .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class
         );
 
-        ClienteDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteDto.class);
+        ClienteUpdateDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteUpdateDto.class);
         if (clienteDto.getAnimal() == null) {
             clienteDto.setAnimal(new ArrayList<>());
         }
@@ -113,13 +114,15 @@ public class ClienteService {
         }
         clienteDto.getAnimal().add(animal);
         Cliente clienteentity = convertToEntity(clienteDto, Cliente.class);
+        clienteentity.setId(idCliente);
 
         clienteentity = clienteRepository.save(clienteentity);
 
         return convertToDto(clienteentity, ClienteDto.class);
     }
     @Transactional
-    public void removeAnimal(Long idCliente, Long idAnimal) {
+    public void removeAnimal(Long idAnimal) {
+        long idCliente =findClienteId();
         existsById(idCliente);
         AnimalSimpleDto animal = convertToDto(
                 animalService.findById(idAnimal)
@@ -138,12 +141,19 @@ public class ClienteService {
 
     }
     @Transactional
-    public Page<AnimalSimpleDto> findAllAnimal(long idCliente, Pageable pages){
+    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages){
+        long idCliente =findClienteId();
         existsById(idCliente);
 
-        Page<Animal> animal = clienteRepository.findAllClienteByVeterinario(idCliente, pages);
+        Page<Animal> animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);
 
         return animal.map(animais -> convertToDto(animais, AnimalSimpleDto.class));
+    }
+
+    @Transactional
+    public long findClienteId(){
+        Users user  =usersService.findUsers();
+        return user.getCliente().getId();
     }
 
 

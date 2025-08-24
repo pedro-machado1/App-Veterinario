@@ -1,7 +1,5 @@
 package com.security;
 
-import com.dto.users.UsersSimpleDto;
-import com.dto.users.UsersWithoutPassword;
 import com.dto.users.Usersdto;
 import com.model.Users;
 import com.security.dto.AuthenticationDto;
@@ -11,7 +9,6 @@ import com.security.service.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -106,9 +103,7 @@ public class AuthController {
                 .getAuthentication()
                 .getPrincipal();
             Users currentUser = (Users) principal;
-            Optional<Users> user = userRepository.findById(currentUser.getId());
-            if (user.isEmpty()) throw new Exception("User not found");
-            currentUser = user.get();
+            currentUser = userRepository.findByEmail(currentUser.getEmail());
             Usersdto usersdto=convertToDto(currentUser, Usersdto.class);
             usersdto.setPassword(null);
             return ResponseEntity.ok().body(usersdto);

@@ -1,9 +1,7 @@
 package com.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.dto.users.Usersdto;
 import com.dto.cliente.ClienteDto;
+import com.dto.cliente.ClienteUpdateDto;
 import com.model.Cliente;
 import com.model.Users;
 import com.security.UsersRepository;

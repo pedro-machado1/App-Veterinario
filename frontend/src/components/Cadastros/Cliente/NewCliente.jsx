@@ -111,7 +111,8 @@ const NewCliente = () => {
     try {
       const response = await axios.post(
         `${apiUrl}/api/cliente`,
-        newClient
+        newClient,
+        {withCredentials : true }
       );
       console.log('New Client:', response.data);
       handleReset();

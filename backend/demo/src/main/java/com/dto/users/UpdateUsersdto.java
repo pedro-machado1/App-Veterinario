@@ -16,10 +16,6 @@ public class UpdateUsersdto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
-    private String email;
-
-    private String password;
-
     private Role role;
 
     private ClienteSimpleDto cliente;

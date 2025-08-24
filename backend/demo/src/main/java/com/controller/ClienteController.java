@@ -6,17 +6,13 @@ import com.dto.cliente.ClienteUpdateDto;
 import com.security.SecurityFilter;
 import com.service.ClienteService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
@@ -36,17 +32,12 @@ public class ClienteController {
     @PostMapping
     public ResponseEntity<ClienteDto> insert(@Valid @RequestBody ClienteDto cliente, HttpServletRequest request) throws Exception {
         ClienteDto newClientDto = clientService.insert(cliente);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newClientDto.getId())
-                .toUri();
-        return ResponseEntity.created(uri).body(newClientDto);
+        return ResponseEntity.ok(newClientDto);
     }
     @GetMapping("{id}")
-    public ResponseEntity<Optional<ClienteDto>> findById(@PathVariable Long id){
+    public ResponseEntity<Optional<ClienteDto>> findById(@PathVariable Long id) throws Exception {
         Optional<ClienteDto> clienteDto =clientService.findById(id);
-        clienteDto.get().getUsers().setPassword(null);
+        if (clienteDto.isEmpty()) throw new Exception("error ");
         return ResponseEntity.ok(clienteDto);
     }
 
@@ -67,20 +58,20 @@ public class ClienteController {
         clientService.delete(id);
         return ResponseEntity.ok().body("o cliente " + id + " foi removido");
     }
-    @PutMapping("/{id}/addanimal/{idAnimal}")
-    public ResponseEntity<ClienteDto> addCliente(@PathVariable Long id, @PathVariable Long idAnimal) {
-        ClienteDto clienteDto = clientService.addAnimal(id, idAnimal);
+    @PutMapping("/addanimal/{idAnimal}")
+    public ResponseEntity<ClienteDto> addAnimal(@PathVariable Long idAnimal) {
+        ClienteDto clienteDto = clientService.addAnimal(idAnimal);
         return ResponseEntity.ok(clienteDto);
     }
-    @DeleteMapping("/{id}/removeanimal/{idAnimal}")
-    public ResponseEntity<String> removeCliente(@PathVariable Long id, @PathVariable Long idAnimal) {
-        clientService.removeAnimal(id, idAnimal);
+    @DeleteMapping("/removeanimal/{idAnimal}")
+    public ResponseEntity<String> removeAnimal(@PathVariable Long idAnimal) {
+        clientService.removeAnimal(idAnimal);
         return ResponseEntity.ok().body("o animal foi removido");
     }
 
-    @GetMapping("{id}/animal")
-    public ResponseEntity<Page<AnimalSimpleDto>> findAllCliente(@PathVariable Long id, Pageable pages) {
-        Page<AnimalSimpleDto> animalPage = clientService.findAllAnimal(id, pages);
+    @GetMapping("/animal")
+    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages) {
+        Page<AnimalSimpleDto> animalPage = clientService.findAllAnimal(pages);
         return ResponseEntity.ok().body(animalPage);
     }
 

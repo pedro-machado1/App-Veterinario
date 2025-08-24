@@ -3,6 +3,7 @@ package com.dto.cliente;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.users.UsersSimpleDto;
+import com.dto.users.UsersWithoutPassword;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Users;
@@ -53,6 +54,6 @@ public class ClienteDto {
 
     private List<ConsultaSimpleDto> consulta;
 
-    private UsersSimpleDto users;
+    private UsersWithoutPassword users;
 
 }

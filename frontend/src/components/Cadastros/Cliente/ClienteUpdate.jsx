@@ -22,7 +22,7 @@ const ClienteUpdate = ({
   const [newName, setName] = useState("");
   const [newCpf, setCpf] = useState("");
   const [newPhone, setPhone] = useState("");
-  const [newdataDeNascimento, setdataDeNascimento] = useState("");
+  const [newDataDeNascimento, setDataDeNascimento] = useState("");
   const [newEndereco, setEndereco] = useState("");
   const [newImagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
@@ -38,11 +38,10 @@ const ClienteUpdate = ({
         if (name) setName(name);
         if (cpf) setCpf(cpf);
         if (phone) setPhone(phone);
-        if (dataDeNascimento) setdataDeNascimento(dataDeNascimento);
+        if (dataDeNascimento) setDataDeNascimento(dataDeNascimento);
         if (endereco) setEndereco(endereco);
         if (imagem) setImagem(imagem);
   },[name, cpf, phone, dataDeNascimento, endereco, imagem])
-
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -90,38 +89,19 @@ const ClienteUpdate = ({
     }
   }
 
-  const handleReset = () => {
-    let form = document.getElementById("formsNewClient");
-    let elements = form.getElementsByClassName("isInvalid");
-
-    while (elements.length > 0) {
-      elements[0].classList.remove("isInvalid");
-    }
-
-    setName("");
-    setCpf("");
-    setPhone("");
-    setdataDeNascimento("");
-    setEndereco("");
-    setImagem("");
-    setPreviewImg(null);
-    setError(null);
-    setSuccess(null);
-  }
-
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (
       !CheckCpf(newCpf) ||
       !CheckPhone(newPhone) ||
-      !CheckDate(newdataDeNascimento)
+      !CheckDate(newDataDeNascimento)
     ) return;
 
     const newClient = {
       nome: newName,
       cpf: parseInt(newCpf.replace(/\D/g, "")),
       telefone: parseInt(newPhone.replace(/\D/g, "")),
-      dataDeNascimento: newdataDeNascimento,
+      dataDeNascimento: newDataDeNascimento,
       endereco: newEndereco
       // imagem: newImagem,
     };
@@ -137,7 +117,6 @@ const ClienteUpdate = ({
         {withCredentials : true}
       );
       console.log('New Client:', response.data);
-      handleReset();
       setSuccess("Cliente adicionado com sucesso!");
       setIsLoading(false);
     } catch (err) {
@@ -148,6 +127,7 @@ const ClienteUpdate = ({
         setError(`${err.response.data.message}`);
       }
     }
+    onClose()
   };
 
   function maskCpf(value) {
@@ -185,7 +165,6 @@ const ClienteUpdate = ({
       </h1>
       <form
         id="formsNewClient"
-        onReset={handleReset}
         onSubmit={handleUpdate}>
 
         <div className="line1">
@@ -239,12 +218,12 @@ const ClienteUpdate = ({
             label="Data de Nascimento"
             placeholder={"Digite a data de nascimento do cliente"}
             name={"dataDeNascimento"}
-            idInput="newdataDeNascimento"
+            idInput="newDataDeNascimento"
             classNameDiv="inputdataDeNascimento"
             type="date"
-            value={newdataDeNascimento}
+            value={newDataDeNascimento}
             onChange={(e) => {
-              setdataDeNascimento(e.target.value);
+              setDataDeNascimento(e.target.value);
               isValid(e);
             }}
             onInvalid={(e) => isInvalid(e)}
@@ -294,13 +273,6 @@ const ClienteUpdate = ({
           onClick={handleUpdate}
           className="submit">
           Atualizar
-        </button>
-        <button
-          type="reset"
-          className="cancelar"
-          onClick={() => handleReset()}
-        >
-          Cancelar
         </button>
       </form>
         <button

@@ -18,6 +18,7 @@ import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx
 import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import UserProfile from './pages/UserProfile/UserProfile.jsx'
+import EditAnimal from './components/Cadastros/Animal/EditAnimal.jsx'
 
 function App() {
   
@@ -30,7 +31,7 @@ function App() {
         <Route path="/login" element={<LoginComponents />} />
         <Route path="/register" element={<ProtectedRoute><RegisterComponent /></ProtectedRoute>} />
         <Route path="/newConsulta" element={<ProtectedRoute><NewConsulta /></ProtectedRoute>} />
-        <Route path="/newAnimal" element={<ProtectedRoute><NewAnimal /></ProtectedRoute>} />
+        <Route path="/editAnimal" element={<ProtectedRoute><EditAnimal /></ProtectedRoute>} />
         <Route path="/newCliente" element={<ProtectedRoute><NewCliente /></ProtectedRoute>} />
         <Route path="/newConsultorio" element={<ProtectedRoute><NewConsultorio /></ProtectedRoute>} />
         <Route path="/newMedicamento" element={<ProtectedRoute><NewMedicamento /></ProtectedRoute>} />

@@ -4,7 +4,7 @@ import InputField from "../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin.jsx";
 
-const NewAnimal = (Cliente) => { 
+const NewAnimal = ({onClose}) => { 
     const [nome, setNome] = useState("");
     const [especie, setEspecie] = useState("");
     const [idade, setIdade] = useState("");
@@ -80,9 +80,12 @@ const NewAnimal = (Cliente) => {
           newAnimal
         );
         console.log("New Animal:", response.data);
+        const responseAddToClient = await axios.put(`${apiUrl}/api/cliente/addanimal/${response.data.id}`)
+        console.log("New Animal:", responseAddToClient.data);
         handleReset();
         setSuccess("Animal adicionado com sucesso!");
         setIsLoading(false);
+        onClose()
       } catch (err) {
         setIsLoading(false);
         console.error(err);
@@ -286,7 +289,14 @@ const NewAnimal = (Cliente) => {
             Cancelar
           </button>
         </form>
-        {isLoading && <LoadingSpin/>}
+        <button
+        type="buttom"
+        className="fechar"
+        onClick={onClose}>
+            Fechar
+        </button>
+
+      {isLoading && <LoadingSpin />}
       </div>
     );
 };

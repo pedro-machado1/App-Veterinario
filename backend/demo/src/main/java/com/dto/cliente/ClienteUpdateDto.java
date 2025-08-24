@@ -1,6 +1,9 @@
 package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.users.UpdateUsersdto;
+import com.dto.users.UsersSimpleDto;
+import com.dto.users.UsersWithoutPassword;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +29,8 @@ public class ClienteUpdateDto {
 
     private String telefone;
 
+    private LocalDate dataDeNascimento;
+
     private LocalDate dataDeCriacao;
 
     private LocalDate dataDeAlteracao;
@@ -34,6 +39,5 @@ public class ClienteUpdateDto {
 
     private List<VeterinarioSimpleDto> veterinario;
 
-    private LocalDate dataUpdate;
 
 }

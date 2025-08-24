@@ -1,25 +1,27 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./UserProfile.css"
 import ClienteUpdate from "../../components/Cadastros/Cliente/ClienteUpdate";
 import LoadingSpin from "../../components/Extras/LoadingSpin/LoadingSpin";
 import axios from "axios";
 
 const UserProfile = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [newName, setName] = useState("");
-  const [newCpf, setCpf] = useState("");
-  const [newPhone, setPhone] = useState("");
-  const [newdataDeNascimento, setdataDeNascimento] = useState("");
-  const [newEndereco, setEndereco] = useState("");
-  const [newImagem, setImagem] = useState("");
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate()
+
   const [show, setShow] = useState(false)
-  const [previewImg, setPreviewImg] = useState(null);
-  const [Error, setError] = useState(null);
-  const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [newUser, setNewUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+
+  const formatDateForDisplay = (dateStr) => { 
+    if (!dateStr) return "Data de nascimento não encontrado";
+  const [year, month, day] = dateStr.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,47 +41,7 @@ const UserProfile = () => {
     };
 
     fetchUser();
-  }, []);
-
-  const HandleEdit = async (
-    cpf,
-    nome,
-    telefone,
-    dataDeNascimento,
-    endereco
-  ) => {
-    const clienteid = newUser.cliente.id;
-    const newClient = {
-      nome: newName,
-      cpf: parseInt(newCpf.replace(/\D/g, "")),
-      telefone: parseInt(newPhone.replace(/\D/g, "")),
-      dataDeNascimento: newdataDeNascimento,
-      endereco: newEndereco,
-      // imagem: newImagem,
-    };
-
-    if (!document.getElementById("formsNewClient")?.reportValidity()) {
-      setError("Preencha todos os campos!");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await axios.put(
-        `${apiUrl}/api/cliente/${clienteid}`, 
-        newClient
-      );
-      console.log("Updated Client:", response.data);
-      setSuccess("Cliente atualizado com sucesso!");
-    } catch (err) {
-      console.error(err);
-      if (err.response?.data) {
-        setError(`${err.response.data.message}`);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }; 
+  }, [show]);
 
   if (loading) {
     return <LoadingSpin />;
@@ -95,7 +57,7 @@ const UserProfile = () => {
         CPF: {newUser.cliente.cpf || "CPF não encontrado"}
       </p>
       <p className="text-gray-600">
-        Data de Nascimento: {newUser.cliente?.dataDeNascimento || "Data de nascimento não encontrado"}
+        Data de Nascimento: {formatDateForDisplay(newUser.cliente.dataDeNascimento) || "Data de nascimento não encontrado"}
       </p>
       <p className="text-gray-600">
         Telefone: {newUser.cliente.telefone || "Telefone não encontrado"}
@@ -108,15 +70,21 @@ const UserProfile = () => {
       </p>
 
       <button
-        onClick={() => setShow(true)
+        onClick={() => {
+            if (show == true) setShow(false);
+            else setShow(true);
+          }
         }
       >
         Editar
       </button>
-      <button>
+      <button
+        type="buttom"
+        onClick={() => navigate("/editAnimal")}
+      >
         Editar os animais
       </button>
-      ({show && 
+      {show && 
       <div className="popUp">
         <ClienteUpdate
         name = {newUser.cliente.nome}
@@ -127,7 +95,7 @@ const UserProfile = () => {
         onClose = {() => setShow(false)}
         />
       </div>
-      })
+      }
     </div>
   );
 };

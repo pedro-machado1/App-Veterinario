@@ -58,7 +58,6 @@ const NewConsultorio = () => {
       endereco,
       telefone,
       descricao,
-      veterinario  
     };
     setIsLoading(true);
     try {
