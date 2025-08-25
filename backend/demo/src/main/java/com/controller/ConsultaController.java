@@ -60,7 +60,7 @@ public class ConsultaController {
     }
 
     @PutMapping("/{id}/addanimal/{idAnimal}")
-    public ResponseEntity<ConsultaDto> addAnimal(@PathVariable Long id, @PathVariable Long idAnimal) {
+    public ResponseEntity<ConsultaDto> addAnimal(@PathVariable Long id, @PathVariable Long idAnimal) throws Exception {
         ConsultaDto consultaDto = consultaService.addAnimal(id, idAnimal);
         return ResponseEntity.ok(consultaDto);
     }

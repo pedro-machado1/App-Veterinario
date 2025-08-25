@@ -3,7 +3,7 @@ import { useState } from 'react';
 import InputField from "../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
-import NewAnimal from "../Animal/NewAnimal";
+import NewAnimal from "../Animal/NewAnimal/NewAnimal";
 import { useNavigate } from "react-router-dom";
 
 const NewCliente = () => {

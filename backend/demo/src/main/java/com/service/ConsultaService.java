@@ -122,7 +122,7 @@ public class ConsultaService {
     }
 
     @Transactional
-    public ConsultaDto addAnimal(Long idConsulta, Long idAnimal) {
+    public ConsultaDto addAnimal(Long idConsulta, Long idAnimal){
         existsById(idConsulta);
         AnimalSimpleDto animal = convertToDto(animalService.findById(idAnimal)
                 .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class);
@@ -142,7 +142,7 @@ public class ConsultaService {
         return convertToDto(consultaentity, ConsultaDto.class);
     }
     @Transactional
-    public void removeAnimal(Long idConsulta, Long idAnimal) {
+    public void removeAnimal(Long idConsulta, Long idAnimal){
         existsById(idConsulta);
         AnimalSimpleDto animal = convertToDto(animalService.findById(idAnimal)
                 .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class);

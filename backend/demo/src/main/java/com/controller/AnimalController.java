@@ -37,9 +37,11 @@ public class AnimalController {
         return ResponseEntity.created(uri).body(newAnimalDto);
     }
     @GetMapping("{id}")
-    public ResponseEntity<Optional<AnimalDto>> findById(@PathVariable Long id){
+    public ResponseEntity<AnimalDto> findById(@PathVariable Long id){
         Optional<AnimalDto> animalDto =animalService.findById(id);
-        return ResponseEntity.ok(animalDto);
+        if (animalDto.isEmpty()) return ResponseEntity.notFound().build();
+        AnimalDto animal = animalDto.get();
+        return ResponseEntity.ok(animal);
     }
 
     @GetMapping()
@@ -50,6 +52,7 @@ public class AnimalController {
     @PutMapping("{id}")
     public ResponseEntity<AnimalDto> update(@PathVariable Long id, @Validated @RequestBody AnimalUpdateDto animalUpdateDto){
         AnimalDto animalDto = animalService.update(id, animalUpdateDto);
+        if (animalDto == null) return ResponseEntity.status(403).build();
         return ResponseEntity.ok(animalDto);
     }
     @DeleteMapping("{id}")

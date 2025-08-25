@@ -1,19 +1,31 @@
-// processar o array e apresentar para o usuario toda a lista 
+// processar o array e apresentar para o usuario toda a lista arrumar 
 
 import { useEffect, useState } from "react"
-import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin"
-import NewAnimal from "./NewAnimal"
-import "./EditAnimal.css"
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin"
+import NewAnimal from "../NewAnimal/NewAnimal"
+import EditAnimal from "../EditAnimal/EditAnimal"
+import ShowAnimal from "../ShowAnimal/ShowAnimal"
+import "./MainAnimal.css"
 import axios from "axios"
 
-const EditAnimal = () => {
+const MainAnimal = () => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const [newAnimal, setAnimal] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
     const [show, setShow] = useState(false)
+    const [showMore, setShowMore] = useState(false)
+    const [showEdit, setShowEdit] = useState(false)
     const [Error, setError] = useState(null)
+
+    const showMoreToggle = () => {
+        setShowMore((prev) => !prev)
+    }
+
+    const showEditToggle = () => {
+        setShowEdit((prev) => !prev)
+    }
 
     useEffect(() => {
         const asyncFunction = async () => {
@@ -36,14 +48,16 @@ const EditAnimal = () => {
         }
 
         asyncFunction()
-    }, [])
+    }, [show, showEdit])
 
-
+    const onDelete = async (animalId) => {
+        const response = axios.delete(`${apiUrl}/api/cliente/removeanimal/${animalId}`)
+    }
 
     return (
         <div>
             <h1>
-                Pagina Para Editar Animais
+                Seus Animais
             </h1>
             <div className="displayDeAnimais">
             {newAnimal.map((animal) => (
@@ -54,6 +68,44 @@ const EditAnimal = () => {
                     <p>
                         Especie: {animal.especie || "Erro especie não encontrada"} 
                     </p> 
+                    <button 
+                    className="Edit"
+                    onClick={showMoreToggle}
+                    > 
+                        Ver Mais
+                    </button>
+
+
+                    <button 
+                    className="Edit"
+                    onClick={showEditToggle}
+                    > 
+                        Editar
+                    </button>
+
+                    <button 
+                    className="deletar"
+                    onClick={() => {onDelete(animal.id)} }
+                    > 
+                        Deletar
+                    </button>`
+                    {showMore && 
+                    <ShowAnimal
+                    onClose={() => setShow(false)}
+                    animalId={animal.id}
+                    show = {showMore}
+                    />}`
+                    {showEdit && (
+                    <div> 
+                        <p>dlaskfjldasfkj</p>
+                    <EditAnimal
+                    onClose = {() => setShowEdit(false)}
+                    animalId = {animal.id}
+                    show={showEdit}
+                    />
+                    </div>
+                    )
+                    }
                 </div> 
             ))}
             <button
@@ -78,4 +130,4 @@ const EditAnimal = () => {
     )
 }
 
-export default EditAnimal
+export default MainAnimal

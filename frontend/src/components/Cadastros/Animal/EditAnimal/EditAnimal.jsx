@@ -1,10 +1,15 @@
-import "./NewAnimal.css";
-import { useState } from "react";
-import InputField from "../../Extras/InputField/InputField"; 
+import "./EditAnimal.css"
+import { useState, useEffect } from "react";
 import axios from "axios";
-import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin.jsx";
+import InputField from "../../../Extras/InputField/InputField";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 
-const NewAnimal = ({onClose}) => { 
+const EditAnimal = ({
+    onClose,
+    animalId,
+    show
+}) => {
+
     const [nome, setNome] = useState("");
     const [especie, setEspecie] = useState("");
     const [idade, setIdade] = useState("");
@@ -12,7 +17,6 @@ const NewAnimal = ({onClose}) => {
     const [altura, setAltura] = useState("");
     const [comprimento, setComprimento] = useState("");
     const [peso, setPeso] = useState("");
-    const [texto, setTexto] = useState("");
     const [doenca, setDoenca] = useState("");
     const [alergia, setAlergia] = useState("");
     const [raca, setRaca] = useState("");
@@ -22,6 +26,42 @@ const NewAnimal = ({onClose}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const apiUrl = import.meta.env.VITE_API_URL;
+
+    useEffect(() => {
+        const asyncFunction = async () => { 
+        if (!animalId) console.log("Erro na inicialização");
+        
+        try{ 
+            const response = await axios.get(`${apiUrl}/api/animal/${animalId}`)
+            console.log(response.data)
+            setSuccess("A API obteve sucesso")
+             if (response.data) {
+                setNome(response.data.nome)
+                setEspecie(response.data.especie);
+                setIdade(response.data.idade);
+                setGenero(response.data.genero);
+                setAltura(response.data.altura);
+                setComprimento(response.data.comprimento);
+                setPeso(response.data.peso);
+                setDoenca(response.data.doenca);
+                setAlergia(response.data.alergia);
+                setRaca(response.data.raca);
+
+                setSuccess("Os dados do animal foram carregados com sucesso.");
+            } else {
+                setError("Resposta da API inválida.");
+            }
+            
+        }catch(err){
+            console.log(err)
+            setError("Erro no get do animal")
+        }
+        setIsLoading(false)
+    }
+
+    asyncFunction()
+    }, [show == true, animalId])
+
 
     const isInvalid = (e) => {
       e.target.classList.add("isInvalid");
@@ -33,30 +73,9 @@ const NewAnimal = ({onClose}) => {
       }
     };
 
-    const handleReset = () => {
-      let form = document.getElementById("formsNewAnimal");
-      let elements = form.getElementsByClassName("isInvalid");
-      while (elements.length > 0) {
-        elements[0].classList.remove("isInvalid");
-      }
-      setNome("");
-      setEspecie("");
-      setIdade("");
-      setGenero("");
-      setAltura("");
-      setComprimento("");
-      setPeso("");
-      setTexto("");
-      setDoenca("");
-      setAlergia("");
-      setRaca("");
-      setError(null);
-      setSuccess(null);
-    };
-
     const handleSubmit = async (e) => {
       e.preventDefault();
-      if (!document.getElementById("formsNewAnimal").reportValidity()) {
+      if (!document.getElementById("formseditAnimal").reportValidity()) {
         setError("Preencha todos os campos!");
         return;
       }
@@ -69,20 +88,16 @@ const NewAnimal = ({onClose}) => {
         altura: parseInt(altura, 10),
         comprimento: parseInt(comprimento, 10),
         peso: parseInt(peso, 10),
-        texto: texto,
         doenca: doenca,
         alergia: alergia,
         raca: raca,
       };
       try {
-        const response = await axios.post(
-          `${apiUrl}/api/animal`, 
+        const response = await axios.put(
+          `${apiUrl}/api/animal/${animalId}`, 
           newAnimal
         );
-        console.log("New Animal:", response.data);
-        const responseAddToClient = await axios.put(`${apiUrl}/api/cliente/addanimal/${response.data.id}`)
-        console.log("New Animal:", responseAddToClient.data);
-        handleReset();
+        console.log("Animal:", response.data);
         setSuccess("Animal adicionado com sucesso!");
         setIsLoading(false);
         onClose()
@@ -97,10 +112,9 @@ const NewAnimal = ({onClose}) => {
 
     return (
       <div className="animal-container">
-        <h1 className="title">Registre um animal</h1>
+        <h1 className="title">Edite este animal</h1>
         <form  
-          id="formsNewAnimal"
-          onReset={handleReset}
+          id="formseditAnimal"
           onSubmit={handleSubmit}>
           <div className="line1">
             <InputField
@@ -141,7 +155,7 @@ const NewAnimal = ({onClose}) => {
               classNameDiv="inputIdade"
               type="number"
               value={idade}
-              onChange={(e) => {
+              onChange={(e) => {        
                 setIdade(e.target.value);
                 isValid(e);
               }}
@@ -255,22 +269,7 @@ const NewAnimal = ({onClose}) => {
               required
             />
           </div>
-          <div className="line5">
-            <InputField
-              label="Notas Adicionais"
-              placeholder="Alguma informação adicional"
-              name="texto"
-              idInput="newTexto"
-              classNameDiv="inputTexto"
-              value={texto}
-              onChange={(e) => {
-                setTexto(e.target.value);
-                isValid(e);
-              }}
-              onInvalid={(e) => isInvalid(e)}
-              required
-            />
-          </div>
+
           <div className="errorsOrSuccess">
             <p style={{ color: "red" }}>{Error && Error}</p>
             <p style={{ color: "green" }}>{Success && Success}</p>
@@ -280,13 +279,6 @@ const NewAnimal = ({onClose}) => {
             onClick={handleSubmit}
             className="submit">
             Enviar
-          </button>
-          <button
-            type="reset"
-            className="cancelar"
-            onClick={() => handleReset()}
-          >
-            Cancelar
           </button>
         </form>
         <button
@@ -299,6 +291,6 @@ const NewAnimal = ({onClose}) => {
       {isLoading && <LoadingSpin />}
       </div>
     );
-};
+}
 
-export default NewAnimal;
+export default EditAnimal

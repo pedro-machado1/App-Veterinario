@@ -26,14 +26,14 @@ public class ClienteController {
     @Autowired
     private ClienteService clientService;
 
-    @Autowired
-    private SecurityFilter securityFilter;
 
     @PostMapping
     public ResponseEntity<ClienteDto> insert(@Valid @RequestBody ClienteDto cliente, HttpServletRequest request) throws Exception {
         ClienteDto newClientDto = clientService.insert(cliente);
         return ResponseEntity.ok(newClientDto);
     }
+
+    // fzr verification adm pra conferir se tem permisão
     @GetMapping("{id}")
     public ResponseEntity<Optional<ClienteDto>> findById(@PathVariable Long id) throws Exception {
         Optional<ClienteDto> clienteDto =clientService.findById(id);

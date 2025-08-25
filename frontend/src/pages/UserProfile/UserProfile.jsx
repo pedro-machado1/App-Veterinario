@@ -11,7 +11,7 @@ const UserProfile = () => {
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
-  const [isLoading, setIsLoading] = useState(false);
+  const [hasCliente, setHasClient] = useState(null)
   const [newUser, setNewUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,8 +30,13 @@ const UserProfile = () => {
             {
             withCredentials: true,
         });
+        if (!response.data.cliente){ 
+          console.error("Você não possui nenhum animal cadastrado ")
+          setHasClient(false)
+        }
         setNewUser(response.data);
         console.log(response.data);
+        setHasClient(true)
       } catch (err) {
         setError("Não foi possível carregar o perfil do utilizador.");
         console.error("Erro na requisição:", err);
@@ -53,22 +58,31 @@ const UserProfile = () => {
       <p className="text-gray-600">
         E-mail: {newUser.email || "E-mail não encontrado"}
       </p>
-      <p className="text-gray-600">
-        CPF: {newUser.cliente.cpf || "CPF não encontrado"}
-      </p>
-      <p className="text-gray-600">
-        Data de Nascimento: {formatDateForDisplay(newUser.cliente.dataDeNascimento) || "Data de nascimento não encontrado"}
-      </p>
-      <p className="text-gray-600">
-        Telefone: {newUser.cliente.telefone || "Telefone não encontrado"}
-      </p>
-      <p className="text-gray-600">
-        Endereço: {newUser.cliente.endereco || "Endereço não encontrado"}
-      </p>
-      <p className="text-gray-600">
-        Primeiro Acesso: {newUser.cliente.dataDeCriacao || "Primeiro Acesso não encontrado"}
-      </p>
-
+      {hasCliente && (  
+        <div>
+        <p className="text-gray-600">
+          CPF: {newUser.cliente.cpf || "CPF não encontrado"}
+        </p>
+        <p className="text-gray-600">
+          Data de Nascimento: {formatDateForDisplay(newUser.cliente.dataDeNascimento) || "Data de nascimento não encontrado"}
+        </p>
+        <p className="text-gray-600">
+          Telefone: {newUser.cliente.telefone || "Telefone não encontrado"}
+        </p>
+        <p className="text-gray-600">
+          Endereço: {newUser.cliente.endereco || "Endereço não encontrado"}
+        </p>
+        <p className="text-gray-600">
+          Primeiro Acesso: {newUser.cliente.dataDeCriacao || "Primeiro Acesso não encontrado"}
+        </p>
+      </div>
+      )}
+      {!hasCliente && (
+        <div>
+          <h1 onClick={navigate("/newCliente")}> Você precisar registrar suas informações pessoais</h1>
+        </div>
+      )
+      }
       <button
         onClick={() => {
             if (show == true) setShow(false);
@@ -80,7 +94,7 @@ const UserProfile = () => {
       </button>
       <button
         type="buttom"
-        onClick={() => navigate("/editAnimal")}
+        onClick={() => navigate("/animal")}
       >
         Editar os animais
       </button>

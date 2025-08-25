@@ -2,7 +2,6 @@ import './App.css'
 import './assets/css/buttoms.css'
 import "./assets/css/text.css"
 import MainPage from './pages/MainPage/mainPage.jsx'
-import NewAnimal from './components/Cadastros/Animal/NewAnimal.jsx'
 import NewCliente from './components/Cadastros/Cliente/NewCliente.jsx'
 import NewConsulta from './components/Cadastros/Consulta/newConsulta.jsx'
 import NewConsultorio from './components/Cadastros/Consultorio/newConsultorio/newConsultorio.jsx'
@@ -13,26 +12,27 @@ import NewVacinaItem from './components/Cadastros/VacinaItem/newVacinaitem.jsx'
 import NewVeterinario from './components/Cadastros/Veterinario/addVeterinario/newVeterinario.jsx'
 import RegisterComponent from './components/Security/Register/RegisterComponent.jsx'
 import LoginComponents from './components/Security/Login/LoginComponents.jsx'
+import Navbar from './components/Extras/navbar/Navbar.jsx'
 import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
 import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import UserProfile from './pages/UserProfile/UserProfile.jsx'
-import EditAnimal from './components/Cadastros/Animal/EditAnimal.jsx'
+import EditAnimal from './components/Cadastros/Animal/MainAnimal/MainAnimal.jsx'
 
 function App() {
   
   return (
     <BrowserRouter> 
-    
       <Routes>
         <Route path = "/forgot-password" element = {<ForgotPasswordComponents/>} />
         <Route path = "/reset-password" element= {<ResetPassword/>} />
         <Route path="/login" element={<LoginComponents />} />
-        <Route path="/register" element={<ProtectedRoute><RegisterComponent /></ProtectedRoute>} />
+        <Route path="/register" element={<RegisterComponent />} />
         <Route path="/newConsulta" element={<ProtectedRoute><NewConsulta /></ProtectedRoute>} />
-        <Route path="/editAnimal" element={<ProtectedRoute><EditAnimal /></ProtectedRoute>} />
+        <Route path="/animal" element={<ProtectedRoute><EditAnimal /></ProtectedRoute>} />
         <Route path="/newCliente" element={<ProtectedRoute><NewCliente /></ProtectedRoute>} />
+        <Route path="/navbar" element={<ProtectedRoute><Navbar /></ProtectedRoute>} />
         <Route path="/newConsultorio" element={<ProtectedRoute><NewConsultorio /></ProtectedRoute>} />
         <Route path="/newMedicamento" element={<ProtectedRoute><NewMedicamento /></ProtectedRoute>} />
         <Route path="/newMedicamentoItem" element={<ProtectedRoute><NewMedicamentoItem /></ProtectedRoute>} />

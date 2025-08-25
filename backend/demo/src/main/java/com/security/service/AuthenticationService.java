@@ -1,11 +1,14 @@
 package com.security.service;
 
+import com.dto.users.Usersdto;
 import com.model.Users;
 import com.security.Role;
 import com.security.UsersRepository;
 import com.security.dto.Newpassword;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
+import static com.extras.Converters.convertToDto;
 import static com.extras.Converters.convertToEntity;
 
 
@@ -71,6 +75,22 @@ public class AuthenticationService implements UserDetailsManager {
         }
 
     }
+
+    public Usersdto authenticatedUser() {
+        try {
+        Object principal = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Users currentUser = (Users) principal;
+        currentUser = usersRepository.findByEmail(currentUser.getEmail());
+        Usersdto usersdto = convertToDto(currentUser, Usersdto.class);
+        usersdto.setPassword(null);
+        return usersdto;
+        }catch (Exception e){
+            throw new ResourceNotFoundException("Erro na autenticação");
+        }
+    }
+
     @Override
     public void createUser(UserDetails userDetails) {
         Users user = (Users) usersRepository.findByEmail(userDetails.getUsername());

@@ -49,7 +49,7 @@ public class ClienteService {
         cliente = clienteRepository.save(cliente);
         clienteDTO = convertToDto(cliente, ClienteDto.class);
         usersService.addCliente(clienteDTO);
-        return clienteDTO  ;
+        return clienteDTO ;
     }
 
     @Transactional(readOnly = true)
