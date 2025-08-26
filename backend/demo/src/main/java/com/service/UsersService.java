@@ -2,8 +2,12 @@ package com.service;
 
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.dto.consultorio.ConsultorioDto;
+import com.dto.veterinario.VeterinarioDto;
 import com.model.Cliente;
+import com.model.Consultorio;
 import com.model.Users;
+import com.model.Veterinario;
 import com.security.UsersRepository;
 import com.service.exceptions.DataBaseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +53,11 @@ public class UsersService {
     }
 
     @Transactional
-    public void deleteCliente(String token) throws DataBaseException {
-
+    public void addConsultorio(ConsultorioDto consultorioDto) throws DataBaseException {
+        Users user = findUsers();
+        Consultorio consultorio = convertToEntity(consultorioDto, Consultorio.class);
+        user.setConsultorio(consultorio);
+        usersRepository.save(user);
     }
+
 }

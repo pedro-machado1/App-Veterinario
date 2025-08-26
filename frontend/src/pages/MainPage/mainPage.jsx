@@ -1,4 +1,4 @@
-import Header from "../../components/Extras/header/header";
+import Header from "../../components/Extras/Header/header";
 import { useState } from "react";
 
 const MainPage = () => {

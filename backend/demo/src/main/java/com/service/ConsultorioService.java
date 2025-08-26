@@ -38,12 +38,17 @@ public class ConsultorioService {
     @Autowired
     private VeterinarioService veterinarioService;
 
+    @Autowired
+    private UsersService usersService;
+
     @Transactional
     public ConsultorioDto insert(ConsultorioDto consultorioDto) {
         Consultorio consultorio= convertToEntity(consultorioDto, Consultorio.class);
-        consultorio.setDatadeCadastro(LocalDateTime.now());
+        consultorio.setDataDeCadastro(LocalDate.now());
         consultorio = consultorioRepository.save(consultorio);
-        return convertToEntity(consultorio, ConsultorioDto.class);
+        consultorioDto = convertToDto(consultorio, ConsultorioDto.class);
+        usersService.addConsultorio(consultorioDto);
+        return consultorioDto;
     }
 
     @Transactional(readOnly = true)

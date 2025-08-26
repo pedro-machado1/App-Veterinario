@@ -1,11 +1,11 @@
-import axios from "axios";
-import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
-import InputField from '../../Extras/InputField/InputField.jsx';
-import { Link } from 'react-router-dom';
+import './RegisterConsultorio.css';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import InputField from '../../../Extras/InputField/InputField';
+import LoadingSpin from '../../../Extras/LoadingSpin/LoadingSpin';
 
-const RegisterComponent = () => {
+const RegisterConsultorio = () => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
     
@@ -85,7 +85,7 @@ const RegisterComponent = () => {
         setIsLoading(true)
         try { 
             const response = await axios.post(
-                `${apiUrl}/api/auth/register`, 
+                `${apiUrl}/api/auth/registerConsultorio`, 
                 loginData,  
             );
             console.log("Dados", response.data);
@@ -94,7 +94,7 @@ const RegisterComponent = () => {
             setIsLoading(false)
             setTimeout(() => {
             }, 4000)
-            navigate('/newCliente') 
+            navigate('/newConsultorio') 
 
         } catch (err) {
             setIsLoading(false)
@@ -106,10 +106,7 @@ const RegisterComponent = () => {
             }
         }
     }
-    
-    const voltar = () => {
-        navigate('/Login')
-    }        
+       
 
     return (
         <div>
@@ -161,15 +158,9 @@ const RegisterComponent = () => {
                     <p style={{ color: "green" }}>{Sucess && Sucess}</p>
                 </div>
             </form>
-            <button 
-                id = "voltarParaLogin"
-                onClick={voltar}
-            >
-                Voltar para o Login
-            </button>
             {isLoading && <LoadingSpin/>}
         </div>
     );
 };
 
-export default RegisterComponent;
+export default RegisterConsultorio;

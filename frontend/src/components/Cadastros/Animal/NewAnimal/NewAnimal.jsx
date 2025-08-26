@@ -161,7 +161,7 @@ const NewAnimal = ({onClose}) => {
                 </option>
                 <option value="Masculino">Masculino</option>
                 <option value="Feminino">Feminino</option>
-                <option value=" NÃO INFORMADO"> NÃO INFORMADO</option>
+                <option value="NAO INFORMADO"> NÃO INFORMADO</option>
               </select>
             </div>
           </div>
@@ -249,22 +249,6 @@ const NewAnimal = ({onClose}) => {
               value={raca}
               onChange={(e) => {
                 setRaca(e.target.value);
-                isValid(e);
-              }}
-              onInvalid={(e) => isInvalid(e)}
-              required
-            />
-          </div>
-          <div className="line5">
-            <InputField
-              label="Notas Adicionais"
-              placeholder="Alguma informação adicional"
-              name="texto"
-              idInput="newTexto"
-              classNameDiv="inputTexto"
-              value={texto}
-              onChange={(e) => {
-                setTexto(e.target.value);
                 isValid(e);
               }}
               onInvalid={(e) => isInvalid(e)}

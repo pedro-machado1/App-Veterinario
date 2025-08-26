@@ -4,7 +4,8 @@ public enum Role {
 
     ADMIN("ROLE_ADMIN"),
     CLIENTE("ROLE_CLIENTE"),
-    VETERINARIO("ROLE_VETERINARIO");
+    VETERINARIO("ROLE_VETERINARIO"),
+    CONSULTORIO("ROLE_CONSULTORIO");
 
     private String role;
 

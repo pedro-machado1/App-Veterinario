@@ -48,15 +48,15 @@ function Header() {
 
   return (
     <>
-      <header className="header">
+      <header className="header-container">
         <div className="accountContainer">
-          <div className="account" onClick={showMenu} ref={openMenuPointer}>
-            <label htmlFor=""> VetHelp</label>
+          <div className="account-button" onClick={showMenu} ref={openMenuPointer}>
+            <label className="account-label"> VetHelp</label>
           </div>
           {newShow && ( 
-            <div ref={menuPointer}>
-              <p onClick={() => {navigate("/userProfile")}}> Perfil </p>
-              <p onClick={handleLogout}> Sair</p>
+            <div className= "dropdown-menu" ref={menuPointer}>
+              <p className="menu-item" onClick={() => {navigate("/userProfile")}}> Perfil </p>
+              <p className="menu-item" onClick={handleLogout}> Sair</p>
             </div>
           )}
         </div>

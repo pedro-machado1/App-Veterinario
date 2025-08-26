@@ -2,6 +2,7 @@ package com.fixtures;
 
 import com.model.Consultorio;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ConsultorioFixture {
@@ -12,8 +13,8 @@ public class ConsultorioFixture {
         cs.setEndereco("Av. Principal, 456");
         cs.setTelefone("(11) 11111-1111");
         cs.setDescricao("Consultório veterinário para pequenos animais.");
-        cs.setDataCriacao(LocalDateTime.now().minusMonths(1));
-        cs.setDatadeCadastro(LocalDateTime.now().minusDays(10));
+        cs.setDataDeFundacao(LocalDate.now().minusMonths(1));
+        cs.setDataDeCadastro(LocalDate.now().minusDays(10));
         return cs;
     }
 }

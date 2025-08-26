@@ -38,7 +38,7 @@ public class AnimalController {
     }
     @GetMapping("{id}")
     public ResponseEntity<AnimalDto> findById(@PathVariable Long id){
-        Optional<AnimalDto> animalDto =animalService.findById(id);
+        Optional<AnimalDto> animalDto =animalService.findByIdwithAuthenticate(id);
         if (animalDto.isEmpty()) return ResponseEntity.notFound().build();
         AnimalDto animal = animalDto.get();
         return ResponseEntity.ok(animal);

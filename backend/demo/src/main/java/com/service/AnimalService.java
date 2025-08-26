@@ -41,6 +41,13 @@ public class AnimalService {
     public Optional<AnimalDto> findById(long id){
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado " + id));
+        return Optional.of(convertToDto(animal, AnimalDto.class));
+    }
+
+    @Transactional
+    public Optional<AnimalDto> findByIdwithAuthenticate(long id){
+        Animal animal = animalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado " + id));
         Usersdto usersdto =authenticationService.authenticatedUser();
 
         if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == usersdto.getCliente().getId())){

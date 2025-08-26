@@ -1,7 +1,7 @@
-import "./Navbar.css";    
+import './Navbar.css'
 import {useNavigate, useLocation} from 'react-router-dom';
 import ArrayOptions from "./arrayOptions/arrayOptions"; 
-import Header from "../header/header";
+import Header from "../Header/header";
 
 const Navbar = () => {
 
@@ -9,14 +9,14 @@ const Navbar = () => {
     const location = useLocation()
 
     return ( 
-        <div>
+        <div className='navbar'>
             {
                 ArrayOptions().map((option) => (
-                    <div key={option.nome} 
-                    className= "optionDisplay"
+                    <div key={option.nome}
+                    className= "navbar-link"
                     onClick={() => navigate(option.url)}
                     >
-                        <label htmlFor="DescriptionLabel">{option.nome || "nome não encontrado"}</label>
+                        <label className='link-label' htmlFor="DescriptionLabel">{option.nome || "nome não encontrado"}</label>
                     </div>
                 )
             )}

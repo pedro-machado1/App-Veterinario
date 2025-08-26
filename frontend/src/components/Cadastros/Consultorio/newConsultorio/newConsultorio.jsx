@@ -9,6 +9,7 @@
 
 import "./newConsultorio.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InputField from "../../../Extras/InputField/InputField.jsx";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
@@ -19,11 +20,13 @@ const NewConsultorio = () => {
   const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [dataDeFundacao, setDataDeFundacao] = useState("");
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showVeterinario, setShowVeterinario] = useState(false);
-  
+
+  const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const isInvalid = (e) => e.target.classList.add("isInvalid");
@@ -58,6 +61,7 @@ const NewConsultorio = () => {
       endereco,
       telefone,
       descricao,
+      dataDeFundacao
     };
     setIsLoading(true);
     try {
@@ -65,7 +69,8 @@ const NewConsultorio = () => {
       console.log("New Consultorio:", response.data);
       handleReset();
       setSuccess("Consultório adicionado com sucesso!");
-      setIsLoading(false);
+      setIsLoading(false);  
+      navigate('/login')
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -125,14 +130,25 @@ const NewConsultorio = () => {
           onInvalid={(e)=> isInvalid(e)}
           required
         />
-
+        <InputField
+          label="Data de Fundação"
+          placeholder="Data de Fundação do consultório"
+          name="dataDeFundacao"
+          type="date"
+          idInput="newDataDeFundacao"
+          classNameDiv="inputDataDeFundacao"
+          value={dataDeFundacao}
+          onChange={(e)=> { setDataDeFundacao(e.target.value); isValid(e); }}
+          onInvalid={(e)=> isInvalid(e)}
+          required
+        />
         <button 
           type="button" 
           id="newVeterinarioButton"
           className="cadastrarVeterinario"
           onClick={() => setShowVeterinario(true)}
         >
-          Novo Veterinário
+          Novo Veterinario
         </button>
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>

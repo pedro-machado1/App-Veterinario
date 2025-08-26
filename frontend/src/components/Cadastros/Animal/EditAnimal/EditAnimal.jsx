@@ -175,7 +175,7 @@ const EditAnimal = ({
                 </option>
                 <option value="Masculino">Masculino</option>
                 <option value="Feminino">Feminino</option>
-                <option value=" NÃO INFORMADO"> NÃO INFORMADO</option>
+                <option value="NAO INFORMADO"> NÃO INFORMADO</option>
               </select>
             </div>
           </div>
