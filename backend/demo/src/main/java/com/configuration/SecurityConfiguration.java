@@ -1,6 +1,7 @@
 package com.configuration;
 
 import com.model.Users;
+import com.security.Role;
 import com.security.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ public class SecurityConfiguration {
                 .cors(org.springframework.security.config.Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/medicamento/**").authenticated()
+//                        .requestMatchers("/api/auth/registerVeterinario").hasRole("CONSULTORIO")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

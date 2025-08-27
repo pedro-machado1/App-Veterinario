@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -21,5 +22,7 @@ public class ConsultorioUpdateDto {
     private String telefone;
 
     private String descricao;
+
+    private LocalDate dataDeFundacao;
 
 }

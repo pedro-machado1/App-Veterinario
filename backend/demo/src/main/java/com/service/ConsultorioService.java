@@ -6,6 +6,7 @@ import com.dto.consultorio.ConsultorioUpdateDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.model.Consultorio;
+import com.model.Users;
 import com.model.Veterinario;
 import com.repository.ConsultorioRepository;
 import com.repository.VeterinarioRepository;
@@ -66,7 +67,9 @@ public class ConsultorioService {
 
 
     @Transactional
-    public ConsultorioDto update(Long id, ConsultorioUpdateDto consultorioDto){
+    public ConsultorioDto update(ConsultorioUpdateDto consultorioDto){
+        Users users = usersService.findUsers();
+        long id = users.getConsultorio().getId();
         existsById(id);
         Consultorio consultorio = consultorioRepository.getReferenceById(id);
         convertToEntityVoid(consultorioDto, consultorio);

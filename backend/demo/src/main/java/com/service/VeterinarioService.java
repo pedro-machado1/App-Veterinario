@@ -30,11 +30,16 @@ public class VeterinarioService {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private UsersService usersService;
+
     @Transactional
     public VeterinarioDto insert(VeterinarioDto veterinarioDto){
         Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
         veterinario = veterinarioRepository.save(veterinario);
-        return convertToDto(veterinario, VeterinarioDto.class);
+        veterinarioDto = convertToDto(veterinario, VeterinarioDto.class);
+        usersService.addVeterinario(veterinarioDto);
+        return veterinarioDto;
 
     }
 
@@ -52,7 +57,9 @@ public class VeterinarioService {
     }
 
     @Transactional
-    public VeterinarioDto update(Long id, VeterinarioUpdateDto veterinarioDto){
+    public VeterinarioDto update(VeterinarioUpdateDto veterinarioDto){
+        Users users =usersService.findUsers();
+        long id = users.getVeterinario().getId();
         existsByid(id);
         Veterinario veterinario = veterinarioRepository.getReferenceById(id);
         convertToEntityVoid(veterinarioDto, veterinario);

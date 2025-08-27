@@ -46,9 +46,9 @@ public class VeterinarioController {
         Page<VeterinarioDto> responsePages =veterinarioService.findAll(pages);
         return ResponseEntity.ok().body(responsePages);
     }
-    @PutMapping("{id}")
-    public ResponseEntity<VeterinarioDto> update(@PathVariable Long id, @Validated @RequestBody VeterinarioUpdateDto veterinarioUpdateDto){
-        VeterinarioDto veterinarioDto = veterinarioService.update(id, veterinarioUpdateDto);
+    @PutMapping("")
+    public ResponseEntity<VeterinarioDto> update(@Validated @RequestBody VeterinarioUpdateDto veterinarioUpdateDto){
+        VeterinarioDto veterinarioDto = veterinarioService.update(veterinarioUpdateDto);
         return ResponseEntity.ok(veterinarioDto);
     }
     @DeleteMapping("{id}")

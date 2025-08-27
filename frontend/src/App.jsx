@@ -9,7 +9,7 @@ import NewMedicamento from './components/Cadastros/Medicamento/newMedicamento.js
 import NewMedicamentoItem from './components/Cadastros/MedicamentoItem/NewMedicamentoItem.jsx'
 import NewVacina from './components/Cadastros/Vacina/newVacina.jsx'
 import NewVacinaItem from './components/Cadastros/VacinaItem/newVacinaitem.jsx'
-import NewVeterinario from './components/Cadastros/Veterinario/addVeterinario/newVeterinario.jsx'
+import NewVeterinario from './components/Cadastros/Veterinario/newVeterinario/newVeterinario.jsx'
 import RegisterComponent from './components/Security/Register/RegisterComponent.jsx'
 import LoginComponents from './components/Security/Login/LoginComponents.jsx'
 import Navbar from './components/Extras/navbar/Navbar.jsx'
@@ -21,6 +21,7 @@ import UserProfile from './pages/UserProfile/UserProfile.jsx'
 import EditAnimal from './components/Cadastros/Animal/MainAnimal/MainAnimal.jsx'
 import MainConsultorio from './components/Cadastros/Consultorio/MainConsultorio/MainConsultorio.jsx' 
 import RegisterConsultorio from './components/Cadastros/Consultorio/RegisterConsultorio/RegisterConsultorio.jsx'
+import RegisterVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/RegisterVeterinario.jsx'
 
 function App() {
   
@@ -42,6 +43,7 @@ function App() {
         <Route path="/newMedicamentoItem" element={<ProtectedRoute><NewMedicamentoItem /></ProtectedRoute>} />
         <Route path="/newVacina" element={<ProtectedRoute><NewVacina /></ProtectedRoute>} />
         <Route path="/newVacinaItem" element={<ProtectedRoute><NewVacinaItem /></ProtectedRoute>} />
+        <Route path="/registerVeterinario" element={<ProtectedRoute><RegisterVeterinario /></ProtectedRoute>} />
         <Route path="/newVeterinario" element={<ProtectedRoute><NewVeterinario /></ProtectedRoute>} />
         <Route path="/userProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
         <Route path= "/home" element= {<ProtectedRoute><MainPage /></ProtectedRoute>}/>

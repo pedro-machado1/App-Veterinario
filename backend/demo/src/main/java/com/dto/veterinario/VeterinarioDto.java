@@ -39,14 +39,11 @@ public class VeterinarioDto {
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @NotBlank(message = "Informe o seu email")
-    private String email;
-
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
-//
-//    @NotNull(message = "Informe a sua data de nascimento")
-//    private LocalDate dataDeNascimento;
+
+    @NotNull(message = "Informe a sua data de nascimento")
+    private LocalDate dataDeNascimento;
 
     private String endereco;
 

@@ -60,4 +60,11 @@ public class UsersService {
         usersRepository.save(user);
     }
 
+    @Transactional
+    public void addVeterinario(VeterinarioDto veterinarioDto) throws DataBaseException {
+        Users user = findUsers();
+        Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
+        user.setVeterinario(veterinario);
+        usersRepository.save(user);
+    }
 }

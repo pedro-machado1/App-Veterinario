@@ -1,11 +1,3 @@
-// fzr parte do perfil para concluir essa parte pois checaremos o id para ver se 
-// ele está na conta do consultorio com o id do perfil faremos adicionaremos o veterinario;
-
-
-// fzr update possivel
-
-// tela de visualização do consultório
-
 
 import "./newConsultorio.css";
 import { useState } from "react";
@@ -13,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../../../Extras/InputField/InputField.jsx";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import NewVeterinario from "../../Veterinario/addVeterinario/newVeterinario.jsx";
+import NewVeterinario from "../../Veterinario/newVeterinario/newVeterinario.jsx";
 
 const NewConsultorio = () => {
   const [nome, setNome] = useState("");
@@ -36,6 +28,19 @@ const NewConsultorio = () => {
     }
   };
 
+  const CheckDate = (date) => {
+    const today = new Date();
+    const inputDate = new Date(date);
+    if (inputDate > today) {
+      setError('Data de Nascimento não pode ser futura!');
+      return false;
+    } else {
+      setError(null);
+      return true;
+    }
+  }
+
+
   const handleReset = () => {
     const form = document.getElementById("formsNewConsultorio");
     const elements = form.getElementsByClassName("isInvalid");
@@ -52,6 +57,7 @@ const NewConsultorio = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!CheckDate(dataDeFundacao)) return;
     if (!document.getElementById("formsNewConsultorio").reportValidity()) {
       setError("Preencha todos os campos!");
       return;

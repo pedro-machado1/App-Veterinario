@@ -108,6 +108,18 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/registerVeterinario")
+    public ResponseEntity<String> registerVeterinario(@RequestBody @Valid AuthenticationDto registerDto, HttpServletResponse response){
+        if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
+        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.VETERINARIO);
+
+        usersRepository.save(newUser);
+        login(registerDto, response);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/authentication")
     public ResponseEntity<Usersdto> authentication(){
         try {

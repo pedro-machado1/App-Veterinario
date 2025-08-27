@@ -46,9 +46,9 @@ public class ConsultorioController {
         Page<ConsultorioDto> responsePages =consultorioService.findAll(pages);
         return ResponseEntity.ok().body(responsePages);
     }
-    @PutMapping("{id}")
-    public ResponseEntity<ConsultorioDto> update(@PathVariable Long id, @Validated @RequestBody ConsultorioUpdateDto consultorioUpdateDto){
-        ConsultorioDto consultorioDto = consultorioService.update(id, consultorioUpdateDto);
+    @PutMapping("")
+    public ResponseEntity<ConsultorioDto> update(@Validated @RequestBody ConsultorioUpdateDto consultorioUpdateDto){
+        ConsultorioDto consultorioDto = consultorioService.update(consultorioUpdateDto);
         return ResponseEntity.ok(consultorioDto);
     }
     @DeleteMapping("{id}")

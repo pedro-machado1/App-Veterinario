@@ -11,7 +11,6 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
   const [crvm, setCRVM] = useState("");
   const [cpf, setCpf] = useState(""); 
   const [estado, setEstado] = useState("");
-  const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
   const [dataDeNascimento, setDataDeNascimento] = useState("");
@@ -28,6 +27,8 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
     }
   };
 
+  
+
   const handleReset = () => {
     const form = document.getElementById("formsNewVeterinario");
     const elements = form.getElementsByClassName("isInvalid");
@@ -38,7 +39,7 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
     setCRVM("");
     setCpf("");
     setEstado("");
-    setEmail("");
+    setDataDeNascimento("")
     setTelefone("");
     setEndereco("");
     setError(null);
@@ -47,7 +48,7 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!CheckEmail(email) || !CheckPhone(telefone) || !CheckCpf(cpf) || !CheckDate(dataDeNascimento)) {
+    if (!CheckPhone(telefone) || !CheckCpf(cpf) || !CheckDate(dataDeNascimento)) {
       return;
     }
     if (!document.getElementById("formsNewVeterinario").reportValidity()) {
@@ -59,9 +60,9 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
       crvm,
       cpf,
       estado,
-      email,
       telefone,
-      endereco
+      endereco,
+      dataDeNascimento
     };
     setIsLoading(true);
     try {
@@ -81,17 +82,6 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
       }
     }
   };
-
-  const CheckEmail = (email)=> {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (emailRegex.test(email)) {
-      setError(null);
-      return true;
-    } else {
-      setError('Formato de Email Inválido!');
-      return false;
-    }
-  }
 
   const CheckPhone = (phone) => {
     const onlyDigits = phone.replace(/\D/g, '');
@@ -186,7 +176,7 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
           onChange={(e) => { 
             const mask = maskCpf(e.target.value);
             setCpf(mask);
-            isValid(mask);
+            isValid(e);
           }}
           onInvalid={(e) => isInvalid(e)}
           required
@@ -232,18 +222,6 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
           </select>
         </div>
         <InputField
-          label="Email"
-          placeholder="Informe o email"
-          name="email"
-          idInput="newEmail"
-          classNameDiv="inputEmail"
-          type = "email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onInvalid={(e) => isInvalid(e)}
-          required
-        />
-        <InputField
           label="Telefone"
           placeholder="Informe o telefone"
           name="telefone"
@@ -253,7 +231,7 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
           onChange={(e) => { 
             const mask = maskPhone(e.target.value);
             setTelefone(mask);
-            isValid(mask);
+            isValid(e);
           }}
           onInvalid={(e) => isInvalid(e)}
           required
@@ -270,6 +248,18 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
             isValid(e);
           }}
           onInvalid={(e) => isInvalid(e)}
+        />
+        <InputField
+          label="Data de Nascimento"
+          placeholder="Data de Nascimento do consultório"
+          name="dataDeNascimento"
+          type="date"
+          idInput="newDataDeNascimento"
+          classNameDiv="inputDataDeNascimento"
+          value={dataDeNascimento}
+          onChange={(e)=> { setDataDeNascimento(e.target.value); isValid(e); }}
+          onInvalid={(e)=> isInvalid(e)}
+          required
         />
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin"
 import NewAnimal from "../NewAnimal/NewAnimal"
