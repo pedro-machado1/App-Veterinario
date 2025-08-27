@@ -1,5 +1,6 @@
 package com.dto.consultorio;
 
+import com.dto.users.UsersSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Users;
@@ -35,9 +36,9 @@ public class ConsultorioDto {
 
     private LocalDate dataDeFundacao;
 
-    private LocalDateTime dataDeCadastro;
+    private LocalDate dataDeCadastro;
 
     private List<VeterinarioSimpleDto> veterinario;
 
-    private Users users;
+    private UsersSimpleDto users;
 }

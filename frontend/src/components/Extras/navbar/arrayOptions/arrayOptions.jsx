@@ -1,18 +1,15 @@
-import { jwtDecode } from "jwt-decode"
 
-// get the token
 const ArrayOptions = () => {
 
-        let jwt = jwtDecode(token)
 
-        const options = [
+    const options = [
         {
             nome: "Home",
-            url: "/homePage"
+            url: "/home"
         },
         {
             nome: "Animais",
-            url: "/animais"
+            url: "/animal"
         },
         {
             nome: "Consultorio",
@@ -22,8 +19,9 @@ const ArrayOptions = () => {
             nome: "Veterinario",
             url: "/veterinario"
         },
-        ]
-        return options
+    ]
+
+    return options
 }
 
 export default ArrayOptions

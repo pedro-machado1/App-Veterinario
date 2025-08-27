@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-    @Query("SELECT a FROM Animal a JOIN a.cliente c WHERE c.id = :clienteId")
-    Page<Animal> findAllClienteByVeterinario(@Param("clienteId") Long clienteId, Pageable pageable);
+
+    @Query("SELECT DISTINCT a FROM Cliente c JOIN c.animal a WHERE c.id = :clienteId")
+    Page<Animal> findAllAnimalByCliente(@Param("clienteId") Long clienteId, Pageable pageable);
 
 }

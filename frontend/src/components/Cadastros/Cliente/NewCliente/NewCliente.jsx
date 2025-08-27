@@ -1,16 +1,14 @@
 import "./NewCliente.css";
 import { useState } from 'react';
-import InputField from "../../Extras/InputField/InputField";
+import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
-import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
-import NewAnimal from "../Animal/NewAnimal";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
 
 const NewCliente = () => {
 
   const [newName, setName] = useState("");
   const [newCpf, setCpf] = useState("");
-  const [newEmail, setEmail] = useState("");
   const [newPhone, setPhone] = useState("");
   const [newdataDeNascimento, setdataDeNascimento] = useState("");
   const [newEndereco, setEndereco] = useState("");
@@ -33,17 +31,6 @@ const NewCliente = () => {
       e.target.classList.remove("isInvalid");
     }
   };
-
-  const CheckEmail = (email) => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (emailRegex.test(email)) {
-      setError(null);
-      return true;
-    } else {
-      setError('Formato de Email Inválido!');
-      return false;
-    }
-  }
 
   const CheckPhone = (phone) => {
     const onlyDigits = phone.replace(/\D/g, '');
@@ -90,7 +77,6 @@ const NewCliente = () => {
 
     setName("");
     setCpf("");
-    setEmail("");
     setPhone("");
     setdataDeNascimento("");
     setEndereco("");
@@ -104,7 +90,6 @@ const NewCliente = () => {
     e.preventDefault();
     if (
       !CheckCpf(newCpf) ||
-      !CheckEmail(newEmail) ||
       !CheckPhone(newPhone) ||
       !CheckDate(newdataDeNascimento)
     ) return;
@@ -112,7 +97,6 @@ const NewCliente = () => {
     const newClient = {
       nome: newName,
       cpf: parseInt(newCpf.replace(/\D/g, "")),
-      email: newEmail,
       telefone: parseInt(newPhone.replace(/\D/g, "")),
       dataDeNascimento: newdataDeNascimento,
       endereco: newEndereco
@@ -126,12 +110,14 @@ const NewCliente = () => {
     try {
       const response = await axios.post(
         `${apiUrl}/api/cliente`,
-        newClient
+        newClient,
+        {withCredentials : true }
       );
       console.log('New Client:', response.data);
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
       setIsLoading(false);
+      navigate('/login')
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -213,20 +199,6 @@ const NewCliente = () => {
         </div>
         <div className="line2">
           <InputField
-            label="E-mail"
-            placeholder={"Digite o e-mail do cliente"}
-            name={"email"}
-            type="email"
-            idInput="newEmail"
-            classNameDiv="inputEmail"
-            value={newEmail}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-          <InputField
             label="Telefone"
             placeholder={"Digite o telefone do cliente"}
             name={"phone"}
@@ -288,7 +260,7 @@ const NewCliente = () => {
         )}
         <button className="NovoAnimal"
           type="button"
-          onClick={() => navigate('/newAnimal')}>
+          onClick={() => navigate('/animal')}>
           Adicionar Animal</button>
 
         <div className="errorsOrSuccess">

@@ -3,6 +3,7 @@ package com.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,12 +23,12 @@ public class Consultorio {
 
     private String descricao;
 
-    private LocalDateTime dataCriacao;
+    private LocalDate dataDeFundacao;
 
-    private LocalDateTime datadeCadastro;
+    private LocalDate dataDeCadastro;
 
-//    @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
-//    private Users users;
+    @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
+    private Users users;
 
     @ManyToMany
     @JoinTable(

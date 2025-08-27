@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from "axios";
 import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';

@@ -32,12 +32,12 @@ public class Users implements UserDetails {
 
 //    @OneToOne
 //    private Veterinario veterinario;
-//
+////
     @OneToOne
     private Cliente cliente;
 
-//    @OneToOne
-//    private Consultorio consultorio;
+    @OneToOne
+    private Consultorio consultorio;
 
     public Users (String email, String password, Role role) {
         this.email = email;

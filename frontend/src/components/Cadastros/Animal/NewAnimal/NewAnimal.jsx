@@ -1,10 +1,10 @@
 import "./NewAnimal.css";
 import { useState } from "react";
-import InputField from "../../Extras/InputField/InputField"; 
+import InputField from "../../../Extras/InputField/InputField.jsx"; 
 import axios from "axios";
-import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin.jsx";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
 
-const NewAnimal = (Cliente) => { 
+const NewAnimal = ({onClose}) => { 
     const [nome, setNome] = useState("");
     const [especie, setEspecie] = useState("");
     const [idade, setIdade] = useState("");
@@ -12,7 +12,7 @@ const NewAnimal = (Cliente) => {
     const [altura, setAltura] = useState("");
     const [comprimento, setComprimento] = useState("");
     const [peso, setPeso] = useState("");
-    const [texto, setTexto] = useState("");
+    const [texto, setTexto] = useState(""); 
     const [doenca, setDoenca] = useState("");
     const [alergia, setAlergia] = useState("");
     const [raca, setRaca] = useState("");
@@ -80,9 +80,12 @@ const NewAnimal = (Cliente) => {
           newAnimal
         );
         console.log("New Animal:", response.data);
+        const responseAddToClient = await axios.put(`${apiUrl}/api/cliente/addanimal/${response.data.id}`)
+        console.log("New Animal:", responseAddToClient.data);
         handleReset();
         setSuccess("Animal adicionado com sucesso!");
         setIsLoading(false);
+        onClose()
       } catch (err) {
         setIsLoading(false);
         console.error(err);
@@ -158,7 +161,7 @@ const NewAnimal = (Cliente) => {
                 </option>
                 <option value="Masculino">Masculino</option>
                 <option value="Feminino">Feminino</option>
-                <option value=" NÃO INFORMADO"> NÃO INFORMADO</option>
+                <option value="NAO INFORMADO"> NÃO INFORMADO</option>
               </select>
             </div>
           </div>
@@ -252,22 +255,6 @@ const NewAnimal = (Cliente) => {
               required
             />
           </div>
-          <div className="line5">
-            <InputField
-              label="Notas Adicionais"
-              placeholder="Alguma informação adicional"
-              name="texto"
-              idInput="newTexto"
-              classNameDiv="inputTexto"
-              value={texto}
-              onChange={(e) => {
-                setTexto(e.target.value);
-                isValid(e);
-              }}
-              onInvalid={(e) => isInvalid(e)}
-              required
-            />
-          </div>
           <div className="errorsOrSuccess">
             <p style={{ color: "red" }}>{Error && Error}</p>
             <p style={{ color: "green" }}>{Success && Success}</p>
@@ -286,7 +273,14 @@ const NewAnimal = (Cliente) => {
             Cancelar
           </button>
         </form>
-        {isLoading && <LoadingSpin/>}
+        <button
+        type="buttom"
+        className="fechar"
+        onClick={onClose}>
+            Fechar
+        </button>
+
+      {isLoading && <LoadingSpin />}
       </div>
     );
 };

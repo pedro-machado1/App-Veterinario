@@ -1,26 +1,25 @@
-import React from 'react';
-import axios from "axios";
-import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
-import InputField from '../../Extras/InputField/InputField.jsx';
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { useAuth } from '../Context/AuthContext.jsx'; 
+import './RegisterConsultorio.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import InputField from '../../../Extras/InputField/InputField';
+import LoadingSpin from '../../../Extras/LoadingSpin/LoadingSpin';
 
-const LoginComponents = () => {
+const RegisterConsultorio = () => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const { login} = useAuth()
+    
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
-
-    const [newemail, setEmail] = useState('');
-    const [newpassword, setPassword] = useState('');
+    const [newEmail, setEmail] = useState('');
+    const [newPassword, setPassword] = useState('');
+    const [newConfirmPassword, setConfirmPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [Error, setError] = useState(null);
     const [Sucess, setSucess] = useState(null);
 
     const isInvalid = (e) => {
-    e.target.classList.add("isInvalid");
+        e.target.classList.add("isInvalid");
     };
 
     const isValid = (e) => {
@@ -42,8 +41,18 @@ const LoginComponents = () => {
         }
     }
 
+    const CheckPassword = (password, confirmPassword) =>{ 
+        if (password === confirmPassword) return true;
+        else {
+            HandleReset()
+            setError("As Duas senhas tem que ser iguais")
+            return false
+        }
+
+    }
+
     const HandleReset = (e) => {
-        let form = document.getElementById("formsLogin");
+        let form = document.getElementById("formsRegister");
         let elements = form.getElementsByClassName("isInvalid");
     
 
@@ -53,6 +62,7 @@ const LoginComponents = () => {
 
         setEmail("")
         setPassword("")
+        setConfirmPassword("")
         setIsLoading(false)
         setError(null)
         setSucess(null)
@@ -61,44 +71,54 @@ const LoginComponents = () => {
     const HandleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!CheckEmail(newemail)){
+        if (!CheckEmail(newEmail) || !CheckPassword(newPassword, newConfirmPassword)){
             return;
         }
         const loginData = { 
-            email: newemail,
-            password: newpassword
+            email: newEmail,
+            password: newPassword
         }
-        if (!document.getElementById("formsLogin").reportValidity()) {
+        if (!document.getElementById("formsRegister").reportValidity()) {
             setError("Preencha todos os campos!");
             return;
         }
         setIsLoading(true)
         try { 
-            const response = await login(loginData)
+            const response = await axios.post(
+                `${apiUrl}/api/auth/registerConsultorio`, 
+                loginData,  
+            );
+            console.log("Dados", response.data);
             HandleReset();
-            console.log(response)
-            setSucess("Login realizado com Sucesso")
+            setSucess("Registro realizado com Sucesso")
+            setIsLoading(false)
+            setTimeout(() => {
+            }, 4000)
+            navigate('/newConsultorio') 
+
         } catch (err) {
+            setIsLoading(false)
             HandleReset();
             console.error(err);
             if (err.response && err.response.data) {
+                setIsLoading(false);
                 setError(`${err.response.data.message}`);
             }
         }
-        setIsLoading(false)
     }
-    
+       
+
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Cadastrar Novo Usuário</h1>
             <form
-            id='formsLogin' 
+            id='formsRegister' 
             onSubmit={HandleSubmit} 
             >
                 <InputField 
                 label="Email"
                  type="email"
-                 value = {newemail}
+                 value = {newEmail}
                  onChange={(e) => { 
                     setEmail(e.target.value);
                     isValid(e)
@@ -109,32 +129,38 @@ const LoginComponents = () => {
                 <InputField 
                  label="Senha"
                  type="password"
-                 value={newpassword}
+                 value={newPassword}
                  onChange={(e) => { 
                     setPassword(e.target.value)
                     isValid(e)
                  }}
                  onInvalid={(e) => isInvalid(e)}
                  required />
+                 <InputField
+                 label= "Confirmar senha"
+                 type = "password"
+                 value = {newConfirmPassword}
+                 onChange={(e) => { 
+                    setConfirmPassword(e.target.value)
+                    isValid(e)
+                 }}
+                 onInvalid= {(e) => isInvalid(e)}
+                 required
+                 />
                 <button 
                 type="submit"
                 >
-                    Entrar
+                    Cadastrar
                 </button>
+                
                 <div className="errorsOrSuccess">
                     <p style={{ color: "red" }}>{Error && Error}</p>
                     <p style={{ color: "green" }}>{Sucess && Sucess}</p>
                 </div>
-                <p>
-                    Esqueceu a senha? <Link to="/reset-password">Clique aqui</Link>
-                </p>
-                <p>
-                    Não tem uma conta? <Link to="/register">Registre-se</Link>
-                </p>
             </form>
             {isLoading && <LoadingSpin/>}
         </div>
     );
 };
 
-export default LoginComponents;
+export default RegisterConsultorio;

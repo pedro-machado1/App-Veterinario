@@ -1,7 +1,5 @@
 package com.security;
 
-import com.dto.users.UsersSimpleDto;
-import com.dto.users.UsersWithoutPassword;
 import com.dto.users.Usersdto;
 import com.model.Users;
 import com.security.dto.AuthenticationDto;
@@ -19,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
@@ -96,15 +96,29 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/authentication")
-    public ResponseEntity<UsersWithoutPassword> authentication(){
+    @PostMapping("/registerConsultorio")
+    public ResponseEntity<String> registerConsultorio(@RequestBody @Valid AuthenticationDto registerDto, HttpServletResponse response){
+        if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
+        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CONSULTORIO);
+
+        usersRepository.save(newUser);
+        login(registerDto, response);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/authentication")
+    public ResponseEntity<Usersdto> authentication(){
         try {
             Object principal = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
             Users currentUser = (Users) principal;
-            UsersWithoutPassword dto = convertToDto(currentUser, UsersWithoutPassword.class);
-            return ResponseEntity.ok().body(dto);
+            currentUser = userRepository.findByEmail(currentUser.getEmail());
+            Usersdto usersdto=convertToDto(currentUser, Usersdto.class);
+            usersdto.setPassword(null);
+            return ResponseEntity.ok().body(usersdto);
 
         }catch (Exception e){
             return ResponseEntity.status(403).build();
@@ -130,5 +144,7 @@ public class AuthController {
 
         return ResponseEntity.ok().build();
     }
+
+
 
 }

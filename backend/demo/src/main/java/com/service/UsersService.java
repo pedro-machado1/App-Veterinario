@@ -1,11 +1,13 @@
 package com.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.dto.users.Usersdto;
 import com.dto.cliente.ClienteDto;
+import com.dto.cliente.ClienteUpdateDto;
+import com.dto.consultorio.ConsultorioDto;
+import com.dto.veterinario.VeterinarioDto;
 import com.model.Cliente;
+import com.model.Consultorio;
 import com.model.Users;
+import com.model.Veterinario;
 import com.security.UsersRepository;
 import com.service.exceptions.DataBaseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +33,7 @@ public class UsersService {
     }
 
     @Transactional
-    public Users findUsers(String token) throws DataBaseException {
-        DecodedJWT jwt = JWT.decode(token);
-        long id = Long.parseLong(jwt.getSubject());
-        Optional<Users> user = usersRepository.findById(id);
-        if(user.isEmpty())throw new DataBaseException("User not found");
-        return user.get();
-    }
-
-    @Transactional
-    public Users addCliente(ClienteDto clienteDto) throws DataBaseException {
+    public Users findUsers() throws DataBaseException {
         Object principal = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -48,15 +41,23 @@ public class UsersService {
         long userId = currentUser.getId();
         Optional<Users> usuario = usersRepository.findById(userId);
         if(usuario.isEmpty())throw new DataBaseException("User not found");
-        Users user = usuario.get();
-        Cliente cliente = convertToEntity(clienteDto, Cliente.class);
-        user.setCliente(cliente);
-        usersRepository.save(user);
-        return user;
+        return usuario.get();
     }
 
     @Transactional
-    public void deleteCliente(String token) throws DataBaseException {
-
+    public void addCliente(ClienteDto clienteDto) throws DataBaseException {
+        Users user = findUsers();
+        Cliente cliente = convertToEntity(clienteDto, Cliente.class);
+        user.setCliente(cliente);
+        usersRepository.save(user);
     }
+
+    @Transactional
+    public void addConsultorio(ConsultorioDto consultorioDto) throws DataBaseException {
+        Users user = findUsers();
+        Consultorio consultorio = convertToEntity(consultorioDto, Consultorio.class);
+        user.setConsultorio(consultorio);
+        usersRepository.save(user);
+    }
+
 }

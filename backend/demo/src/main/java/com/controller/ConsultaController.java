@@ -1,9 +1,7 @@
 package com.controller;
 
-import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaDto;
-import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consulta.ConsultaUpdateDto;
 import com.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.lang.module.ResolutionException;
 import java.net.URI;
 import java.util.Optional;
 
@@ -63,7 +60,7 @@ public class ConsultaController {
     }
 
     @PutMapping("/{id}/addanimal/{idAnimal}")
-    public ResponseEntity<ConsultaDto> addAnimal(@PathVariable Long id, @PathVariable Long idAnimal) {
+    public ResponseEntity<ConsultaDto> addAnimal(@PathVariable Long id, @PathVariable Long idAnimal) throws Exception {
         ConsultaDto consultaDto = consultaService.addAnimal(id, idAnimal);
         return ResponseEntity.ok(consultaDto);
     }

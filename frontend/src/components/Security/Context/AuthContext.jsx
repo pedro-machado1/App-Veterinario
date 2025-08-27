@@ -8,23 +8,22 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
   const [newUser, setNewUser] = useState(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const authenticateUser = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/auth/authentication`,
-          {},
+        const response = await axios.get(`${apiUrl}/api/auth/authentication`,
           {withCredentials : true}
         )
         setIsAuthenticated(true)
+        console.log(response.data)
         setNewUser(response.data)
       } catch (err) {
         setIsAuthenticated(false);
         setNewUser(null);
-      } finally {
       }
     }
 
@@ -47,12 +46,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/auth/logout`, 
+          {withCredentials : true}
+      )
+      setIsAuthenticated(false);
+    }catch(err){
+      throw err;
+    };
+    
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, newUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, newUser}}>
       {children}
     </AuthContext.Provider>
   );

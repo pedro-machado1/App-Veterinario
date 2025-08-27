@@ -27,8 +27,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private UsersRepository usersRepository;
-    @Autowired
     private UsersService usersService;
 
 
