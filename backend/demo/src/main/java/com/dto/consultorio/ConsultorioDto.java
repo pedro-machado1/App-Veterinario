@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ConsultorioDto {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private int id;
+    private long id;
 
     @NotBlank(message = "Informe o nome do consultorio")
     private String nome;

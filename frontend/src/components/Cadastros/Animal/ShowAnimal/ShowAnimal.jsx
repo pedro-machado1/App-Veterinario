@@ -36,9 +36,8 @@ const ShowAnimal = ({
 
     return (
       <div className="animal-container">
-        <h2 className="title">Registre um animal</h2>
+        <h2 className="title"> {newAnimal?.nome || "Nome não encontrado"} </h2>
         <div className="presentAnimalContainer">
-        <p>{newAnimal?.nome || "Nome não encontrado"}</p>
             <p>{newAnimal?.especie || "Espécie não encontrada"}</p>
             <p>{newAnimal?.idade || "Idade não encontrada"}</p>
             <p>{newAnimal?.genero || "Gênero não encontrado"}</p>

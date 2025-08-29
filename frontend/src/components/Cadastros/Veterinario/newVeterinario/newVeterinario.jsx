@@ -68,6 +68,7 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
     try {
       const response = await axios.post(`${apiUrl}/api/veterinario`, newVeterinario);
       console.log("New Veterinario:", response.data);
+      const add = await axios.put(`${apiUrl}/api/consultorio/addveterinario/${response.data.id}`)
       handleReset();
       setSuccess("Veterinário adicionado com sucesso!");
       setIsLoading(false);

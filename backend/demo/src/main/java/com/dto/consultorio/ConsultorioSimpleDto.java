@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ConsultorioSimpleDto {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private int id;
+    private long id;
 
     @NotBlank(message = "Informe o nome do consultorio")
     private String nome;

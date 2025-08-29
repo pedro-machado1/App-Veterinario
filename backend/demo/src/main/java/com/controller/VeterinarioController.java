@@ -4,6 +4,10 @@ import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
+import com.extras.EmailToVeterinario;
+import com.security.dto.AuthenticationDto;
+import com.security.service.AuthenticationService;
+import com.security.service.TokenService;
 import com.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +20,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+// criar endpoint que processa adiciona veterinarios para um certo escritorio e os envia um email;
+
 @Validated
 @RestController
 @CrossOrigin( origins = "http://localhost:8080")
@@ -24,6 +30,15 @@ public class VeterinarioController {
 
     @Autowired
     private VeterinarioService veterinarioService;
+
+    @Autowired
+    private EmailToVeterinario emailToVeterinario;
+
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping
     public ResponseEntity<VeterinarioDto> insert( @RequestBody VeterinarioDto veterinariodto){
@@ -35,6 +50,14 @@ public class VeterinarioController {
                 .toUri();
         return ResponseEntity.created(uri).body(veterinario);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody AuthenticationDto veterinariodto){
+        String token =tokenService.generateTokenForVeterinario(veterinariodto.getEmail());
+        emailToVeterinario.sendEmail(veterinariodto.getEmail(), token);
+        return ResponseEntity.ok().body("O e-mail foi enviado");
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<Optional<VeterinarioDto>> findById(@PathVariable Long id){
         Optional<VeterinarioDto> veterinarioDto =veterinarioService.findById(id);

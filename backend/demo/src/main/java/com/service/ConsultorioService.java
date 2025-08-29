@@ -97,7 +97,9 @@ public class ConsultorioService {
     }
 
     @Transactional
-    public ConsultorioDto addVeterinario(Long idConsultorio, Long idVeterinario) {
+    public ConsultorioDto addVeterinario(Long idVeterinario) {
+        Users users = usersService.findUsers();
+        long idConsultorio = users.getConsultorio().getId();
         existsById(idConsultorio);
         VeterinarioSimpleDto veterinario = convertToDto(
                 veterinarioService.findById(idVeterinario)
@@ -113,8 +115,7 @@ public class ConsultorioService {
         }
         consultorioDto.getVeterinario().add(veterinario);
         Consultorio consultorioentity = convertToEntity(consultorioDto, Consultorio.class);
-
-        consultorioentity = consultorioRepository.save(consultorioentity);
+         consultorioentity = consultorioRepository.save(consultorioentity);
 
         return convertToDto(consultorioentity, ConsultorioDto.class);
     }

@@ -1,20 +1,16 @@
 import "./RegisterVeterinario.css"
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import InputField from '../../../Extras/InputField/InputField';
 import LoadingSpin from '../../../Extras/LoadingSpin/LoadingSpin';
 
-const RegisterVeterinario = () => {
+const SendEmailVeterinario = () => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
     
-    const navigate = useNavigate();
-    const [params] = useSearchParams() 
 
     const [newEmail, setEmail] = useState('');
-    const [newPassword, setPassword] = useState('');
-    const [newConfirmPassword, setConfirmPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [Error, setError] = useState(null);
     const [Sucess, setSucess] = useState(null);
@@ -42,28 +38,15 @@ const RegisterVeterinario = () => {
         }
     }
 
-    const CheckPassword = (password, confirmPassword) =>{ 
-        if (password === confirmPassword) return true;
-        else {
-            HandleReset()
-            setError("As Duas senhas tem que ser iguais")
-            return false
-        }
-
-    }
-
     const HandleReset = (e) => {
         let form = document.getElementById("formsRegister");
         let elements = form.getElementsByClassName("isInvalid");
     
-
         while (elements.length > 0) {
         elements[0].classList.remove("isInvalid");
         }
 
         setEmail("")
-        setPassword("")
-        setConfirmPassword("")
         setIsLoading(false)
         setError(null)
         setSucess(null)
@@ -72,14 +55,11 @@ const RegisterVeterinario = () => {
     const HandleSubmit = async (e) => {
         e.preventDefault();
 
-        var token = params.get('token')
-
-        if (!CheckEmail(newEmail) || !CheckPassword(newPassword, newConfirmPassword)){
+        if (!CheckEmail(newEmail)){
             return;
         }
         const loginData = { 
             email: newEmail,
-            password: newPassword
         }
         if (!document.getElementById("formsRegister").reportValidity()) {
             setError("Preencha todos os campos!");
@@ -88,17 +68,13 @@ const RegisterVeterinario = () => {
         setIsLoading(true)
         try { 
             const response = await axios.post(
-                `${apiUrl}/api/auth/registerVeterinario?token=${token}`,
-                loginData
+                `${apiUrl}/api/veterinario/register`, 
+                loginData,  
             );
             console.log("Dados", response.data);
             HandleReset();
-            setSucess("Registro realizado com Sucesso")
+            setSucess("Informe o veterinário para registrar o usuário")
             setIsLoading(false)
-            setTimeout(() => {
-            }, 4000)
-            navigate('/newVeterinario') 
-
         } catch (err) {
             setIsLoading(false)
             HandleReset();
@@ -114,6 +90,10 @@ const RegisterVeterinario = () => {
     return (
         <div>
             <h1>Cadastrar Novo Veterinario Para o Consultorio</h1>
+            <p> Aqui você deverá colocar um email do veterinario 
+                para que ele possa criar a conta e registrar as suas 
+                informações
+            </p>
             <form
             id='formsRegister' 
             onSubmit={HandleSubmit} 
@@ -129,31 +109,10 @@ const RegisterVeterinario = () => {
                  onInvalid={(e) => isInvalid(e)}
                  required 
                  />
-                <InputField 
-                 label="Senha"
-                 type="password"
-                 value={newPassword}
-                 onChange={(e) => { 
-                    setPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required />
-                 <InputField
-                 label= "Confirmar senha"
-                 type = "password"
-                 value = {newConfirmPassword}
-                 onChange={(e) => { 
-                    setConfirmPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid= {(e) => isInvalid(e)}
-                 required
-                 />
                 <button 
                 type="submit"
                 >
-                    Cadastrar
+                    Mandar o e-mail
                 </button>
                 
                 <div className="errorsOrSuccess">
@@ -166,4 +125,4 @@ const RegisterVeterinario = () => {
     );
 };
 
-export default RegisterVeterinario;
+export default SendEmailVeterinario;

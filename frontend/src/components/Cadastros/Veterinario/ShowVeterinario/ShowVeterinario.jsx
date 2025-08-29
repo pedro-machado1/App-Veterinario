@@ -1,2 +1,82 @@
 import "./ShowVeterinario.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import { useNavigate } from "react-router-dom";
+
+const ShowVeterinario = ({ onClose, veterinarioId }) => {
+  const [veterinario, setVeterinario] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchVeterinario = async () => {
+      if (!veterinarioId) {
+        console.log("Erro na inicialização");
+        setError("Erro na inicialização");
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const response = await axios.get(
+          `${apiUrl}/api/veterinario/${veterinarioId}`
+        );
+        console.log(response.data);
+        setVeterinario(response.data);
+        setSuccess("A API obteve sucesso");
+      } catch (err) {
+        console.log(err);
+        setError("Erro ao carregar o veterinário");
+      }
+      setIsLoading(false);
+    };
+    fetchVeterinario();
+  }, [veterinarioId]);
+
+  return (
+    <div className="veterinario-container">
+      <h2 className="title">
+        {veterinario?.nome || "Nome não encontrado"}
+      </h2>
+      <div className="presentVeterinarioContainer">
+        <p>
+          <strong>CPF:</strong> {veterinario?.cpf || "CPF não encontrado"}
+        </p>
+        <p>
+          <strong>CRVM:</strong> {veterinario?.CRVM || "CRVM não encontrado"}
+        </p>
+        <p>
+          <strong>Email:</strong> {veterinario?.email || "Email não encontrado"}
+        </p>
+        <p>
+          <strong>Telefone:</strong>{" "}
+          {veterinario?.telefone || "Telefone não encontrado"}
+        </p>
+        <p>
+          <strong>Endereço:</strong>{" "}
+          {veterinario?.endereco || "Endereço não encontrado"}
+        </p>
+      </div>
+      <button type="button" className="fechar" onClick={onClose}>
+        Fechar
+      </button>
+      <button
+        type="button"
+        className="navigate"
+        onClick={() => navigate("/veterinarios")}
+      >
+        Voltar
+      </button>
+      {isLoading && <LoadingSpin />}
+      {error && <div className="error">{error}</div>}
+      {success && <div className="success">{success}</div>}
+    </div>
+  );
+};
+
+export default ShowVeterinario;
 

@@ -46,7 +46,7 @@ public class ConsultorioController {
         Page<ConsultorioDto> responsePages =consultorioService.findAll(pages);
         return ResponseEntity.ok().body(responsePages);
     }
-    @PutMapping("")
+    @PutMapping()
     public ResponseEntity<ConsultorioDto> update(@Validated @RequestBody ConsultorioUpdateDto consultorioUpdateDto){
         ConsultorioDto consultorioDto = consultorioService.update(consultorioUpdateDto);
         return ResponseEntity.ok(consultorioDto);
@@ -56,9 +56,9 @@ public class ConsultorioController {
         consultorioService.delete(id);
         return ResponseEntity.ok().body("o consultorio " + id + " foi removido");
     }
-    @PutMapping("/{id}/addveterinario/{idVeterinario}")
-    public ResponseEntity<ConsultorioDto> addVeterinario(@PathVariable Long id, @PathVariable Long idVeterinario) {
-        ConsultorioDto consultorioDto = consultorioService.addVeterinario(id, idVeterinario);
+    @PutMapping("/addveterinario/{idVeterinario}")
+    public ResponseEntity<ConsultorioDto> addVeterinario( @PathVariable Long idVeterinario) {
+        ConsultorioDto consultorioDto = consultorioService.addVeterinario(idVeterinario);
         return ResponseEntity.ok(consultorioDto);
     }
     @DeleteMapping("/{id}/removeveterinario/{idVeterinario}")

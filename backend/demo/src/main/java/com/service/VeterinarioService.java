@@ -5,6 +5,7 @@ import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.model.*;
 import com.repository.VeterinarioRepository;
 import com.service.exceptions.DataBaseException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +40,8 @@ public class VeterinarioService {
         Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
         veterinario = veterinarioRepository.save(veterinario);
         veterinarioDto = convertToDto(veterinario, VeterinarioDto.class);
-        usersService.addVeterinario(veterinarioDto);
+        Users users = usersService.findUsers();
         return veterinarioDto;
-
     }
 
     @Transactional(readOnly = true)
