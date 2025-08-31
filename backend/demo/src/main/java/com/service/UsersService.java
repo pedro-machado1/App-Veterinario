@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.cliente.ClienteDto;
-import com.dto.cliente.ClienteUpdateDto;
 import com.dto.consultorio.ConsultorioDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.model.Cliente;

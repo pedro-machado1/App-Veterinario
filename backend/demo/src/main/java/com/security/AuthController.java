@@ -111,15 +111,16 @@ public class AuthController {
     }
 
     @PostMapping("/registerVeterinario")
-    public ResponseEntity<String> registerVeterinario(@RequestBody @Valid AuthenticationDto registerDto, @RequestParam String token){
+    public ResponseEntity<String> registerVeterinario(@RequestBody @Valid AuthenticationDto registerDto, @RequestParam String token, HttpServletResponse response){
         if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
-//        tokenService.validateTokenForVeterinario(token);
+        tokenService.validateTokenForVeterinario(token);
         DecodedJWT newToken = JWT.decode(token);
         if (!newToken.getSubject().equals(registerDto.getEmail())) return ResponseEntity.badRequest().body("Email inválido");
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
         Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.VETERINARIO);
 
         usersRepository.save(newUser);
+        login(registerDto, response);
         return ResponseEntity.ok().build();
     }
 

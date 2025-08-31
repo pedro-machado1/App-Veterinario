@@ -3,6 +3,7 @@ import { useState } from "react";
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 
 // fzr para CRVM
 
@@ -19,6 +20,9 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   
   const apiUrl = import.meta.env.VITE_API_URL;
+  const location = useLocation();
+  const [params] = useSearchParams()
+  const navigate = useNavigate();
   
   const isInvalid = (e) => e.target.classList.add("isInvalid");
   const isValid = (e) => {
@@ -48,6 +52,10 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    var token = params.get('token')
+
+    console.log(token)
     if (!CheckPhone(telefone) || !CheckCpf(cpf) || !CheckDate(dataDeNascimento)) {
       return;
     }
@@ -66,15 +74,17 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
     };
     setIsLoading(true);
     try {
-      const response = await axios.post(`${apiUrl}/api/veterinario`, newVeterinario);
+      const response = await axios.post(`${apiUrl}/api/veterinario?token=${token}`,
+         newVeterinario);
       console.log("New Veterinario:", response.data);
-      const add = await axios.put(`${apiUrl}/api/consultorio/addveterinario/${response.data.id}`)
       handleReset();
       setSuccess("Veterinário adicionado com sucesso!");
       setIsLoading(false);
       if (onVeterinarioSubmit) {
         onVeterinarioSubmit(newVeterinario);
       }
+      navigate('/login')
+      
     } catch (err) {
       setIsLoading(false);
       console.error(err);

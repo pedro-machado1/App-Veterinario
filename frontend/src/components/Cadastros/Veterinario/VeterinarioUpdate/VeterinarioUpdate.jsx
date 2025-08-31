@@ -119,10 +119,8 @@ const VeterinarioUpdate = ({
             const response = await axios.put(
                 `${apiUrl}/api/veterinario`,
                 UpdateVeterinario,
-                { withCredentials: true }
             );
-            console.log('New Vetererinario:', response.data);
-            setSuccess("Veterinario adicionado com sucesso!");
+            console.log('Updated Vetererinario:', response.data);
             setIsLoading(false);
         } catch (err) {
             setIsLoading(false);

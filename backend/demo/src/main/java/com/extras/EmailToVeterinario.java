@@ -25,7 +25,7 @@ public class EmailToVeterinario {
         LocalDateTime agora = LocalDateTime.now().plusMinutes(60);
 
         String link = "http://localhost:5173/registerVeterinario?token=" + token;
-        String resendLink = "http://localhost:8080/api/emails/resend?to=" + to;
+        String resendLink = "http://localhost:8080/api/emails/resend?to=" + to + "&token=" + token;
 
         String body = "Olá, " + to + " Você tem até" + agora.format(formatador) + " para criar a sua conta.\n\n" +
                 "Clique no link abaixo para realizar isso :\n\n" +

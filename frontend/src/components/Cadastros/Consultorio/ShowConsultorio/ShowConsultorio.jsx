@@ -56,10 +56,7 @@ const ShowNewConsultorio = ({
         <button
         type="buttom"
         className=""
-        onClick={() => navigate("/veterinario",
-            {state: {  
-                consultorioId : consultorioId}
-        } 
+        onClick={() => navigate(`/veterinario?consultorioId=${consultorioId}`,
         )}>
             Ver Veterinários
         </button>

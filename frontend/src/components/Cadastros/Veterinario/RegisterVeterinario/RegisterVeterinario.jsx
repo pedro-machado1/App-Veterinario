@@ -97,7 +97,9 @@ const RegisterVeterinario = () => {
             setIsLoading(false)
             setTimeout(() => {
             }, 4000)
-            navigate('/newVeterinario') 
+            navigate(`/newVeterinario?token=${token}`,
+                  
+            ) 
 
         } catch (err) {
             setIsLoading(false)

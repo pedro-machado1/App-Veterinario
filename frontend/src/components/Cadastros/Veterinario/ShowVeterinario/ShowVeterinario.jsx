@@ -2,17 +2,20 @@ import "./ShowVeterinario.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import { useNavigate } from "react-router-dom";
+import VeterinarioUpdate from "../VeterinarioUpdate/VeterinarioUpdate.jsx";
 
 const ShowVeterinario = ({ onClose, veterinarioId }) => {
   const [veterinario, setVeterinario] = useState(null);
+  const [showEdit, setShowEdit] = useState(false)
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const apiUrl = import.meta.env.VITE_API_URL;
-  const navigate = useNavigate();
 
+  const showEditToggle = () => {
+    setShowEdit((prev) => !prev)
+  }
   useEffect(() => {
     const fetchVeterinario = async () => {
       if (!veterinarioId) {
@@ -27,7 +30,6 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
         );
         console.log(response.data);
         setVeterinario(response.data);
-        setSuccess("A API obteve sucesso");
       } catch (err) {
         console.log(err);
         setError("Erro ao carregar o veterinário");
@@ -47,10 +49,10 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
           <strong>CPF:</strong> {veterinario?.cpf || "CPF não encontrado"}
         </p>
         <p>
-          <strong>CRVM:</strong> {veterinario?.CRVM || "CRVM não encontrado"}
+          <strong>CRVM:</strong> {veterinario?.crvm || "CRVM não encontrado"}
         </p>
         <p>
-          <strong>Email:</strong> {veterinario?.email || "Email não encontrado"}
+          <strong>Estado:</strong> {veterinario?.estado || "estado não encontrado"}
         </p>
         <p>
           <strong>Telefone:</strong>{" "}
@@ -61,16 +63,13 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
           {veterinario?.endereco || "Endereço não encontrado"}
         </p>
       </div>
-      <button type="button" className="fechar" onClick={onClose}>
+      <button 
+      type="button" 
+      className="fechar"
+       onClick={onClose}>
         Fechar
       </button>
-      <button
-        type="button"
-        className="navigate"
-        onClick={() => navigate("/veterinarios")}
-      >
-        Voltar
-      </button>
+      
       {isLoading && <LoadingSpin />}
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}

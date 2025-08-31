@@ -40,7 +40,7 @@ public class VeterinarioService {
         Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
         veterinario = veterinarioRepository.save(veterinario);
         veterinarioDto = convertToDto(veterinario, VeterinarioDto.class);
-        Users users = usersService.findUsers();
+        usersService.addVeterinario(veterinarioDto);
         return veterinarioDto;
     }
 

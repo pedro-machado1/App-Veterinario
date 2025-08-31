@@ -113,7 +113,7 @@ const MainAnimal = () => {
                     {showEdit == animal.id && (
                     <div> 
                     <EditAnimal
-                    onClose = {() => setShowEdit(false)}
+                    onClose = {() => setShowEdit(null)}
                     animalId = {animal.id}
                     show={showEdit}
                     />

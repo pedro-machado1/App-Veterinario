@@ -22,7 +22,7 @@ public class TokenService {
     @Value("${api.security.token.reset}")
     private String resetTokenSecret;
 
-    @Value("${api.security.token.secret}")
+    @Value("${api.security.token.veterinario}")
     private String secretLoginVeterinario;
 
     public String generateRefreshToken(long id){
@@ -93,13 +93,14 @@ public class TokenService {
                 .verify(token);
     }
 
-    public String generateTokenForVeterinario(String email) {
+    public String generateTokenForVeterinario(String email, long consultorioId) {
         long TOKEN_VETERINARIO = 1000 * 60 * 60; // 60 minutos
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretLoginVeterinario);
             return JWT.create()
-                    .withSubject(email)
                     .withIssuer("API Veterinario")
+                    .withSubject(email)
+                    .withClaim("consultorioId", consultorioId)
                     .withIssuedAt(new Date(System.currentTimeMillis()))
                     .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_VETERINARIO))
                     .sign(algorithm);

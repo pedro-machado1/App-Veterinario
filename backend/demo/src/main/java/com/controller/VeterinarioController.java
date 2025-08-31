@@ -1,13 +1,18 @@
 package com.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
 import com.extras.EmailToVeterinario;
+import com.model.Users;
 import com.security.dto.AuthenticationDto;
 import com.security.service.AuthenticationService;
 import com.security.service.TokenService;
+import com.service.ConsultorioService;
+import com.service.UsersService;
 import com.service.VeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,17 +37,24 @@ public class VeterinarioController {
     private VeterinarioService veterinarioService;
 
     @Autowired
+    private ConsultorioService consultorioService;
+
+    @Autowired
     private EmailToVeterinario emailToVeterinario;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private UsersService usersService;
 
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping
-    public ResponseEntity<VeterinarioDto> insert( @RequestBody VeterinarioDto veterinariodto){
+    @PostMapping()
+    public ResponseEntity<VeterinarioDto> insert( @RequestBody VeterinarioDto veterinariodto, @RequestParam String token){
         VeterinarioDto veterinario = veterinarioService.insert(veterinariodto);
+        tokenService.validateTokenForVeterinario(token);
+        DecodedJWT jwt  =JWT.decode(token);
+        String consultorioId  =jwt.getClaim("consultorioId").toString();
+        consultorioService.addVeterinarioWithConsultorioId(veterinario.getId(),  Long.parseLong(consultorioId));
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -53,7 +65,9 @@ public class VeterinarioController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody AuthenticationDto veterinariodto){
-        String token =tokenService.generateTokenForVeterinario(veterinariodto.getEmail());
+        Users users = usersService.findUsers();
+        long consultorioId = users.getConsultorio().getId();
+        String token =tokenService.generateTokenForVeterinario(veterinariodto.getEmail(), consultorioId);
         emailToVeterinario.sendEmail(veterinariodto.getEmail(), token);
         return ResponseEntity.ok().body("O e-mail foi enviado");
     }
@@ -69,7 +83,7 @@ public class VeterinarioController {
         Page<VeterinarioDto> responsePages =veterinarioService.findAll(pages);
         return ResponseEntity.ok().body(responsePages);
     }
-    @PutMapping("")
+    @PutMapping()
     public ResponseEntity<VeterinarioDto> update(@Validated @RequestBody VeterinarioUpdateDto veterinarioUpdateDto){
         VeterinarioDto veterinarioDto = veterinarioService.update(veterinarioUpdateDto);
         return ResponseEntity.ok(veterinarioDto);

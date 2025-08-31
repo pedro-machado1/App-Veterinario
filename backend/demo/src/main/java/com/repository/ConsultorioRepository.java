@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConsultorioRepository extends JpaRepository<Consultorio, Long> {
-    @Query("SELECT v FROM Veterinario v JOIN v.consultorio c WHERE c.id = :consultorioId")
+    @Query("SELECT DISTINCT v FROM Consultorio c JOIN c.veterinario v WHERE c.id = :consultorioId")
     Page<Veterinario> findAllVeterinarioByConsultorioId(@Param("consultorioId") Long consultorioId, Pageable pageable);
 
 

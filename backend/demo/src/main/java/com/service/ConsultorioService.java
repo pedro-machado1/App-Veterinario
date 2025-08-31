@@ -120,6 +120,26 @@ public class ConsultorioService {
         return convertToDto(consultorioentity, ConsultorioDto.class);
     }
     @Transactional
+    public void addVeterinarioWithConsultorioId(Long idVeterinario, long idConsultorio) {
+        existsById(idConsultorio);
+        VeterinarioSimpleDto veterinario = convertToDto(
+                veterinarioService.findById(idVeterinario)
+                        .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio)), VeterinarioSimpleDto.class
+        );
+
+        ConsultorioDto consultorioDto = convertToDto( consultorioRepository.getReferenceById(idConsultorio), ConsultorioDto.class);
+        if (consultorioDto.getVeterinario() == null) {
+            consultorioDto.setVeterinario(new ArrayList<>());
+        }
+        if (consultorioDto.getVeterinario().contains(veterinario)) {
+            throw new DataBaseException("Consultório já está cadastrado no veterinário");
+        }
+        consultorioDto.getVeterinario().add(veterinario);
+        Consultorio consultorioentity = convertToEntity(consultorioDto, Consultorio.class);
+        consultorioentity = consultorioRepository.save(consultorioentity);
+
+    }
+    @Transactional
     public void removeVeterinario( Long idConsultorio, Long idVeterinario) {
         existsById(idVeterinario);
         VeterinarioSimpleDto veterinario = convertToDto(
