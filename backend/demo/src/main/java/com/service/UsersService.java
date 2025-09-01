@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.cliente.ClienteDto;
-import com.dto.cliente.ClienteUpdateDto;
 import com.dto.consultorio.ConsultorioDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.model.Cliente;
@@ -60,4 +59,11 @@ public class UsersService {
         usersRepository.save(user);
     }
 
+    @Transactional
+    public void addVeterinario(VeterinarioDto veterinarioDto) throws DataBaseException {
+        Users user = findUsers();
+        Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
+        user.setVeterinario(veterinario);
+        usersRepository.save(user);
+    }
 }

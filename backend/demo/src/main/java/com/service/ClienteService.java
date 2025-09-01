@@ -128,9 +128,9 @@ public class ClienteService {
                 animalService.findById(idAnimal)
                         .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class
         );
-        ClienteDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteDto.class);
+        ClienteUpdateDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteUpdateDto.class);
         if (clienteDto.getAnimal() == null) {
-            throw new DataBaseException("Animal não possui clientes cadastrados");
+            throw new DataBaseException("Cliente não possui cadastrados");
         }
         if (!clienteDto.getAnimal().contains(animal)) {
             throw new DataBaseException("Cliente não está cadastrado no animal");

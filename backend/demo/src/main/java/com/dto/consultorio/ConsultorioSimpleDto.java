@@ -1,6 +1,8 @@
 package com.dto.consultorio;
 
+import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.Users;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ConsultorioSimpleDto {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private int id;
+    private long id;
 
     @NotBlank(message = "Informe o nome do consultorio")
     private String nome;
@@ -32,5 +34,7 @@ public class ConsultorioSimpleDto {
     private LocalDate dataDeFundacao;
 
     private LocalDate dataDeCadastro;
+
+    private Estado estado;
 
 }

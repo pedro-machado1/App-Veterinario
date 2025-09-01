@@ -1,5 +1,6 @@
 package com.model;
 
+import com.enums.Estado;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class Consultorio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private String nome;
 
@@ -27,6 +28,8 @@ public class Consultorio {
 
     private LocalDate dataDeCadastro;
 
+    private Estado estado;
+
     @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
     private Users users;
 
@@ -37,6 +40,14 @@ public class Consultorio {
             inverseJoinColumns = @JoinColumn(name = "veterinario_id")
     )
     private List<Veterinario> veterinario;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tb_veterinario_cliente",
+            joinColumns = @JoinColumn(name = "veterinario_id"),
+            inverseJoinColumns = @JoinColumn(name = "cliente_id")
+    )
+    private List<Cliente> cliente;
 
 
 }

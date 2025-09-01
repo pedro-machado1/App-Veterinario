@@ -1,5 +1,7 @@
 package com.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.users.Usersdto;
 import com.model.Users;
 import com.security.dto.AuthenticationDto;
@@ -44,7 +46,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid AuthenticationDto data, HttpServletResponse response) {
         try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword());
+             var usernamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword());
             var auth = this.authenticationManager.authenticate(usernamePassword);
             Users users = (Users) auth.getPrincipal();
 
@@ -102,6 +104,20 @@ public class AuthController {
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
         Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CONSULTORIO);
+
+        usersRepository.save(newUser);
+        login(registerDto, response);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/registerVeterinario")
+    public ResponseEntity<String> registerVeterinario(@RequestBody @Valid AuthenticationDto registerDto, @RequestParam String token, HttpServletResponse response){
+        if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
+        tokenService.validateTokenForVeterinario(token);
+        DecodedJWT newToken = JWT.decode(token);
+        if (!newToken.getSubject().equals(registerDto.getEmail())) return ResponseEntity.badRequest().body("Email inválido");
+        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
+        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.VETERINARIO);
 
         usersRepository.save(newUser);
         login(registerDto, response);

@@ -30,9 +30,9 @@ public class Users implements UserDetails {
 
     private Role role;
 
-//    @OneToOne
-//    private Veterinario veterinario;
-////
+    @OneToOne
+    private Veterinario veterinario;
+
     @OneToOne
     private Cliente cliente;
 
@@ -47,7 +47,10 @@ public class Users implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == role.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (role == Role.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (role == Role.VETERINARIO) return List.of(new SimpleGrantedAuthority("ROLE_VETERINARIO"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (role == Role.CLIENTE) return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (role == Role.CONSULTORIO) return List.of(new SimpleGrantedAuthority("ROLE_CONSULTORIO"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 

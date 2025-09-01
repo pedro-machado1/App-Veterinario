@@ -12,7 +12,6 @@ public class VeterinarioFixture {
         v.setCpf("111.111.111-11");
         v.setCrvm("CRMV-000000");
         v.setNome("Dra. Veterinária");
-        v.setEmail("veterinaria@example.com");
         v.setTelefone("(22) 22222-2222");
         // Caso precise, ajuste o estado conforme os valores disponíveis no enum Estado
         // v.setEstado(Estado.SP);

@@ -85,6 +85,15 @@ const NewConsulta = () => {
           onInvalid={(e) => isInvalid(e)}
           required
         />
+      <button
+      type="buttom"
+      className="buttomCliente"
+      // onClick={}
+      >
+        Cliente
+      </button>
+      
+      {isLoading && <LoadingSpin />}
         <div className="errorsOrSuccess">
           <p style={{color:"red"}}>{Error && Error}</p>
           <p style={{color:"green"}}>{Success && Success}</p>
@@ -92,7 +101,6 @@ const NewConsulta = () => {
         <button type="submit" className="submit">Enviar</button>
         <button type="reset" className="cancelar" onClick={handleReset}>Cancelar</button>
       </form>
-      {isLoading && <LoadingSpin />}
     </div>
   );
 };

@@ -40,7 +40,7 @@ public class Cliente {
     private List<Animal> animal;
 
     @ManyToMany (mappedBy = "cliente")
-    private List<Veterinario> veterinario;
+    private List<Consultorio> Consultorio;
 
     @OneToMany(mappedBy = "cliente")
     private List<Consulta> consulta;

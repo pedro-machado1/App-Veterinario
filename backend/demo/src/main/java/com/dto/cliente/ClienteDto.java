@@ -50,7 +50,7 @@ public class ClienteDto {
 
     private List<AnimalSimpleDto> animal;
 
-    private List<VeterinarioSimpleDto> veterinario;
+    private List<ConsultaSimpleDto> consultorio;
 
     private List<ConsultaSimpleDto> consulta;
 

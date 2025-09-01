@@ -1,7 +1,10 @@
 package com.dto.consultorio;
 
+import com.dto.animal.AnimalSimpleDto;
+import com.dto.cliente.ClienteSimpleDto;
 import com.dto.users.UsersSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
+import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Users;
 import jakarta.validation.constraints.NotBlank;
@@ -20,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ConsultorioDto {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private int id;
+    private long id;
 
     @NotBlank(message = "Informe o nome do consultorio")
     private String nome;
@@ -34,11 +37,15 @@ public class ConsultorioDto {
     @NotBlank(message = "Informe a descrição do consultorio")
     private String descricao;
 
+    private Estado estado;
+
     private LocalDate dataDeFundacao;
 
     private LocalDate dataDeCadastro;
 
     private List<VeterinarioSimpleDto> veterinario;
+
+    private List<ClienteSimpleDto> Cliente;
 
     private UsersSimpleDto users;
 }

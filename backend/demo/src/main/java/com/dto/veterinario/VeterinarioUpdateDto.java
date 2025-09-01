@@ -30,8 +30,6 @@ public class VeterinarioUpdateDto {
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    private String email;
-
     private String telefone;
 
     private String endereco;

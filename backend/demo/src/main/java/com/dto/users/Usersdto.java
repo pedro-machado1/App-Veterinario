@@ -29,4 +29,6 @@ public class Usersdto {
     private ClienteSimpleDto cliente;
 
     private ConsultorioSimpleDto consultorio;
+
+    private VeterinarioSimpleDto veterinario;
 }

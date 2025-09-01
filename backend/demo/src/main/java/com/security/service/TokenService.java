@@ -22,6 +22,9 @@ public class TokenService {
     @Value("${api.security.token.reset}")
     private String resetTokenSecret;
 
+    @Value("${api.security.token.veterinario}")
+    private String secretLoginVeterinario;
+
     public String generateRefreshToken(long id){
         long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 30; // 30 dias
         try{
@@ -68,7 +71,7 @@ public class TokenService {
                 .verify(token);}
 
     public String generateResetPasswordToken(long id) {
-        long RESET_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutos
+        long RESET_TOKEN_EXPIRATION = 1000 * 60 * 20; // 20 minutos
         try {
             Algorithm algorithm = Algorithm.HMAC256(resetTokenSecret);
             return JWT.create()
@@ -82,9 +85,32 @@ public class TokenService {
         }
     }
 
-    // Novo: validar token de reset de senha
     public DecodedJWT validateResetPasswordToken(String token) throws JWTVerificationException {
         Algorithm algorithm = Algorithm.HMAC256(resetTokenSecret);
+        return JWT.require(algorithm)
+                .withIssuer("API Veterinario")
+                .build()
+                .verify(token);
+    }
+
+    public String generateTokenForVeterinario(String email, long consultorioId) {
+        long TOKEN_VETERINARIO = 1000 * 60 * 60; // 60 minutos
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretLoginVeterinario);
+            return JWT.create()
+                    .withIssuer("API Veterinario")
+                    .withSubject(email)
+                    .withClaim("consultorioId", consultorioId)
+                    .withIssuedAt(new Date(System.currentTimeMillis()))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_VETERINARIO))
+                    .sign(algorithm);
+        } catch (JWTCreationException e) {
+            throw new RuntimeException("Erro ao gerar token JWT de reset de senha", e);
+        }
+    }
+
+    public DecodedJWT validateTokenForVeterinario(String token) throws JWTVerificationException {
+        Algorithm algorithm = Algorithm.HMAC256(secretLoginVeterinario);
         return JWT.require(algorithm)
                 .withIssuer("API Veterinario")
                 .build()

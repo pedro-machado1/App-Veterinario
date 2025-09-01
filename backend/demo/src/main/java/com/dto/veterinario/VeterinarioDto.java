@@ -5,6 +5,7 @@ import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.observacao.ObservacaoSimpleDto;
+import com.dto.users.UsersSimpleDto;
 import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Users;
@@ -39,14 +40,11 @@ public class VeterinarioDto {
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @NotBlank(message = "Informe o seu email")
-    private String email;
-
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
-//
-//    @NotNull(message = "Informe a sua data de nascimento")
-//    private LocalDate dataDeNascimento;
+
+    @NotNull(message = "Informe a sua data de nascimento")
+    private LocalDate dataDeNascimento;
 
     private String endereco;
 
@@ -55,11 +53,7 @@ public class VeterinarioDto {
 
     private List<ObservacaoSimpleDto> observacao;
 
-    private List<MedicamentoSimpleDto> medicamento;
-
     private List<ConsultaSimpleDto> consulta;
 
-    private List<ClienteSimpleDto> cliente;
-
-    private Users users;
+    private UsersSimpleDto users;
 }

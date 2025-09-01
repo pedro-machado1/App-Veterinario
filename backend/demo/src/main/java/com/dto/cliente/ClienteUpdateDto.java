@@ -1,6 +1,7 @@
 package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.users.UpdateUsersdto;
 import com.dto.users.UsersSimpleDto;
 import com.dto.users.UsersWithoutPassword;
@@ -38,6 +39,8 @@ public class ClienteUpdateDto {
     private List<AnimalSimpleDto> animal;
 
     private List<VeterinarioSimpleDto> veterinario;
+
+    private List<ConsultaSimpleDto> consulta;
 
 
 }

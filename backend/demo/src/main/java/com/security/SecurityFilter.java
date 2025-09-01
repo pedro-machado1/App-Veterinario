@@ -33,7 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getServletPath();
-        return path.startsWith("/api/auth/") && !path.equals("/api/auth/authentication");
+        return (path.startsWith("/api/auth/") && !path.equals("/api/auth/authentication")) || path.startsWith(("/api/emails/resend"));
     }
 
     @Override

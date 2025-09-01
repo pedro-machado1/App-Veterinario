@@ -18,10 +18,9 @@ public class EmailService {
 
     public void sendEmail(String to, String token){
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime agora = LocalDateTime.now().plusMinutes(15);
+        LocalDateTime agora = LocalDateTime.now().plusMinutes(20);
 
         String link = "http://localhost:5173/reset-password?token=" + token;
-        String subject ="Recuperação de senha";
         String body = "Olá, " + to + " Você tem até" + agora.format(formatador) + " para redefinir a sua senha.\n\n" +
                 "Clique no link abaixo para confirmar seu email:\n\n" +
                 link + "\n\n" +
@@ -29,7 +28,7 @@ public class EmailService {
                 "Equipe da VetHelp";
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("pedro.jardim.machado@hotmail.com");
+        message.setTo("pedro.jardim.machado@hotmail.com ");
         message.setSubject("Recuperação de senha VetHelp");
         message.setText(body);
         mailSender.send(message);

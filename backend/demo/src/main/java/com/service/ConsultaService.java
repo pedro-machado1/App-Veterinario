@@ -49,19 +49,19 @@ public class ConsultaService {
     @Autowired
     private AnimalService animalService;
 
+    @Autowired
+    private UsersService usersService;
+
     @Transactional
     public ConsultaDto insert(ConsultaDto consultaDTO) {
-
         ClienteSimpleDto cliente = convertToDto(clienteService.findById(consultaDTO.getCliente().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaDTO.getCliente().getId() + " não foi encontrado."))
                 , ClienteSimpleDto.class);
-        VeterinarioSimpleDto veterinario = convertToDto(veterinarioService.findById(consultaDTO.getVeterinario().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o veterinário da consulta" + consultaDTO.getVeterinario().getId() + " não foi encontrado."))
-                , VeterinarioSimpleDto.class);
-
+        Veterinario veterinario = usersService.findUsers().getVeterinario();
+        VeterinarioSimpleDto veterinarioDto =convertToDto(veterinario, VeterinarioSimpleDto.class);
         consultaDTO.setDataCriacao(LocalDateTime.now());
         consultaDTO.setCliente(cliente);
-        consultaDTO.setVeterinario(veterinario);
+        consultaDTO.setVeterinario(veterinarioDto);
         Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
         consulta = consultaRepository.save(consulta);
         return convertToDto(consulta, ConsultaDto.class);

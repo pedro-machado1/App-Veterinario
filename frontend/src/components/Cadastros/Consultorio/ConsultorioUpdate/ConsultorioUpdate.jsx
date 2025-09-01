@@ -1,29 +1,28 @@
-// fzr com que vire um pop up na tela 
-
-
-import "./ClienteUpdate.css"
+import "./ConsultorioUpdate"
 import { useState, useEffect } from 'react';
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const ClienteUpdate = ({ 
-    name,
-    cpf,
-    phone,
-    dataDeNascimento,
-    endereco,
-    imagem,
-    onClose,
+const ConsultorioUpdate = ({
+  name,
+  phone,
+  dataDeFundacao,
+  endereco,
+  estado,
+  imagem,
+  descricao,
+  onClose,
 
 }) => {
 
   const [newName, setName] = useState("");
-  const [newCpf, setCpf] = useState("");
   const [newPhone, setPhone] = useState("");
-  const [newDataDeNascimento, setDataDeNascimento] = useState("");
+  const [newDataDeFundacao, setDataDeFundacao] = useState("");
   const [newEndereco, setEndereco] = useState("");
+  const [newDescricao, setNewDescricao] = useState("")
+  const [newEstado, setNewEstado] = useState("");
   const [newImagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
   const [Error, setError] = useState(null);
@@ -35,13 +34,14 @@ const ClienteUpdate = ({
 
 
   useEffect(() => {
-        if (name) setName(name);
-        if (cpf) setCpf(cpf);
-        if (phone) setPhone(phone);
-        if (dataDeNascimento) setDataDeNascimento(dataDeNascimento);
-        if (endereco) setEndereco(endereco);
-        if (imagem) setImagem(imagem);
-  },[name, cpf, phone, dataDeNascimento, endereco, imagem])
+    if (name) setName(name);
+    if (phone) setPhone(phone);
+    if (dataDeFundacao) setDataDeFundacao(dataDeFundacao);
+    if (endereco) setEndereco(endereco);
+    if (estado) setNewEstado(estado);
+    if (descricao) setNewDescricao(descricao);
+    if (imagem) setImagem(imagem);
+  }, [name, phone, dataDeFundacao, endereco, descricao, imagem, estado])
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -66,17 +66,6 @@ const ClienteUpdate = ({
     }
   }
 
-  const CheckCpf = (CPF) => {
-    const onlyDigits = CPF.replace(/\D/g, '');
-    if (onlyDigits.length === 11) {
-      setError(null);
-      return true;
-    } else {
-      setError('Formato de Cpf Inválido!');
-      return false;
-    }
-  }
-
   const CheckDate = (DATE) => {
     const today = new Date();
     const inputDate = new Date(DATE);
@@ -92,32 +81,32 @@ const ClienteUpdate = ({
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (
-      !CheckCpf(newCpf) ||
       !CheckPhone(newPhone) ||
-      !CheckDate(newDataDeNascimento)
+      !CheckDate(newDataDeFundacao)
     ) return;
 
-    const newClient = {
+    const UpdateConsultorio = {
       nome: newName,
-      cpf: parseInt(newCpf.replace(/\D/g, "")),
       telefone: parseInt(newPhone.replace(/\D/g, "")),
-      dataDeNascimento: newDataDeNascimento,
-      endereco: newEndereco
-      // imagem: newImagem,
+      dataDeFundacao: newDataDeFundacao,
+      descricao: newDescricao,
+      endereco: newEndereco,
+      estado: newEstado
+      // imagem: newImagem
     };
-    if (!document.getElementById("formsNewClient").reportValidity()) {
+    if (!document.getElementById("formsUpdateConsultorio").reportValidity()) {
       setError("Preencha todos os campos!");
       return;
     }
     setIsLoading(true);
     try {
       const response = await axios.put(
-        `${apiUrl}/api/cliente`,
-        newClient,
-        {withCredentials : true}
+        `${apiUrl}/api/consultorio`,
+        UpdateConsultorio,
+        { withCredentials: true }
       );
-      console.log('New Client:', response.data);
-      setSuccess("Cliente adicionado com sucesso!");
+      console.log('New Consultorio:', response.data);
+      setSuccess("Consultorio adicionado com sucesso!");
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -129,14 +118,6 @@ const ClienteUpdate = ({
     }
     onClose()
   };
-
-  function maskCpf(value) {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  }
 
   function maskPhone(value) {
     return value
@@ -159,18 +140,18 @@ const ClienteUpdate = ({
   };
 
   return (
-    <div className="cliente-container ">
+    <div className="consultorio-container ">
       <h1 className="title">
-        Atualize o seu perfil
+        Atualize o Seu Constultório
       </h1>
       <form
-        id="formsNewClient"
+        id="formsUpdateConsultorio"
         onSubmit={handleUpdate}>
 
         <div className="line1">
           <InputField
             label="Nome"
-            placeholder={"Digite o nome do cliente"}
+            placeholder={"Digite o nome do consultório"}
             name={"name"}
             idInput="newName"
             classNameDiv="inputName"
@@ -182,26 +163,11 @@ const ClienteUpdate = ({
             onInvalid={(e) => isInvalid(e)}
             required
           />
-          <InputField
-            label="CPF"
-            placeholder={"Digite o CPF do cliente"}
-            name={"cpf"}
-            idInput="newCpf"
-            classNameDiv="inputCpf"
-            value={maskCpf(newCpf)}
-            onChange={(e) => {
-              const masked = maskCpf(e.target.value);
-              setCpf(masked);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
         </div>
         <div className="line2">
           <InputField
             label="Telefone"
-            placeholder={"Digite o telefone do cliente"}
+            placeholder={"Digite o telefone do consultório"}
             name={"phone"}
             idInput="newPhone"
             classNameDiv="inputPhone"
@@ -215,15 +181,15 @@ const ClienteUpdate = ({
             required
           />
           <InputField
-            label="Data de Nascimento"
-            placeholder={"Digite a data de nascimento do cliente"}
-            name={"dataDeNascimento"}
-            idInput="newDataDeNascimento"
-            classNameDiv="inputdataDeNascimento"
+            label="Data de Fundação"
+            placeholder={"Digite a data de Fundação do Consultorio"}
+            name={"DataDeFundacao"}
+            idInput="newDataDeFundacao"
+            classNameDiv="inputDataDeFundacao"
             type="date"
-            value={newDataDeNascimento}
+            value={newDataDeFundacao}
             onChange={(e) => {
-              setDataDeNascimento(e.target.value);
+              setDataDeFundacao(e.target.value);
               isValid(e);
             }}
             onInvalid={(e) => isInvalid(e)}
@@ -231,9 +197,50 @@ const ClienteUpdate = ({
           />
         </div>
         <div className="line3"></div>
+        <div className="inputEstado">
+          <label htmlFor="newEstado">Estado</label>
+          <select
+            id="newEstado"
+            value={estado}
+            onChange={(e) => setNewEstado(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Selecione...
+            </option>
+            <option value="Acre">Acre</option>
+            <option value="Amapá">Amapá</option>
+            <option value="Alagoas">Alagoas</option>
+            <option value="Amazonas">Amazonas</option>
+            <option value="Bahia">Bahia</option>
+            <option value="Ceará">Ceará</option>
+            <option value="Distrito Federal">Distrito Federal</option>
+            <option value="Espírito Santo">Espírito Santo</option>
+            <option value="Goiás">Goiás</option>
+            <option value="Maranhão">Maranhão</option>
+            <option value="Mato Grosso">Mato Grosso</option>
+            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+            <option value="Minas Gerais">Minas Gerais</option>
+            <option value="Pará">Pará</option>
+            <option value="Paraíba">Paraíba</option>
+            <option value="Paraná">Paraná</option>
+            <option value="Pernambuco">Pernambuco</option>
+            <option value="Piauí">Piauí</option>
+            <option value="Rio de Janeiro">Rio de Janeiro</option>
+            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+            <option value="Rondônia">Rondônia</option>
+            <option value="Roraima">Roraima</option>
+            <option value="Santa Catarina">Santa Catarina</option>
+            <option value="São Paulo">São Paulo</option>
+            <option value="Sergipe">Sergipe</option>
+            <option value="Tocantins">Tocantins</option>
+          </select>
+        </div>
+
         <InputField
           label="Endereço"
-          placeholder={"Digite o endereço do cliente"}
+          placeholder={"Digite o endereço do consultório"}
           idInput="newendereco"
           classNameDiv="inputendereco"
           value={newEndereco}
@@ -246,7 +253,7 @@ const ClienteUpdate = ({
         />
         <InputField
           label="URL da Imagem"
-          placeholder={"Coloque a Imagem de perfil do cliente"}
+          placeholder={"Coloque a Imagem de perfil do consultório"}
           idInput="newImagem"
           classNameDiv="inputImagem"
           type="file"
@@ -259,11 +266,19 @@ const ClienteUpdate = ({
             style={{ width: "150px", height: "auto", marginTop: "10px" }}
           />
         )}
-        <button className="NovoAnimal"
-          type="button"
-          onClick={() => navigate('/newAnimal')}>
-          Adicionar Animal</button>
-
+        <InputField
+          label="Descrição"
+          placeholder={"Digite o descrição do consultorio"}
+          idInput="newDescricao"
+          classNameDiv="inputDescricao"
+          value={newDescricao}
+          onChange={(e) => {
+            setNewDescricao(e.target.value);
+            isValid(e);
+          }}
+          onInvalid={(e) => isInvalid(e)}
+          required
+        />
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>
           <p style={{ color: "green" }}>{Success && Success}</p>
@@ -275,16 +290,16 @@ const ClienteUpdate = ({
           Atualizar
         </button>
       </form>
-        <button
+      <button
         type="buttom"
         className="fechar"
         onClick={onClose}>
-            Fechar
-        </button>
+        Fechar
+      </button>
 
       {isLoading && <LoadingSpin />}
     </div>
   );
 };
 
-export default ClienteUpdate;
+export default ConsultorioUpdate;

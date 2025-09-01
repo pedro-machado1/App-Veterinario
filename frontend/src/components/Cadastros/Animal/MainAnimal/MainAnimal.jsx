@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin"
 import NewAnimal from "../NewAnimal/NewAnimal"
@@ -14,16 +13,26 @@ const MainAnimal = () => {
     const [newAnimal, setAnimal] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
     const [show, setShow] = useState(false)
-    const [showMore, setShowMore] = useState(false)
+    const [showMore, setShowMore] = useState(null)
     const [showEdit, setShowEdit] = useState(false)
     const [Error, setError] = useState(null)    
 
-    const showMoreToggle = () => {
-        setShowMore((prev) => !prev)
+    const showMoreToggle = (animalId) => {
+        if( showMore == animalId) {
+            setShowMore(null)
+        }
+        else{
+            setShowMore(animalId)
+        }
     }
 
-    const showEditToggle = () => {
-        setShowEdit((prev) => !prev)
+    const showEditToggle = (animalId) => {
+        if (showEdit == animalId) {
+            setShowEdit(null)
+        }
+        else{
+            setShowEdit(animalId)
+        }
     }
 
     useEffect(() => {
@@ -77,15 +86,14 @@ const MainAnimal = () => {
                     </p> 
                     <button 
                     className="Edit"
-                    onClick={showMoreToggle}
+                    onClick={() => showMoreToggle(animal.id)}
                     > 
                         Ver Mais
                     </button>
-
-
+                    
                     <button 
                     className="Edit"
-                    onClick={showEditToggle}
+                    onClick={() => showEditToggle(animal.id)}
                     > 
                         Editar
                     </button>
@@ -96,16 +104,16 @@ const MainAnimal = () => {
                     > 
                         Deletar
                     </button>`
-                    {showMore && 
+                    {showMore == animal.id && 
                     <ShowAnimal
-                    onClose={() => setShowMore(false)}
+                    onClose={() => setShowMore(null)}
                     animalId={animal.id}
                     show = {showMore}
                     />}`
-                    {showEdit && (
+                    {showEdit == animal.id && (
                     <div> 
                     <EditAnimal
-                    onClose = {() => setShowEdit(false)}
+                    onClose = {() => setShowEdit(null)}
                     animalId = {animal.id}
                     show={showEdit}
                     />
