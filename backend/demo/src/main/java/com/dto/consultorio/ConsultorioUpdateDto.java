@@ -1,6 +1,7 @@
 package com.dto.consultorio;
 
 import com.dto.veterinario.VeterinarioSimpleDto;
+import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +25,10 @@ public class ConsultorioUpdateDto {
     private String descricao;
 
     private LocalDate dataDeFundacao;
+
+    private LocalDate dataDeCadastro;
+
+    private Estado estado;
+
 
 }

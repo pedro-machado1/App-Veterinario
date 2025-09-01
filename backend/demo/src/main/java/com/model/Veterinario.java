@@ -43,14 +43,6 @@ public class Veterinario {
     )
     private List<Consultorio> consultorio;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tb_veterinario_cliente",
-            joinColumns = @JoinColumn(name = "veterinario_id"),
-            inverseJoinColumns = @JoinColumn(name = "cliente_id")
-    )
-    private List<Cliente> cliente;
-
     @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private List<Observacao> observacao;
 

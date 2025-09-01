@@ -45,6 +45,7 @@ const ShowNewConsultorio = ({
             <p>{newConsultorio?.dataDeFundacao || "Data de fundação não encontrada"}</p>
             <p>{newConsultorio?.dataDeCadastro || "Data de cadastro não encontrada"}</p>
             <p>{newConsultorio?.descricao || "Descrição não encontrado"}</p>
+            <p>{newConsultorio?.estado || "Estado não encontrado"}</p>
      
         </div>
         <button

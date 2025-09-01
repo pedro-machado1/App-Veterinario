@@ -30,6 +30,7 @@ public class ConsultaDto {
 
     private LocalDateTime dataAlteracao;
 
+//    @NotNull(message = "Informe o veterinário que registrou essa consulta")
     private VeterinarioSimpleDto veterinario;
 
     @NotNull(message = "Informe o cliente dessa consulta")

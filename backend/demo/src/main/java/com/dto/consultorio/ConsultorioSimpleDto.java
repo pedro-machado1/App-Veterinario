@@ -1,5 +1,6 @@
 package com.dto.consultorio;
 
+import com.enums.Estado;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.model.Users;
 import jakarta.validation.constraints.NotBlank;
@@ -33,5 +34,7 @@ public class ConsultorioSimpleDto {
     private LocalDate dataDeFundacao;
 
     private LocalDate dataDeCadastro;
+
+    private Estado estado;
 
 }

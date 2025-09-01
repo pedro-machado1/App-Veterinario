@@ -3,16 +3,17 @@ import { useState, useEffect } from 'react';
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const ConsultorioUpdate = ({ 
-    name,
-    phone,
-    dataDeFundacao,
-    endereco,
-    imagem,
-    descricao,
-    onClose,
+const ConsultorioUpdate = ({
+  name,
+  phone,
+  dataDeFundacao,
+  endereco,
+  estado,
+  imagem,
+  descricao,
+  onClose,
 
 }) => {
 
@@ -21,6 +22,7 @@ const ConsultorioUpdate = ({
   const [newDataDeFundacao, setDataDeFundacao] = useState("");
   const [newEndereco, setEndereco] = useState("");
   const [newDescricao, setNewDescricao] = useState("")
+  const [newEstado, setNewEstado] = useState("");
   const [newImagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
   const [Error, setError] = useState(null);
@@ -32,13 +34,14 @@ const ConsultorioUpdate = ({
 
 
   useEffect(() => {
-        if (name) setName(name);
-        if (phone) setPhone(phone);
-        if (dataDeFundacao) setDataDeFundacao(dataDeFundacao);
-        if (endereco) setEndereco(endereco);
-        if (descricao) setNewDescricao(descricao);
-        if (imagem) setImagem(imagem);
-  },[name, phone, dataDeFundacao, endereco, descricao, imagem])
+    if (name) setName(name);
+    if (phone) setPhone(phone);
+    if (dataDeFundacao) setDataDeFundacao(dataDeFundacao);
+    if (endereco) setEndereco(endereco);
+    if (estado) setNewEstado(estado);
+    if (descricao) setNewDescricao(descricao);
+    if (imagem) setImagem(imagem);
+  }, [name, phone, dataDeFundacao, endereco, descricao, imagem, estado])
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -87,7 +90,8 @@ const ConsultorioUpdate = ({
       telefone: parseInt(newPhone.replace(/\D/g, "")),
       dataDeFundacao: newDataDeFundacao,
       descricao: newDescricao,
-      endereco: newEndereco
+      endereco: newEndereco,
+      estado: newEstado
       // imagem: newImagem
     };
     if (!document.getElementById("formsUpdateConsultorio").reportValidity()) {
@@ -99,7 +103,7 @@ const ConsultorioUpdate = ({
       const response = await axios.put(
         `${apiUrl}/api/consultorio`,
         UpdateConsultorio,
-        {withCredentials : true}
+        { withCredentials: true }
       );
       console.log('New Consultorio:', response.data);
       setSuccess("Consultorio adicionado com sucesso!");
@@ -193,6 +197,47 @@ const ConsultorioUpdate = ({
           />
         </div>
         <div className="line3"></div>
+        <div className="inputEstado">
+          <label htmlFor="newEstado">Estado</label>
+          <select
+            id="newEstado"
+            value={estado}
+            onChange={(e) => setNewEstado(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Selecione...
+            </option>
+            <option value="Acre">Acre</option>
+            <option value="Amapá">Amapá</option>
+            <option value="Alagoas">Alagoas</option>
+            <option value="Amazonas">Amazonas</option>
+            <option value="Bahia">Bahia</option>
+            <option value="Ceará">Ceará</option>
+            <option value="Distrito Federal">Distrito Federal</option>
+            <option value="Espírito Santo">Espírito Santo</option>
+            <option value="Goiás">Goiás</option>
+            <option value="Maranhão">Maranhão</option>
+            <option value="Mato Grosso">Mato Grosso</option>
+            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+            <option value="Minas Gerais">Minas Gerais</option>
+            <option value="Pará">Pará</option>
+            <option value="Paraíba">Paraíba</option>
+            <option value="Paraná">Paraná</option>
+            <option value="Pernambuco">Pernambuco</option>
+            <option value="Piauí">Piauí</option>
+            <option value="Rio de Janeiro">Rio de Janeiro</option>
+            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+            <option value="Rondônia">Rondônia</option>
+            <option value="Roraima">Roraima</option>
+            <option value="Santa Catarina">Santa Catarina</option>
+            <option value="São Paulo">São Paulo</option>
+            <option value="Sergipe">Sergipe</option>
+            <option value="Tocantins">Tocantins</option>
+          </select>
+        </div>
+
         <InputField
           label="Endereço"
           placeholder={"Digite o endereço do consultório"}
@@ -245,12 +290,12 @@ const ConsultorioUpdate = ({
           Atualizar
         </button>
       </form>
-        <button
+      <button
         type="buttom"
         className="fechar"
         onClick={onClose}>
-            Fechar
-        </button>
+        Fechar
+      </button>
 
       {isLoading && <LoadingSpin />}
     </div>

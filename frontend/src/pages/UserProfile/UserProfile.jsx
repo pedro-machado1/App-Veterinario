@@ -149,6 +149,9 @@ const UserProfile = () => {
             Endereço: {newUser?.consultorio?.endereco || "Endereço não encontrado"}
           </p>
           <p className="text-gray-600">
+            Endereço: {newUser?.consultorio?.estado || "Estado não encontrado"}
+          </p>
+          <p className="text-gray-600">
             Descrição: {newUser?.consultorio?.descricao || "Descrição não encontrada"}
           </p>
           <p className="text-gray-600">
@@ -169,6 +172,7 @@ const UserProfile = () => {
                 phone = {newUser.consultorio.telefone}
                 dataDeFundacao = {newUser.consultorio.dataDeFundacao}
                 endereco = {newUser.consultorio.endereco}
+                estado = {newUser.consultorio.estado}
                 descricao = {newUser.consultorio.descricao}
                 onClose = {() => setShowConsultorio(false)}
               />
@@ -191,7 +195,7 @@ const UserProfile = () => {
             CRVM: {newUser?.veterinario?.crvm || "CRVM não encontrado"}
           </p>
           <p>
-            Data de Nascimento: {newUser?.veterinario?.dataDeNascimento || "Data de nascimento não encontrada"}
+            Data de Nascimento: {newUser?.veterinario?.dataDeNascimento || "Data de fundação não encontrada"}
           </p>
           <p>
             Estado: {newUser?.veterinario?.estado || "Estado não encontrado"}

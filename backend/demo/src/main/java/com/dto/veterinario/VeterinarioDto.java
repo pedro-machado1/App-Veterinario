@@ -55,7 +55,5 @@ public class VeterinarioDto {
 
     private List<ConsultaSimpleDto> consulta;
 
-    private List<ClienteSimpleDto> cliente;
-
     private UsersSimpleDto users;
 }

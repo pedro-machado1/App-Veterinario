@@ -30,9 +30,6 @@ public class VeterinarioService {
     private VeterinarioRepository veterinarioRepository;
 
     @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
     private UsersService usersService;
 
     @Transactional
@@ -45,10 +42,10 @@ public class VeterinarioService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<VeterinarioDto> findById(Long id){
+    public Optional<Veterinario> findById(Long id){
         Veterinario veterinario = veterinarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(veterinario, VeterinarioDto.class));
+        return Optional.of(veterinario);
     }
 
     @Transactional
@@ -87,55 +84,6 @@ public class VeterinarioService {
         }
     }
 
-    @Transactional
-    public VeterinarioDto addCliente(Long idVeterinario, Long idCliente) {
-        existsByid(idVeterinario);
-        ClienteSimpleDto cliente = convertToDto(
-                clienteService.findById(idCliente)
-                        .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idCliente)), ClienteSimpleDto.class
-        );
-
-        VeterinarioDto veterinarioDto = convertToDto( veterinarioRepository.getReferenceById(idVeterinario), VeterinarioDto.class);
-        if (veterinarioDto.getCliente() == null) {
-            veterinarioDto.setCliente(new ArrayList<>());
-        }
-        if (veterinarioDto.getCliente().contains(cliente)) {
-            throw new DataBaseException("Cliente já está cadastrado no veterinário");
-        }
-        veterinarioDto.getCliente().add(cliente);
-        Veterinario veterinarioentity = convertToEntity(veterinarioDto, Veterinario.class);
-
-        veterinarioentity = veterinarioRepository.save(veterinarioentity);
-
-        return convertToDto(veterinarioentity, VeterinarioDto.class);
-    }
-    @Transactional
-    public void removeCliente(Long idVeterinario, Long idCliente) {
-        existsByid(idVeterinario);
-        ClienteSimpleDto cliente = convertToDto(
-                clienteService.findById(idCliente)
-                        .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idCliente)), ClienteSimpleDto.class
-        );
-        VeterinarioDto veterinarioDto = convertToDto( veterinarioRepository.getReferenceById(idVeterinario), VeterinarioDto.class);
-        if (veterinarioDto.getCliente() == null) {
-            throw new DataBaseException("Veterinário não possui clientes cadastrados");
-        }
-        if (!veterinarioDto.getCliente().contains(cliente)) {
-            throw new DataBaseException("Cliente não está cadastrado no veterinário");
-        }
-        veterinarioDto.getCliente().remove(cliente);
-        Veterinario veterinarioentity = convertToEntity(veterinarioDto, Veterinario.class);
-        veterinarioRepository.save(veterinarioentity);
-
-    }
-    @Transactional
-    public Page<ClienteSimpleDto> findAllCliente(long veterinarioId, Pageable pages){
-        existsByid(veterinarioId);
-
-        Page<Cliente> clientes = veterinarioRepository.findAllClienteByVeterinarioId(veterinarioId, pages);
-
-        return clientes.map(cliente -> convertToDto(cliente, ClienteSimpleDto.class));
-    }
 }
 
 
