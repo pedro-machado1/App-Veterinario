@@ -2,12 +2,13 @@ import "./ShowCliente.css"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import { useNavigate } from "react-router-dom";
+import MainConsultaCliente from "../../Consulta/MainConsulta/MainConsultaCliente.jsx";
 
 
 const ShowCliente = ({ 
     onClose,
     clienteId,
+    userProfile
 }) => {
 
     const [newCliente, setNewCliente] = useState(null)
@@ -76,6 +77,13 @@ const ShowCliente = ({
                 Data de Cadastro: {newCliente?.dataDeCriacao || "Data de cadastro não encontrada"}
             </p>     
         </div>
+        { userProfile == true && 
+            <div>
+                <MainConsultaCliente 
+                
+                /> 
+            </div>
+        }
         <button
         type="buttom"
         className="fechar"

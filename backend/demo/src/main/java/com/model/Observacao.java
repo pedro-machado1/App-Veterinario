@@ -3,6 +3,7 @@ package com.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,9 +16,9 @@ public class Observacao {
 
     private String texto;
 
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
-    private LocalDateTime dataAlteracao;
+    private LocalDate dataAlteracao;
 
     @ManyToOne
     @JoinColumn(name = "animal_id")

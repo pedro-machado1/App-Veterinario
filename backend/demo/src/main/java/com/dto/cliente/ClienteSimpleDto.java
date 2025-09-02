@@ -13,22 +13,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteSimpleDto {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     @NotNull(message = "Informe o id")
     private long id;
 
-    @NotBlank(message = "Informe o seu CPF")
     private String cpf;
 
-    @NotBlank(message = "Informe o seu nome")
     private String nome;
 
-    @NotBlank(message = "Informe o seu endereço")
     private String endereco;
-    @NotBlank(message = "Informe o seu telefone")
+
     private String telefone;
 
-    //    @NotNull(message = "Informe a sua data de nascimento")
     private LocalDate dataDeNascimento;
 
 //    @NotBlank

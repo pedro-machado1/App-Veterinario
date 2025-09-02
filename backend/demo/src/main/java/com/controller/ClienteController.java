@@ -4,6 +4,7 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.model.Cliente;
 import com.service.ClienteService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -77,5 +78,17 @@ public class ClienteController {
         return ResponseEntity.ok().body(animalPage);
     }
 
+    @GetMapping("/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsulta(Pageable pages) {
+        Page<ConsultaSimpleDto> consultaPage = clientService.findAllConsultaByCliente(pages, 0);
+        return ResponseEntity.ok().body(consultaPage);
+    }
+
+
+    @GetMapping("/{idCliente}/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsulta(Pageable pages, @PathVariable Long idCliente) {
+        Page<ConsultaSimpleDto> consultaPage = clientService.findAllConsultaByCliente(pages, idCliente);
+        return ResponseEntity.ok().body(consultaPage);
+    }
 
 }

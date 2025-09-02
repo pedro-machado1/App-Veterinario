@@ -7,6 +7,7 @@ import axios from "axios";
 import ConsultorioUpdate from "../../components/Cadastros/Consultorio/ConsultorioUpdate/ConsultorioUpdate";
 import VeterinarioUpdate from "../../components/Cadastros/Veterinario/VeterinarioUpdate/VeterinarioUpdate";
 import ConsultorioEditVeterinario from "../../components/Cadastros/Consultorio/ConsultorioEditVeterinarios/ConsultorioEditVeterinarios";
+import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaCliente";
 
 const UserProfile = () => {
 
@@ -16,6 +17,7 @@ const UserProfile = () => {
   const [showCliente, setShowCliente] = useState(false)
   const [showConsultorio, setShowConsultorio] = useState(false)
   const [showNovoConsultorio, setshowNovoConsultorio] = useState(false)
+  const [showConsultasCliente, setShowConsultasCliente] = useState(false)
   const [ showEditVeterinario, setShowEditVeterinario] = useState(false)
   const [showVeterinario, setShowVeterinario] = useState(false)
 
@@ -27,6 +29,10 @@ const UserProfile = () => {
 
   const toggleEditVeterinario = () => {
         setshowNovoConsultorio((prev) => !prev)
+  }
+
+  const toggleConsultasCliente = () => {
+        setShowConsultasCliente((prev) => !prev)
   }
 
   const toggleNovoConsultorio = () => {
@@ -118,6 +124,16 @@ const UserProfile = () => {
           <p className="text-gray-600">
             Primeiro Acesso: {newUser?.cliente?.dataDeCriacao || "Primeiro Acesso não encontrado"}
           </p>
+          <button
+            onClick={toggleConsultasCliente}
+          >
+            Consultas
+          </button>
+          { showConsultasCliente &&  
+            <MainConsultaCliente
+              onClose = {() => setShowConsultasCliente(false)}
+            />
+          }
           <button
             onClick={toggleCliente}
           >

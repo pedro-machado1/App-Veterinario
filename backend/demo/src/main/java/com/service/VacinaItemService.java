@@ -39,7 +39,7 @@ public class VacinaItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId()))
                 ,VacinaSimpleDto.class);
         vacinaItemDto.setVacina(vacina);
-        vacinaItemDto.setDataAplicacao(LocalDateTime.now());
+        vacinaItemDto.setDataAplicacao(LocalDate.now());
         VacinaItem vacinaItem = convertToEntity(vacinaItemDto, VacinaItem.class);
         vacinaItem =vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);

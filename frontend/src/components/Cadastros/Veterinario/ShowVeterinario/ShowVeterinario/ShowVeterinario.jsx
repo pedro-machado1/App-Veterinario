@@ -23,7 +23,7 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
       }
       try {
         const response = await axios.get(
-          `${apiUrl}/api/veterinario/${veterxinarioId}`
+          `${apiUrl}/api/veterinario/${veterinarioId}`
         );
         console.log(response.data);
         setVeterinario(response.data);

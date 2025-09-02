@@ -54,15 +54,14 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaDto insert(ConsultaDto consultaDTO) {
-        ClienteSimpleDto cliente = convertToDto(clienteService.findById(consultaDTO.getCliente().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaDTO.getCliente().getId() + " não foi encontrado."))
-                , ClienteSimpleDto.class);
-        Veterinario veterinario = usersService.findUsers().getVeterinario();
-        VeterinarioSimpleDto veterinarioDto =convertToDto(veterinario, VeterinarioSimpleDto.class);
-        consultaDTO.setDataCriacao(LocalDateTime.now());
-        consultaDTO.setCliente(cliente);
-        consultaDTO.setVeterinario(veterinarioDto);
         Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
+        Optional<Cliente> clienteOptional = clienteService.findById(consultaDTO.getCliente().getId());
+        if (clienteOptional.isEmpty()) return null;
+        Cliente cliente = clienteOptional.get();
+        Veterinario veterinario = usersService.findUsers().getVeterinario();
+        consulta.setDataCriacao(LocalDate.now());
+        consulta.setCliente(cliente);
+        consulta.setVeterinario(veterinario);
         consulta = consultaRepository.save(consulta);
         return convertToDto(consulta, ConsultaDto.class);
     }
@@ -93,7 +92,7 @@ public class ConsultaService {
 
         consultaDto.setVeterinario(veterinario);
         consultaDto.setCliente(cliente);
-        consultaDto.setDataAlteracao(LocalDateTime.now());
+        consultaDto.setDataAlteracao(LocalDate.now());
         Consulta consultaaux = convertToEntity(consultaRepository.getReferenceById(id), Consulta.class);
         Consulta consulta =convertToEntity(consultaaux, Consulta.class);
 

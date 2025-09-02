@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class VacinaItemUpdateDto {
 
     private String descricao;
 
-    private LocalDateTime dataAplicacao;
+    private LocalDate dataAplicacao;
 
     private Date dataValidade;
 

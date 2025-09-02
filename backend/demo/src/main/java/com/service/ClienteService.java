@@ -7,9 +7,11 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.users.Usersdto;
 import com.model.Animal;
 import com.model.Cliente;
+import com.model.Consulta;
 import com.model.Users;
 import com.repository.AnimalRepository;
 import com.repository.ClienteRepository;
@@ -160,6 +162,18 @@ public class ClienteService {
     public long findClienteId(){
         Users user  =usersService.findUsers();
         return user.getCliente().getId();
+    }
+
+    @Transactional
+    public Page<ConsultaSimpleDto> findAllConsultaByCliente(Pageable pages, long id){
+        if (id == 0) {
+            id = findClienteId();
+            existsById(id);
+        }
+
+        Page<Consulta> consulta = clienteRepository.findAllConsultaByCliente(id, pages);
+
+        return consulta.map(consultas -> convertToDto(consultas, ConsultaSimpleDto.class));
     }
 
 

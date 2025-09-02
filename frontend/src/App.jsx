@@ -3,7 +3,7 @@ import './assets/css/buttoms.css'
 import "./assets/css/text.css"
 import MainPage from './pages/MainPage/mainPage.jsx'
 import NewCliente from './components/Cadastros/Cliente/NewCliente/NewCliente.jsx'
-import NewConsulta from './components/Cadastros/Consulta/newConsulta.jsx'
+import NewConsulta from './components/Cadastros/Consulta/newConsulta/newConsulta.jsx'
 import NewConsultorio from './components/Cadastros/Consultorio/newConsultorio/newConsultorio.jsx'
 import NewMedicamento from './components/Cadastros/Medicamento/newMedicamento.jsx'
 import NewMedicamentoItem from './components/Cadastros/MedicamentoItem/NewMedicamentoItem.jsx'

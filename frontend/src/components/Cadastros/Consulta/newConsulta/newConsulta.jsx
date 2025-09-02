@@ -1,12 +1,15 @@
 import "./NewConsulta.css";
 import { useState } from "react";
-import InputField from "../../Extras/InputField/InputField";
+import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
-import LoadingSpin from "../../Extras/LoadingSpin/LoadingSpin";
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
+import SearchCliente from "../../Cliente/SearchCliente/SearchCliente";
 
 const NewConsulta = () => {
   const [titulo, setTitulo] = useState("");
   const [texto, setTexto] = useState("");
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +17,6 @@ const NewConsulta = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   
   const isInvalid = (e) => e.target.classList.add("isInvalid");
-  
   const isValid = (e) => {
     if (e.target.value && e.target.classList.contains("isInvalid")) {
       e.target.classList.remove("isInvalid");
@@ -31,6 +33,7 @@ const NewConsulta = () => {
     setTexto("");
     setError(null);
     setSuccess(null);
+    setSelectedClient(null);
   };
   
   const handleSubmit = async (e) => {
@@ -41,8 +44,10 @@ const NewConsulta = () => {
     }
     const newConsulta = {
       titulo,
-      texto
+      texto,
+      cliente: { id: parseInt(selectedClient)}
     };
+    console.log(newConsulta)
     setIsLoading(true);
     try {
       const response = await axios.post(`${apiUrl}/api/consulta`, newConsulta);
@@ -85,15 +90,27 @@ const NewConsulta = () => {
           onInvalid={(e) => isInvalid(e)}
           required
         />
-      <button
-      type="buttom"
-      className="buttomCliente"
-      // onClick={}
-      >
-        Cliente
-      </button>
-      
-      {isLoading && <LoadingSpin />}
+
+        <button
+          type="button"
+          className="buttomCliente"
+          onClick={() => setShowSearch(true)}
+        >
+          Selecionar Cliente
+        </button>
+        {selectedClient && (
+          <div className="selectedClient">
+            <p>Cliente selecionado: {selectedClient}</p>
+          </div>
+        )}
+        {showSearch && (
+          <SearchCliente 
+            onClose={() => setShowSearch(false)}
+            onClientSelect={(clientId) => setSelectedClient(clientId)}
+          />
+        )}
+
+        {isLoading && <LoadingSpin />}
         <div className="errorsOrSuccess">
           <p style={{color:"red"}}>{Error && Error}</p>
           <p style={{color:"green"}}>{Success && Success}</p>

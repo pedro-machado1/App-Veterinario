@@ -26,9 +26,9 @@ public class ConsultaDto {
     @NotBlank(message = "Informe o texto da consulta")
     private String texto;
 
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
-    private LocalDateTime dataAlteracao;
+    private LocalDate dataAlteracao;
 
 //    @NotNull(message = "Informe o veterinário que registrou essa consulta")
     private VeterinarioSimpleDto veterinario;

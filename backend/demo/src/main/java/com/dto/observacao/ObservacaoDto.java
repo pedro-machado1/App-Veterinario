@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,10 +20,10 @@ public class ObservacaoDto {
     private long id;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime dataAlteracao;
+    private LocalDate dataAlteracao;
 
     @NotBlank(message = "Informe o texto da observação")
     private String texto;

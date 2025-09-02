@@ -2,6 +2,7 @@ package com.repository;
 
 import com.model.Animal;
 import com.model.Cliente;
+import com.model.Consulta;
 import com.model.Veterinario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +18,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Page<Animal> findAllAnimalByCliente(@Param("clienteId") Long clienteId, Pageable pageable);
 
     Page<Cliente> findAllByCpf(String cpf, Pageable pageable);
+
+    @Query("SELECT DISTINCT ca FROM Cliente c JOIN c.consulta ca WHERE c.id = :clienteId")
+    Page<Consulta> findAllConsultaByCliente(@Param("clienteId") long clienteId, Pageable pageable) ;
 
 }
