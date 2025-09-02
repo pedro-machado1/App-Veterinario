@@ -40,12 +40,24 @@ const ShowNewConsultorio = ({
       <div className="animal-container">
         <h2 className="title">{newConsultorio?.nome || "Nome não encontrado"}</h2>
         <div className="presentAnimalContainer">
-            <p>{newConsultorio?.endereco || "Endereço não encontrada"}</p>
-            <p>{newConsultorio?.telefone || "Telefone não encontrado"}</p>
-            <p>{newConsultorio?.dataDeFundacao || "Data de fundação não encontrada"}</p>
-            <p>{newConsultorio?.dataDeCadastro || "Data de cadastro não encontrada"}</p>
-            <p>{newConsultorio?.descricao || "Descrição não encontrado"}</p>
-            <p>{newConsultorio?.estado || "Estado não encontrado"}</p>
+            <p>
+                Endereço: {newConsultorio?.endereco || "Endereço não encontrada"}
+                </p>
+            <p>
+                Telefone: {newConsultorio?.telefone || "Telefone não encontrado"}
+            </p>
+            <p>
+                Dta de Fundação: {newConsultorio?.dataDeFundacao || "Data de fundação não encontrada"}
+            </p>
+            <p>
+                Data de Cadastro: {newConsultorio?.dataDeCadastro || "Data de cadastro não encontrada"}
+            </p>
+            <p>
+                Descrição: {newConsultorio?.descricao || "Descrição não encontrado"}
+            </p>
+            <p>
+                Estado: {newConsultorio?.estado || "Estado não encontrado"}
+            </p>
      
         </div>
         <button

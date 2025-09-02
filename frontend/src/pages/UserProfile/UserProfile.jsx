@@ -6,6 +6,7 @@ import LoadingSpin from "../../components/Extras/LoadingSpin/LoadingSpin";
 import axios from "axios";
 import ConsultorioUpdate from "../../components/Cadastros/Consultorio/ConsultorioUpdate/ConsultorioUpdate";
 import VeterinarioUpdate from "../../components/Cadastros/Veterinario/VeterinarioUpdate/VeterinarioUpdate";
+import ConsultorioEditVeterinario from "../../components/Cadastros/Consultorio/ConsultorioEditVeterinarios/ConsultorioEditVeterinarios";
 
 const UserProfile = () => {
 
@@ -14,6 +15,8 @@ const UserProfile = () => {
 
   const [showCliente, setShowCliente] = useState(false)
   const [showConsultorio, setShowConsultorio] = useState(false)
+  const [showNovoConsultorio, setshowNovoConsultorio] = useState(false)
+  const [ showEditVeterinario, setShowEditVeterinario] = useState(false)
   const [showVeterinario, setShowVeterinario] = useState(false)
 
   const [hasCliente, setHasClient] = useState(null)
@@ -22,6 +25,13 @@ const UserProfile = () => {
   const [newUser, setNewUser] = useState(null);
   const [loading, setLoading] = useState(null);
 
+  const toggleEditVeterinario = () => {
+        setshowNovoConsultorio((prev) => !prev)
+  }
+
+  const toggleNovoConsultorio = () => {
+        setShowEditVeterinario((prev) => !prev)
+  }
 
   const toggleConsultorio = () => {
         setShowConsultorio((prev) => !prev)
@@ -165,6 +175,11 @@ const UserProfile = () => {
           >
             Editar
           </button>
+          <button 
+            onClick={toggleEditVeterinario} 
+          >
+            Editar os veterinarios do Consultorio
+          </button>
           {showConsultorio &&
             <div className="popUpConsultorio">
               <ConsultorioUpdate
@@ -177,6 +192,14 @@ const UserProfile = () => {
                 onClose = {() => setShowConsultorio(false)}
               />
             </div>
+          }
+          {showEditVeterinario && 
+            <div className="displayShowEditVeterinario">
+              <ConsultorioEditVeterinario
+              consultorioId={newUser.consultorio.id}
+              onClose={() => {setShowEditVeterinario(false)}}
+              />
+            </div>  
           }
         </div>
       )}
@@ -207,9 +230,16 @@ const UserProfile = () => {
             Endereço: {newUser?.veterinario?.endereco || "Endereço não encontrado"}
           </p>
           <button
+            className="EditarVeterinario"
             onClick={toggleVeterinario}
           >
             Editar
+          </button>
+          <button
+            className="novoConsultorio"
+            onClick={toggleNovoConsultorio}
+          >
+            Novo Consultorio
           </button>
           {showVeterinario &&
             <div className="popUpConsultorio">
@@ -226,6 +256,13 @@ const UserProfile = () => {
               />
             </div>
           }
+          {/* // substituir */}
+          {/* {showNovoConsultorio && 
+            <div className="displayNovoConsultorio">
+              <MainConsultorio/>
+            </div>
+
+          } */}
         </div>
       )}
       {!hasCliente && !hasConsultorio && !hasVeterinario && (

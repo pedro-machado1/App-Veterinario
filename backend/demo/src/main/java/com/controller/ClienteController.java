@@ -2,7 +2,9 @@ package com.controller;
 
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
+import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.model.Cliente;
 import com.service.ClienteService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -14,6 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
@@ -33,17 +37,17 @@ public class ClienteController {
 
     // fzr verification adm pra conferir se tem permisão
     @GetMapping("{id}")
-    public ResponseEntity<Optional<ClienteDto>> findById(@PathVariable Long id) throws Exception {
-        Optional<ClienteDto> clienteDto =clientService.findById(id);
+    public ResponseEntity<Optional<ClienteSimpleDto>> findById(@PathVariable Long id) throws Exception {
+        Optional<Cliente> clienteDto =clientService.findById(id);
         if (clienteDto.isEmpty()) throw new Exception("error ");
-        return ResponseEntity.ok(clienteDto);
+        return ResponseEntity.ok(Optional.of(convertToDto(clienteDto.get(), ClienteSimpleDto.class)));
     }
 
     // look into changing page size and changing to PageModel;
 
     @GetMapping()
-    public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages){
-         Page<ClienteDto> responsePages =clientService.findAll(pages);
+    public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages, @RequestParam(required = false) String cpf){
+         Page<ClienteDto> responsePages =clientService.findAll(pages, cpf);
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping()

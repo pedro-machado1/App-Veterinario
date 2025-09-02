@@ -6,7 +6,11 @@ import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
+import com.enums.Estado;
+import com.model.Consultorio;
+import com.model.Users;
 import com.service.ConsultorioService;
+import com.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +22,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+import static com.extras.Converters.convertToDto;
+
 @Validated
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
@@ -25,6 +31,9 @@ import java.util.Optional;
 public class ConsultorioController {
     @Autowired
     private ConsultorioService consultorioService;
+
+    @Autowired
+    private UsersService usersService;
 
     @PostMapping()
     public ResponseEntity<ConsultorioDto> insert(@Validated @RequestBody ConsultorioDto consultorioDto) {
@@ -37,14 +46,26 @@ public class ConsultorioController {
         return ResponseEntity.ok().body(consultorio);
     }
     @GetMapping("{id}")
-    public ResponseEntity<Optional<ConsultorioDto>> findById(@PathVariable Long id){
-        Optional<ConsultorioDto> consultorioDto =consultorioService.findById(id);
-        return ResponseEntity.ok(consultorioDto);
+    public ResponseEntity<Optional<ConsultorioSimpleDto>> findById(@PathVariable Long id){
+        Optional<Consultorio> consultorio =consultorioService.findById(id);
+        if (consultorio.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Optional.of(convertToDto(consultorio.get(), ConsultorioSimpleDto.class)));
     }
 
     @GetMapping()
-    public ResponseEntity<Page<ConsultorioDto>> findAll(Pageable pages, @RequestParam(required = false) String nome, @RequestParam(required = false) String endereco){
-        Page<ConsultorioDto> responsePages =consultorioService.findAll(pages);
+    public ResponseEntity<Page<ConsultorioDto>> findAll(Pageable pages, @RequestParam(required = false) String estado, @RequestParam(required = false) String endereco){
+        Page<ConsultorioDto> responsePages;
+        if (estado != null ) {
+            try {
+            Estado estadoConsulta = Estado.valueOf(estado);
+            responsePages = consultorioService.findAll(pages, estadoConsulta);
+            }catch (Exception e){
+                return ResponseEntity.status(400).build();
+            }
+        }
+        else {
+            responsePages = consultorioService.findAll(pages, null);
+        }
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping()
@@ -63,14 +84,15 @@ public class ConsultorioController {
         ConsultorioDto consultorioDto = consultorioService.addVeterinario(idVeterinario);
         return ResponseEntity.ok(consultorioDto);
     }
-    @DeleteMapping("/{id}/removeveterinario/{idVeterinario}")
-    public ResponseEntity<String> removeVeterinaro(@PathVariable Long id, @PathVariable Long idVeterinario) {
-        consultorioService.removeVeterinario(id, idVeterinario);
+    @DeleteMapping("/removeveterinario/{idVeterinario}")
+    public ResponseEntity<String> removeVeterinaro(@PathVariable Long idVeterinario) {
+        Users users = usersService.findUsers();
+        consultorioService.removeVeterinario(users.getId(), idVeterinario);
         return ResponseEntity.ok().body("o consultório foi removido");
     }
 
     @GetMapping("{id}/veterinario")
-    public ResponseEntity<Page<VeterinarioSimpleDto>> findAllConsultorio(@PathVariable Long id, Pageable pages) {
+    public ResponseEntity<Page<VeterinarioSimpleDto>> findAllVeterinario(@PathVariable Long id, Pageable pages) {
         Page<VeterinarioSimpleDto> veterinario = consultorioService.findAllVeterinario(id, pages);
         return ResponseEntity.ok().body(veterinario);
     }

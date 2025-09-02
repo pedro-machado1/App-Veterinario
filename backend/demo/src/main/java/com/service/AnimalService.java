@@ -37,21 +37,23 @@ public class AnimalService {
         animal = animalRepository.save(animal);
         return convertToDto(animal, AnimalDto.class);
     }
+
+
     @Transactional
-    public Optional<AnimalDto> findById(long id){
+    public Optional<Animal> findById(long id) {
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado " + id));
-        return Optional.of(convertToDto(animal, AnimalDto.class));
+        return Optional.of(animal);
     }
 
     @Transactional
-    public Optional<AnimalDto> findByIdwithAuthenticate(long id){
+    public Optional<Animal> findByIdwithAuthenticate(long id){
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado " + id));
         Usersdto usersdto =authenticationService.authenticatedUser();
 
         if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == usersdto.getCliente().getId())){
-            return Optional.of(convertToDto(animal, AnimalDto.class));
+            return Optional.of(animal);
         }
         throw new ResourceNotFoundException("Você não têm permissão para acessar este recurso");
     }

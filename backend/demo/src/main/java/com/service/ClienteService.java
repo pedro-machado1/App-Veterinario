@@ -53,15 +53,21 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ClienteDto> findById(Long id){
+    public Optional<Cliente> findById(Long id){
         Cliente cliente = clienteRepository.findById(id)
                           .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(cliente, ClienteDto.class));
+        return Optional.of(cliente);
     }
 
     @Transactional
-    public Page<ClienteDto> findAll(Pageable pages){
-        Page<Cliente> clientes = clienteRepository.findAll(pages);
+    public Page<ClienteDto> findAll(Pageable pages, String cpf){
+        Page<Cliente> clientes;
+        if (cpf != null){
+            clientes = clienteRepository.findAllByCpf(cpf, pages);
+        }
+        else {
+            clientes = clienteRepository.findAll(pages);
+        }
         return clientes.map(cliente -> convertToDto(cliente, ClienteDto.class));
     }
 

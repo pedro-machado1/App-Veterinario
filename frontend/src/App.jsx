@@ -25,6 +25,7 @@ import RegisterVeterinario from './components/Cadastros/Veterinario/RegisterVete
 import MainVeterinario from './components/Cadastros/Veterinario/MainVeterinario/MainVeterinario.jsx'
 import { useAuth } from './components/Security/Context/AuthContext.jsx'
 import SendEmailVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/SendEmailVeterinario.jsx'
+import MainCliente from './components/Cadastros/Cliente/MainCliente/MainCliente.jsx'
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
           <Route path="/registerVeterinario" element={<ProtectedRoute><RegisterVeterinario /></ProtectedRoute>} />
           <Route path="/newVeterinario" element={<ProtectedRoute><NewVeterinario /></ProtectedRoute>} />
           <Route path="/userProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+          <Route path="/cliente" element={<ProtectedRoute><MainCliente /></ProtectedRoute>} />
           <Route path= "/home" element= {<ProtectedRoute><MainPage /></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>

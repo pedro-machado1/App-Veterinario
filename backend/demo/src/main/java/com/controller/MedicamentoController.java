@@ -1,7 +1,9 @@
 package com.controller;
 
 import com.dto.medicamento.MedicamentoDto;
+import com.dto.medicamento.MedicamentoSimpleDto;
 import com.dto.medicamento.MedicamentoUpdateDto;
+import com.model.Medicamento;
 import com.service.MedicamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 
 @Validated
@@ -35,9 +39,9 @@ public class MedicamentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<MedicamentoDto>> findById(@PathVariable Long id){
-        Optional<MedicamentoDto> medicamentoDto = medicamentoService.findById(id);
-        return ResponseEntity.ok(medicamentoDto);
+    public ResponseEntity<Optional<MedicamentoSimpleDto>> findById(@PathVariable Long id){
+        Optional<Medicamento> medicamento = medicamentoService.findById(id);
+        return ResponseEntity.ok(Optional.of(convertToDto(medicamento, MedicamentoSimpleDto.class)));
     }
 
     @GetMapping()

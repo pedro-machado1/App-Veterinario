@@ -67,10 +67,10 @@ public class ConsultaService {
         return convertToDto(consulta, ConsultaDto.class);
     }
     @Transactional(readOnly = true)
-    public Optional<ConsultaDto> findById(Long id){
+    public Optional<Consulta> findById(Long id){
         Consulta consulta = consultaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(consulta, ConsultaDto.class));
+        return Optional.of(consulta);
     }
 
     @Transactional

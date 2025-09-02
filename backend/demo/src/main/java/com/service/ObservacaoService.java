@@ -48,10 +48,10 @@ public class ObservacaoService {
         return convertToDto(observacao, ObservacaoDto.class);
     }
     @Transactional(readOnly = true)
-    public Optional<ObservacaoDto> findById(Long id){
+    public Optional<Observacao> findById(Long id){
         Observacao observacao = observacaoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(observacao, ObservacaoDto.class));
+        return Optional.of(observacao);
     }
 
     @Transactional

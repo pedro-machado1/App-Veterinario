@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.vacina.VacinaDto;
+import com.dto.vacina.VacinaSimpleDto;
 import com.dto.vacina.VacinaUpdateDto;
 import com.model.Vacina;
 import com.service.VacinaService;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
@@ -36,9 +39,10 @@ public class VacinaController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<VacinaDto>> findById(@PathVariable Long id){
-        Optional<VacinaDto> vacinaDto = vacinaService.findById(id);
-        return ResponseEntity.ok(vacinaDto);
+    public ResponseEntity<Optional<VacinaSimpleDto>> findById(@PathVariable Long id){
+        Optional<Vacina> vacina = vacinaService.findById(id);
+        if (vacina.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Optional.of(convertToDto(vacina.get(), VacinaSimpleDto.class)));
     }
     @GetMapping()
     public ResponseEntity<Page<VacinaDto>> findAll(Pageable pages){

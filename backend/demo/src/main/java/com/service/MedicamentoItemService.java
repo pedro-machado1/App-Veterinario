@@ -59,10 +59,10 @@ public class MedicamentoItemService {
     }
     // fazer outro exception
     @Transactional
-    public Optional<MedicamentoItemDto> findById(Long id) {
+    public Optional<MedicamentoItem> findById(Long id) {
         MedicamentoItem medicamento = medicamentoItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(medicamento, MedicamentoItemDto.class));
+        return Optional.of(medicamento);
     }
     public Page<MedicamentoItemDto> findAll(Pageable pageable) {
         Page<MedicamentoItem> pages =medicamentoItemRepository.findAll(pageable);

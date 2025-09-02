@@ -1,9 +1,11 @@
 package com.controller;
 
 import com.dto.animal.AnimalDto;
+import com.dto.animal.AnimalSimpleDto;
 import com.dto.animal.AnimalUpdateDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
+import com.model.Animal;
 import com.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToEntity;
 
 
 @Validated
@@ -37,11 +41,11 @@ public class AnimalController {
         return ResponseEntity.created(uri).body(newAnimalDto);
     }
     @GetMapping("{id}")
-    public ResponseEntity<AnimalDto> findById(@PathVariable Long id){
-        Optional<AnimalDto> animalDto =animalService.findByIdwithAuthenticate(id);
-        if (animalDto.isEmpty()) return ResponseEntity.notFound().build();
-        AnimalDto animal = animalDto.get();
-        return ResponseEntity.ok(animal);
+    public ResponseEntity<AnimalSimpleDto> findById(@PathVariable Long id){
+        Optional<Animal> animal =animalService.findByIdwithAuthenticate(id);
+        if (animal.isEmpty()) return ResponseEntity.notFound().build();
+        Animal animalentety = animal.get();
+        return ResponseEntity.ok(convertToEntity(animalentety, AnimalSimpleDto.class));
     }
 
     @GetMapping()

@@ -1,21 +1,18 @@
 import "./ShowVeterinario.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import VeterinarioUpdate from "../VeterinarioUpdate/VeterinarioUpdate.jsx";
+import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import VeterinarioUpdate from "../../VeterinarioUpdate/VeterinarioUpdate.jsx";
 
 const ShowVeterinario = ({ onClose, veterinarioId }) => {
   const [veterinario, setVeterinario] = useState(null);
-  const [showEdit, setShowEdit] = useState(false)
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const showEditToggle = () => {
-    setShowEdit((prev) => !prev)
-  }
+
   useEffect(() => {
     const fetchVeterinario = async () => {
       if (!veterinarioId) {
@@ -26,7 +23,7 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
       }
       try {
         const response = await axios.get(
-          `${apiUrl}/api/veterinario/${veterinarioId}`
+          `${apiUrl}/api/veterinario/${veterxinarioId}`
         );
         console.log(response.data);
         setVeterinario(response.data);

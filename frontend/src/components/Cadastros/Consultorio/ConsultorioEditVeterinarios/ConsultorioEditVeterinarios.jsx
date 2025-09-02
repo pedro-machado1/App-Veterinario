@@ -1,15 +1,17 @@
-
-import "./MainVeterinario.css";
+import "./ConsultorioEditVeterinarios.css"
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ShowVeterinario from "../../Veterinario/ShowVeterinario/ShowVeterinario/ShowVeterinario";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import ShowVeterinario from "../ShowVeterinario/ShowVeterinario/ShowVeterinario";
 
-const MainVeterinario = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
+const ConsultorioEditVeterinario = ({ 
+    consultorioId,
+    onClose
+}) => {
 
-  const [params] = useSearchParams() 
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
 
   const [veterinarios, setVeterinarios] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +29,6 @@ const MainVeterinario = () => {
   useEffect(() => {
     const fetchVeterinarios = async () => {
       setIsLoading(true)
-      var consultorioId = params.get("consultorioId")
       setError(null);
       try {
           const response = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}/veterinario`);
@@ -44,7 +45,18 @@ const MainVeterinario = () => {
     };
 
     fetchVeterinarios();
-  }, [showMore]);
+  }, [showMore, consultorioId]);
+
+  const HandleDelete = async (veterinarioId) => {
+    setIsLoading(true)
+    try{
+        const response = axios.delete(`${apiUrl}/api/consultorio/removeveterinario/${veterinarioId}`)
+        console.log(response.data)
+    }catch(err){
+        setError("Erro ao Deletar esse Veterinario do seu Consultorio")
+    }
+    setIsLoading(false)
+  }
 
   return (
     <div className="main-veterinario-container">
@@ -63,8 +75,15 @@ const MainVeterinario = () => {
             <p>
               <strong>CRVM:</strong> {vet.crvm || "Erro: CRVM não encontrado"}
             </p>
-            <button className="Edit" onClick={() => showMoreToggle(vet.id)}>
+            <button className="Edit" 
+            onClick={() => showMoreToggle(vet.id)}
+            >
               Ver Mais
+            </button>
+            <button className="deletar" 
+            onClick={() => HandleDelete(vet.id)}
+            >
+                Deletar
             </button>
             {showMore === vet.id && <ShowVeterinario
             onClose={() => setShowMore(false)}
@@ -74,11 +93,24 @@ const MainVeterinario = () => {
           </div>
         ))}
       </div>
-      
+      <button 
+        className="AddVeterinario"
+        onClick={ () =>  navigate("/sendVeterinario")}
+      >
+        Adicionar Veterinário
+      </button>
+      <button 
+        className="Fechar"
+        onClick={onClose}
+      >
+        Fechar Essa Janela
+      </button>
       {isLoading && <LoadingSpin />}
       {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
   );
-};
 
-export default MainVeterinario;
+
+}
+
+export default ConsultorioEditVeterinario

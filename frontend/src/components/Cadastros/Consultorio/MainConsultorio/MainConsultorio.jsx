@@ -5,6 +5,7 @@ import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Security/Context/AuthContext";
 import { useEffect, useState, useRef } from "react";
+import InputField from "../../../Extras/InputField/InputField";
 
 const MainConsultorio = () => {
 
@@ -15,7 +16,7 @@ const MainConsultorio = () => {
     const [IsLoading, setIsLoading] = useState(true)
     const [show, setShow] = useState(false)
     const [showMore, setShowMore] = useState(null)
-    const [showEdit, setShowEdit] = useState(false)
+    const [searchCpf, setSearchCpf] = useState("");
     const [Error, setError] = useState(null)    
 
     const showMoreToggle = (consultorioid) => {
@@ -28,19 +29,24 @@ const MainConsultorio = () => {
     }
 
 
-    useEffect(() => {
-
         const asyncFunction = async () => {
+            let response
             setIsLoading(true)
             setError(null)
             console.log("Recarregando a página")
-            const response = await axios.get(`${apiUrl}/api/consultorio`, {
-                withCredentials: true
+            let url = `${apiUrl}/api/consultorio`
+            if (searchCpf != "") {
+                url += `?estado=${searchCpf}`
+                response = await axios.get(url)
             }
-            )
+            else {
+                response = await axios.get(url)
+            }
+
             if (response.data.content.length == 0) {
                 setError("Você não possui nenhum consultorio cadastrado")
-
+                
+                setNewConsultorio([]);
                 console.error("Você não possui nenhum consultorio cadastrado ")
             }
             else {
@@ -50,8 +56,10 @@ const MainConsultorio = () => {
             setIsLoading(false)
         }
 
+
+    useEffect(() => {
         asyncFunction()
-    }, [show])
+    }, [show, searchCpf])
 
 
     const navigate = useNavigate();
@@ -61,6 +69,45 @@ const MainConsultorio = () => {
         <button className="botaoCadastrarConsultorio" onClick={() => { navigate("/registerConsultorio")}}>
             Cadastrar Consultório
         </button>
+        <div className="inputEstado">
+          <label htmlFor="newEstado">Estado</label>
+          <select
+                placeholder="Search by CPF"
+                value={searchCpf}
+                onChange={(e) => setSearchCpf(e.target.value)}
+          >
+            <option value="" disabled>
+              Selecione...
+            </option>
+            <option value="AC">Acre</option>
+            <option value="AM">Amapá</option>
+            <option value="AL">Alagoas</option>
+            <option value="AM">Amazonas</option>
+            <option value="BA">Bahia</option>
+            <option value="CE">Ceará</option>
+            <option value="DF">Distrito Federal</option>
+            <option value="ES">Espírito Santo</option>
+            <option value="GO">Goiás</option>
+            <option value="MA">Maranhão</option>
+            <option value="MG">Mato Grosso</option>
+            <option value="MS">Mato Grosso do Sul</option>
+            <option value="MG">Minas Gerais</option>
+            <option value="PA">Pará</option>
+            <option value="PB">Paraíba</option>
+            <option value="PR">Paraná</option>
+            <option value="PE">Pernambuco</option>
+            <option value="PI">Piauí</option>
+            <option value="RJ">Rio de Janeiro</option>
+            <option value="RN">Rio Grande do Norte</option>
+            <option value="RS">Rio Grande do Sul</option>
+            <option value="RO">Rondônia</option>
+            <option value="RR">Roraima</option>
+            <option value="SC">Santa Catarina</option>
+            <option value="SP">São Paulo</option>
+            <option value="SE">Sergipe</option>
+            <option value="TO">Tocantins</option>
+          </select>
+        </div>
 
         <h1>
             Consultórios
@@ -89,6 +136,7 @@ const MainConsultorio = () => {
             ))}
             </div>
             {IsLoading && <LoadingSpin/>}
+            {Error && <div style={{ color: "red" }}>{Error}</div>}
 
         </div>
     )

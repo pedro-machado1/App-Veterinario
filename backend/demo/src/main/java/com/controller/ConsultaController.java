@@ -2,7 +2,10 @@ package com.controller;
 
 import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consulta.ConsultaUpdateDto;
+import com.dto.consultorio.ConsultorioDto;
+import com.model.Consulta;
 import com.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 
 @Validated
@@ -36,9 +41,10 @@ public class ConsultaController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<ConsultaDto>> findById(@PathVariable Long id){
-        Optional<ConsultaDto> consultaDto =consultaService.findById(id);
-        return ResponseEntity.ok(consultaDto);
+    public ResponseEntity<Optional<ConsultaSimpleDto>> findById(@PathVariable Long id){
+        Optional<Consulta> consulta =consultaService.findById(id);
+        if (consulta.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Optional.of(convertToDto(consulta.get(), ConsultaSimpleDto.class)));
     }
 
     @GetMapping()

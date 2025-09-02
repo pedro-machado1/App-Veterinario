@@ -46,10 +46,10 @@ public class VacinaItemService {
 
     }
     @Transactional
-    public Optional<VacinaItemDto> findById(Long id){
+    public Optional<VacinaItem> findById(Long id){
         VacinaItem vacinaItem = vacinaItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(vacinaItem, VacinaItemDto.class));
+        return Optional.of(vacinaItem);
     }
 
     @Transactional

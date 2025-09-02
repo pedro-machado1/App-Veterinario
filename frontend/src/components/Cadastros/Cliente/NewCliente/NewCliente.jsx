@@ -96,8 +96,8 @@ const NewCliente = () => {
 
     const newClient = {
       nome: newName,
-      cpf: parseInt(newCpf.replace(/\D/g, "")),
-      telefone: parseInt(newPhone.replace(/\D/g, "")),
+      cpf: newCpf.replace(/\D/g, ""),
+      telefone: newPhone.replace(/\D/g, ""),
       dataDeNascimento: newdataDeNascimento,
       endereco: newEndereco
       // imagem: newImagem,

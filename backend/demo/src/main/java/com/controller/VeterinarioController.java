@@ -5,6 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
+import com.dto.veterinario.VeterinarioSimpleDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
 import com.extras.EmailToVeterinario;
 import com.model.Users;
@@ -15,6 +16,8 @@ import com.security.service.TokenService;
 import com.service.ConsultorioService;
 import com.service.UsersService;
 import com.service.VeterinarioService;
+import com.service.exceptions.DataBaseException;
+import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,10 +78,11 @@ public class VeterinarioController {
         return ResponseEntity.ok().body("O e-mail foi enviado");
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Optional<VeterinarioDto>> findById(@PathVariable Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<VeterinarioSimpleDto>> findById(@PathVariable Long id){
         Optional<Veterinario> veterinarioDto = veterinarioService.findById(id);
-        return ResponseEntity.ok(Optional.of(convertToDto(veterinarioDto, VeterinarioDto.class)));
+        if (veterinarioDto.isEmpty()) throw  new ResourceNotFoundException("Veterinario não encontrado");
+        return ResponseEntity.ok(Optional.of(convertToDto(veterinarioDto.get(), VeterinarioSimpleDto.class)));
     }
 
     @GetMapping()
