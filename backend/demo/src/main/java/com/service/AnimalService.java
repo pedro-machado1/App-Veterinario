@@ -12,12 +12,15 @@ import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.antlr.v4.runtime.misc.Array2DHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -30,10 +33,15 @@ public class AnimalService {
     private AnimalRepository animalRepository;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Transactional
-    public AnimalDto insert(AnimalDto animalDto){
+    public AnimalDto insert(AnimalDto animalDto, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
+        animalDto.setImagem(null);
         Animal animal = convertToEntity(animalDto, Animal.class);
+        animal.setImagem(imagemString);
         animal = animalRepository.save(animal);
         return convertToDto(animal, AnimalDto.class);
     }
@@ -47,15 +55,36 @@ public class AnimalService {
     }
 
     @Transactional
-    public Optional<Animal> findByIdwithAuthenticate(long id){
+    public Optional<Animal> findByIdwithAuthenticate(long id, long idConsulta){
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado " + id));
-        Usersdto usersdto =authenticationService.authenticatedUser();
 
-        if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == usersdto.getCliente().getId())){
-            return Optional.of(animal);
+        if (idConsulta != 0){
+            if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == idConsulta)){
+                return Optional.of(animal);
+            }
         }
-        throw new ResourceNotFoundException("Você não têm permissão para acessar este recurso");
+        else {
+            Usersdto usersdto =authenticationService.authenticatedUser();
+            if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == usersdto.getCliente().getId())){
+                return Optional.of(animal);
+            }
+        }
+
+
+        throw new ResourceNotFoundException("Não foi encontrado o animal");
+    }
+
+    @Transactional
+    public Resource findImagemByAnimal(Animal animal){
+        String imagemPath = animal.getImagem();
+
+        if (imagemPath == null || imagemPath.isEmpty()) {
+            throw new ResourceNotFoundException("Imagem não encontrada");
+        }
+
+        return fileStorageService.loadFileAsResource(imagemPath);
+
     }
 
     @Transactional

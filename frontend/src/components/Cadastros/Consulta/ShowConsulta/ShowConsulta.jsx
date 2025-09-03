@@ -2,6 +2,7 @@ import "./ShowConsulta.css"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import ShowAnimal from "../../Animal/ShowAnimal/ShowAnimal.jsx";
 
 
 const ShowConsulta = ({ 
@@ -46,8 +47,12 @@ const ShowConsulta = ({
                 Data :{newConsulta?.dataCriacao || "CPF não encontrada"}
             </p>
             <p>
-                Data De Alteração: {newConsulta?.dataAlteracao || "Telefone não encontrado"}
+                Data De Alteração: {newConsulta?.dataCriacao || "Data não encontrado"}
             </p>
+            <p>
+                Data De Alteração: {newConsulta?.dataAlteracao || "Data não encontrado"}
+            </p>
+            
         </div>
         <button
         type="buttom"

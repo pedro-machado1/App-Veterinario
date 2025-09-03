@@ -4,25 +4,34 @@ import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import SearchCliente from "../../Cliente/SearchCliente/SearchCliente";
+import SearchAnimal from "../../Animal/SearchAnimal/SearchAnimal";
 
 const NewConsulta = () => {
+
   const [titulo, setTitulo] = useState("");
   const [texto, setTexto] = useState("");
   const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedAnimals, setSelectedAnimals] = useState([]); // array de animais
   const [showSearch, setShowSearch] = useState(false);
+  const [showSearchAnimal, setShowSearchAnimal] = useState(false);
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const apiUrl = import.meta.env.VITE_API_URL;
-  
+
   const isInvalid = (e) => e.target.classList.add("isInvalid");
+
   const isValid = (e) => {
     if (e.target.value && e.target.classList.contains("isInvalid")) {
       e.target.classList.remove("isInvalid");
     }
   };
-  
+
+  const toggleShow = () => {
+    setShowSearchAnimal((prev) => !prev);
+  };
+
   const handleReset = () => {
     const form = document.getElementById("formsNewConsulta");
     const elements = form.getElementsByClassName("isInvalid");
@@ -34,8 +43,9 @@ const NewConsulta = () => {
     setError(null);
     setSuccess(null);
     setSelectedClient(null);
+    setSelectedAnimals([]);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!document.getElementById("formsNewConsulta").reportValidity()) {
@@ -45,9 +55,10 @@ const NewConsulta = () => {
     const newConsulta = {
       titulo,
       texto,
-      cliente: { id: parseInt(selectedClient)}
+      cliente: { id: parseInt(selectedClient.id) },
+      animal: selectedAnimals.map((a) => ({ id: parseInt(a.id) })),
     };
-    console.log(newConsulta)
+    console.log(newConsulta);
     setIsLoading(true);
     try {
       const response = await axios.post(`${apiUrl}/api/consulta`, newConsulta);
@@ -63,11 +74,30 @@ const NewConsulta = () => {
       }
     }
   };
-  
+
+  const addAnimal = (animal) => {
+    setSelectedAnimals((prev) => {
+      if (!animal.id) return prev;
+      // some pq é object
+      if (prev.some((a) => a.id === animal.id)) return prev;
+      return [...prev, animal];
+    });
+  };
+
+  const removeAnimal = (animalId) => {
+    setSelectedAnimals((prev) =>
+      prev.filter((a) => String(a.id) !== String(animalId))
+    );
+  };
+
   return (
     <div className="consulta-container">
       <h1 className="title">Registre uma consulta</h1>
-      <form id="formsNewConsulta" onReset={handleReset} onSubmit={handleSubmit}>
+      <form
+        id="formsNewConsulta"
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+      >
         <InputField
           label="Título"
           placeholder="Informe o título da consulta"
@@ -75,7 +105,10 @@ const NewConsulta = () => {
           idInput="newTitulo"
           classNameDiv="inputTitulo"
           value={titulo}
-          onChange={(e) => { setTitulo(e.target.value); isValid(e); }}
+          onChange={(e) => {
+            setTitulo(e.target.value);
+            isValid(e);
+          }}
           onInvalid={(e) => isInvalid(e)}
           required
         />
@@ -86,7 +119,10 @@ const NewConsulta = () => {
           idInput="newTexto"
           classNameDiv="inputTexto"
           value={texto}
-          onChange={(e) => { setTexto(e.target.value); isValid(e); }}
+          onChange={(e) => {
+            setTexto(e.target.value);
+            isValid(e);
+          }}
           onInvalid={(e) => isInvalid(e)}
           required
         />
@@ -100,24 +136,58 @@ const NewConsulta = () => {
         </button>
         {selectedClient && (
           <div className="selectedClient">
-            <p>Cliente selecionado: {selectedClient}</p>
+            <p>Cliente selecionado: {selectedClient.nome}</p>
+            <button onClick={() => setShowSearchAnimal(true)}>
+              {" "}
+              Selecionar Animal{" "}
+            </button>
           </div>
         )}
-        {showSearch && (
-          <SearchCliente 
-            onClose={() => setShowSearch(false)}
-            onClientSelect={(clientId) => setSelectedClient(clientId)}
-          />
+
+        {selectedAnimals.length > 0 && (
+          <div className="selectedAnimalsList">
+            <h4>Animais selecionados:</h4>
+            {selectedAnimals.map((a) => (
+              <div key={a.id}>
+                <span>{a.nome || `#${a.id}`}</span>
+                <button type="button" onClick={() => removeAnimal(a.id)}>
+                  Remover
+                </button>
+              </div>
+            ))}
+          </div>
         )}
 
         {isLoading && <LoadingSpin />}
         <div className="errorsOrSuccess">
-          <p style={{color:"red"}}>{Error && Error}</p>
-          <p style={{color:"green"}}>{Success && Success}</p>
+          <p style={{ color: "red" }}>{Error && Error}</p>
+          <p style={{ color: "green" }}>{Success && Success}</p>
         </div>
-        <button type="submit" className="submit">Enviar</button>
-        <button type="reset" className="cancelar" onClick={handleReset}>Cancelar</button>
+        <button type="submit" className="submit">
+          Enviar
+        </button>
+        <button type="reset" className="cancelar" onClick={handleReset}>
+          Cancelar
+        </button>
       </form>
+      {showSearch && (
+        <SearchCliente
+          onClose={() => setShowSearch(false)}
+          onClientSelect={(cliente) => setSelectedClient(cliente)}
+        />
+      )}
+      {showSearchAnimal && (
+        <div>
+          <SearchAnimal
+            onClose={() => setShowSearchAnimal(false)}
+            onAnimalSelect={(animal) => {
+              addAnimal(animal);
+              setShowSearchAnimal(false);
+            }}
+            clienteId={selectedClient.id}
+          />
+        </div>
+      )}
     </div>
   );
 };

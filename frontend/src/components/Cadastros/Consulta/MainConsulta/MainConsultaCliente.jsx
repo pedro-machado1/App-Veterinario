@@ -2,15 +2,12 @@ import "./MainConsultaCliente.css";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
 import ShowConsulta from "../ShowConsulta/ShowConsulta";
 
 const MainConsultaCliente = ({
     onClose
 }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [params] = useSearchParams();
-  const navigate = useNavigate();
 
   const [consultas, setConsultas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,7 +50,7 @@ const MainConsultaCliente = ({
     };
 
     fetchConsultas();
-  }, [params, showMore]);
+  }, [showMore]);
 
   return (
     <div className="main-consulta-container">

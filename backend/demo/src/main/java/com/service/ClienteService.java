@@ -149,8 +149,8 @@ public class ClienteService {
 
     }
     @Transactional
-    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages){
-        long idCliente =findClienteId();
+    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages, long idCliente){
+        if (idCliente == 0) idCliente = findClienteId();
         existsById(idCliente);
 
         Page<Animal> animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);

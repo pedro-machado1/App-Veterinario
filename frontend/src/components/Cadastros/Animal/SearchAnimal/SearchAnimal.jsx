@@ -1,21 +1,21 @@
+import "./SearchAnimal.css"
+
 import { useEffect, useState } from "react";
-import ShowCliente from "../ShowCliente/ShowCliente.jsx";
+import ShowAnimal from "../ShowAnimal/ShowAnimal";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
-import InputField from "../../../Extras/InputField/InputField";
-import "./SearchCliente.css"; 
 
-const SearchCliente = ({
+const SearchAnimal = ({
     onClose,
-    onClientSelect
+    onAnimalSelect,
+    clienteId
 }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     
-    const [clientes, setClientes] = useState([]);
+    const [animal, setAnimals] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [showMoreCliente, setShowMoreCliente] = useState(null);
-    const [searchCpf, setSearchCpf] = useState("");
+    const [showMoreAnimal, setShowMoreAnimal] = useState(null);
     const [error, setError] = useState(null);
 
 
@@ -28,88 +28,89 @@ const SearchCliente = ({
       }
 
 
-    const showMoreToggle = (clienteId) => {
-        if (showMoreCliente === clienteId) {
-            setShowMoreCliente(null);
+    const showMoreToggle = (animalId) => {
+        if (showMoreAnimal === animalId) {
+            setShowMoreAnimal(null);
         } else {
-            setShowMoreCliente(clienteId);
+            setShowMoreAnimal(animalId);
         }
     };
 
-    const fetchClientes = async () => {
+    const fetchAnimals = async () => {
         setIsLoading(true);
         setError(null);
         
-        if (searchCpf === "") {
-            setClientes([]); 
+        if (clienteId === "") {
+            setAnimals([]); 
             setIsLoading(false);
             return;
         }
         
-        let url = `${apiUrl}/api/cliente?cpf=${searchCpf}`;
+        let url = `${apiUrl}/api/cliente/animal?idCliente=${clienteId}`;
         
         try {
             const response = await axios.get(url);
             if (response.data.content.length === 0) {
-                setError("Nenhum cliente encontrado com esse CPF");
-                setClientes([]);
+                setError("Nenhum animal encontrado com esse CPF");
+                setAnimals([]);
             } else {
-                setClientes(response.data.content);
+                setAnimals(response.data.content);
             }
         } catch (err) {
-            console.error("Erro ao carregar o cliente:", err);
-            setError("Ocorreu um erro ao carregar os clientes.");
+            console.error("Erro ao carregar o animal:", err);
+            setError("Ocorreu um erro ao carregar os animais.");
         }finally{
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchClientes();
+        fetchAnimals();
     }, []); 
 
     const navigate = useNavigate();
 
     return(
         <div>
-            <button type="button" className="botaoCadastrar" onClick={() => navigate("/registerCliente")}>
-                Cadastrar Cliente
+            <button type="button" className="botaoCadastrar" onClick={() => navigate("/registeranimal")}>
+                Cadastrar animal
             </button>
-            <div className="searchContainer">
+            {/* <div className="searchContainer">
                 <InputField
                     type="text"
                     placeholder="Pesquisar por CPF"
                     value={maskCpf(searchCpf)}
                     onChange={(e) => setSearchCpf(e.target.value)}
                 />
-                <button type="button" onClick={fetchClientes}>Pesquisar</button>
-            </div>
-            <h1>Clientes</h1>
-            <div className="displayDeClientes">
-                {clientes.map((cliente) => (
-                    <div key={cliente.id} className="ClienteCard">
+                <button type="button" onClick={fetchAnimals}>Pesquisar</button>
+            </div> */}
+            <h1>Animais</h1>
+            <div className="displayDeanimais">
+                {animal.map((animal) => (
+                    <div key={animal.id} className="animalCard">
                         <p>
-                            <strong>Nome:</strong> {cliente.nome || "Nome não encontrado"}
+                            <strong>Nome:</strong> {animal.nome || "Nome não encontrado"}
                         </p>
                         <p>
-                            <strong>CPF:</strong> {maskCpf(cliente.cpf) || "CPF não encontrado"} 
+                            <strong>Especie:</strong> {animal.especie || "Especie não encontrado"} 
                         </p> 
                         <button 
                             className="showMoreButton"
-                            onClick={() => showMoreToggle(cliente.id)}
+                            onClick={() => showMoreToggle(animal.id)}
                         > 
                             Ver Mais
                         </button>
-                        {showMoreCliente === cliente.id && 
-                            <ShowCliente
-                                onClose={() => setShowMoreCliente(null)}
-                                clienteId={cliente.id}
+                        {showMoreAnimal === animal.id && 
+                            <ShowAnimal
+                                onClose={() => setShowMoreAnimal(null)}
+                                animalId={animal.id}
+                                clienteId={clienteId}
                             />
                         }
                         <button
                             className="selecionarButton"
                             onClick={() => {
-                                onClientSelect(cliente);
+                                onAnimalSelect(animal);
                                 onClose();
                             }}
                         >
@@ -130,4 +131,4 @@ const SearchCliente = ({
     );
 };
 
-export default SearchCliente;
+export default SearchAnimal;

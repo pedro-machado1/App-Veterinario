@@ -36,6 +36,8 @@ public class Animal {
 
     private String raca;
 
+    private String imagem;
+
     @ManyToMany(mappedBy = "animal")
     private List<Cliente> cliente;
 

@@ -73,8 +73,12 @@ public class ClienteController {
     }
 
     @GetMapping("/animal")
-    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages) {
-        Page<AnimalSimpleDto> animalPage = clientService.findAllAnimal(pages);
+    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages , @RequestParam(required = false) Long idCliente) {
+        Page<AnimalSimpleDto> animalPage;
+        if (idCliente == null) animalPage = clientService.findAllAnimal(pages, 0);
+
+        else animalPage = clientService.findAllAnimal(pages, idCliente);
+
         return ResponseEntity.ok().body(animalPage);
     }
 
