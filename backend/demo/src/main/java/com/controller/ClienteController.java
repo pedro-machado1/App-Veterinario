@@ -6,16 +6,23 @@ import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.model.Cliente;
+import com.model.Consultorio;
 import com.service.ClienteService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
@@ -31,8 +38,11 @@ public class ClienteController {
 
 
     @PostMapping
-    public ResponseEntity<ClienteDto> insert(@Valid @RequestBody ClienteDto cliente, HttpServletRequest request) throws Exception {
-        ClienteDto newClientDto = clientService.insert(cliente);
+    public ResponseEntity<ClienteDto> insert(
+            @Valid @RequestPart("cliente") ClienteDto cliente,
+            @RequestParam(required = false, value = "imagem") MultipartFile imagem
+            ) throws Exception {
+        ClienteDto newClientDto = clientService.insert(cliente, imagem);
         return ResponseEntity.ok(newClientDto);
     }
 
@@ -44,6 +54,34 @@ public class ClienteController {
         return ResponseEntity.ok(Optional.of(convertToDto(clienteDto.get(), ClienteSimpleDto.class)));
     }
 
+
+    @GetMapping("/{id}/imagem")
+    public ResponseEntity<Resource> findImagemById(@PathVariable Long id){
+        Optional<Cliente> clienteOptional = clientService.findById(id);
+
+        if (clienteOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        try{
+            Cliente cliente = clienteOptional.get();
+            Resource resource = clientService.findImagemByAnimal(cliente);
+
+            Path filePath = ((UrlResource) resource).getFile().toPath();
+
+            String contentType = Files.probeContentType(filePath);
+            if(contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+        }catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     // look into changing page size and changing to PageModel;
 
     @GetMapping()
@@ -52,8 +90,11 @@ public class ClienteController {
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping()
-    public ResponseEntity<ClienteDto> update(@Validated @RequestBody ClienteUpdateDto clienteUpdateDto){
-       ClienteDto clienteDto = clientService.update(clienteUpdateDto);
+    public ResponseEntity<ClienteDto> update(
+            @Validated @RequestPart(value = "cliente") ClienteUpdateDto clienteUpdateDto,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem
+    ){
+       ClienteDto clienteDto = clientService.update(clienteUpdateDto, imagem);
        return ResponseEntity.ok(clienteDto);
     }
     @DeleteMapping("{id}")

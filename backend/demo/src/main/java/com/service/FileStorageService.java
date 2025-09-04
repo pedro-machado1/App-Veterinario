@@ -32,8 +32,8 @@ public class FileStorageService {
     }
 
     public String saveFile(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("Arquivo vazio");
+        if (file == null || file.isEmpty()) {
+            return null;
         }
 
         try {

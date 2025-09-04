@@ -36,6 +36,8 @@ public class ClienteUpdateDto {
 
     private LocalDate dataDeAlteracao;
 
+    private String imagem;
+
     private List<AnimalSimpleDto> animal;
 
     private List<VeterinarioSimpleDto> veterinario;

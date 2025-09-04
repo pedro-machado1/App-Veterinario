@@ -8,17 +8,21 @@ import ConsultorioUpdate from "../../components/Cadastros/Consultorio/Consultori
 import VeterinarioUpdate from "../../components/Cadastros/Veterinario/VeterinarioUpdate/VeterinarioUpdate";
 import ConsultorioEditVeterinario from "../../components/Cadastros/Consultorio/ConsultorioEditVeterinarios/ConsultorioEditVeterinarios";
 import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaCliente";
+import notLogin from "../../assets/images/notLogin.png"
 
 const UserProfile = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate()
 
+  const [imagem, setImagem] = useState(null)
+  const [Error, setError] = useState(null)
+
   const [showCliente, setShowCliente] = useState(false)
   const [showConsultorio, setShowConsultorio] = useState(false)
   const [showNovoConsultorio, setshowNovoConsultorio] = useState(false)
   const [showConsultasCliente, setShowConsultasCliente] = useState(false)
-  const [ showEditVeterinario, setShowEditVeterinario] = useState(false)
+  const [showEditVeterinario, setShowEditVeterinario] = useState(false)
   const [showVeterinario, setShowVeterinario] = useState(false)
 
   const [hasCliente, setHasClient] = useState(null)
@@ -28,25 +32,25 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(null);
 
   const toggleEditVeterinario = () => {
-        setshowNovoConsultorio((prev) => !prev)
+    setshowNovoConsultorio((prev) => !prev)
   }
 
   const toggleConsultasCliente = () => {
-        setShowConsultasCliente((prev) => !prev)
+    setShowConsultasCliente((prev) => !prev)
   }
 
   const toggleNovoConsultorio = () => {
-        setShowEditVeterinario((prev) => !prev)
+    setShowEditVeterinario((prev) => !prev)
   }
 
   const toggleConsultorio = () => {
-        setShowConsultorio((prev) => !prev)
+    setShowConsultorio((prev) => !prev)
   }
   const toggleCliente = () => {
-        setShowCliente((prev) => !prev)
+    setShowCliente((prev) => !prev)
   }
   const toggleVeterinario = () => {
-        setShowVeterinario((prev) => !prev)
+    setShowVeterinario((prev) => !prev)
   }
 
   const formatDateForDisplay = (dateStr) => {
@@ -72,16 +76,42 @@ const UserProfile = () => {
           setNewUser(response.data);
           console.log(response.data);
           setHasClient(true)
+          const imagem = await axios.get(
+            `${apiUrl}/api/cliente/${response.data.cliente.id}/imagem`, {
+            responseType: 'blob'
+          }
+          )
+          const imageUrl = URL.createObjectURL(imagem.data);
+          setImagem(imageUrl);
+
         }
         if (response.data.consultorio) {
           setNewUser(response.data);
           console.log(response.data);
           setHasConsultorio(true)
+
+          const imagem = await axios.get(
+            `${apiUrl}/api/consultorio/${response.data.consultorio.id}/imagem`, {
+            responseType: 'blob'
+          }
+          )
+          const imageUrl = URL.createObjectURL(imagem.data);
+          setImagem(imageUrl);
+
         }
         if (response.data.veterinario) {
           setNewUser(response.data);
           console.log(response.data);
           setHasVeterinario(true)
+
+          const imagem = await axios.get(
+            `${apiUrl}/api/cliente/${response.data.veterinario.id}/imagem`, {
+            responseType: 'blob'
+          }
+          )
+          const imageUrl = URL.createObjectURL(imagem.data);
+          setImagem(imageUrl);
+
         }
 
       } catch (err) {
@@ -104,7 +134,11 @@ const UserProfile = () => {
 
       {hasCliente && (
         <div>
-          <h1 className="k">{newUser?.cliente?.nome}</h1>
+          {imagem ? (
+            <img src={imagem} alt={`Foto de ${newUser?.cliente?.nome}`} className="cliente-image" />
+          ) : (
+            <img src={notLogin} className="notFound-image" />
+          )}
           <p className="text-gray-600">
             E-mail: {newUser?.email || "E-mail não encontrado"}
           </p>
@@ -129,9 +163,9 @@ const UserProfile = () => {
           >
             Consultas
           </button>
-          { showConsultasCliente &&  
+          {showConsultasCliente &&
             <MainConsultaCliente
-              onClose = {() => setShowConsultasCliente(false)}
+              onClose={() => setShowConsultasCliente(false)}
             />
           }
           <button
@@ -148,11 +182,13 @@ const UserProfile = () => {
           {showCliente &&
             <div className="popUpCliente">
               <ClienteUpdate
+                id={newUser.cliente.id}
                 name={newUser.cliente.nome}
                 cpf={newUser.cliente.cpf}
                 phone={newUser.cliente.telefone}
                 dataDeNascimento={newUser.cliente.dataDeNascimento}
                 endereco={newUser.cliente.endereco}
+                imagem={newUser.cliente.imagem}
                 onClose={() => setShowCliente(false)}
               />
             </div>
@@ -162,9 +198,12 @@ const UserProfile = () => {
 
       {hasConsultorio && (
         <div>
-          <h1 className="text-gray-600">
-            {newUser?.consultorio?.nome || "Nome não encontrado"}
-          </h1>
+          {imagem ? (
+            <img src={imagem} alt={`Foto de ${newUser?.consultorio?.nome}`} className="consultorio-image" />
+          ) : (
+            <img src={notLogin} className="notFound-image" />
+          )}
+
           <p className="text-gray-600">
             E-mail: {newUser?.email || "E-mail não encontrado"}
           </p>
@@ -191,39 +230,41 @@ const UserProfile = () => {
           >
             Editar
           </button>
-          <button 
-            onClick={toggleEditVeterinario} 
+          <button
+            onClick={toggleEditVeterinario}
           >
             Editar os veterinarios do Consultorio
           </button>
           {showConsultorio &&
             <div className="popUpConsultorio">
               <ConsultorioUpdate
-                name = {newUser.consultorio.nome}
-                phone = {newUser.consultorio.telefone}
-                dataDeFundacao = {newUser.consultorio.dataDeFundacao}
-                endereco = {newUser.consultorio.endereco}
-                estado = {newUser.consultorio.estado}
-                descricao = {newUser.consultorio.descricao}
-                onClose = {() => setShowConsultorio(false)}
+                name={newUser.consultorio.nome}
+                phone={newUser.consultorio.telefone}
+                dataDeFundacao={newUser.consultorio.dataDeFundacao}
+                endereco={newUser.consultorio.endereco}
+                estado={newUser.consultorio.estado}
+                descricao={newUser.consultorio.descricao}
+                onClose={() => setShowConsultorio(false)}
               />
             </div>
           }
-          {showEditVeterinario && 
+          {showEditVeterinario &&
             <div className="displayShowEditVeterinario">
               <ConsultorioEditVeterinario
-              consultorioId={newUser.consultorio.id}
-              onClose={() => {setShowEditVeterinario(false)}}
+                consultorioId={newUser.consultorio.id}
+                onClose={() => { setShowEditVeterinario(false) }}
               />
-            </div>  
+            </div>
           }
         </div>
       )}
       {hasVeterinario && (
         <div>
-          <h1>
-            {newUser?.veterinario?.nome || "Nome não encontrado"}
-          </h1>
+          {imagem ? (
+            <img src={imagem} alt={`Foto de ${newUser?.veterinario?.nome}`} className="veterinario-image" />
+          ) : (
+            <img src={notLogin} className="notFound-image" />
+          )}
           <p>
             E-mail: {newUser?.email || "E-mail não encontrado"}
           </p>
@@ -260,15 +301,15 @@ const UserProfile = () => {
           {showVeterinario &&
             <div className="popUpConsultorio">
               <VeterinarioUpdate
-                name = {newUser.veterinario.nome}
-                cpf = {newUser.veterinario.cpf}
+                name={newUser.veterinario.nome}
+                cpf={newUser.veterinario.cpf}
                 crvm={newUser.veterinario.crvm}
                 estado={newUser.veterinario.estado}
-                phone = {newUser.veterinario.telefone}
-                dataDeNascimento = {newUser.veterinario.dataDeNascimento}
-                endereco = {newUser.veterinario.endereco}
-                descricao = {newUser.veterinario.descricao}
-                onClose = {() => setShowVeterinario(false)}
+                phone={newUser.veterinario.telefone}
+                dataDeNascimento={newUser.veterinario.dataDeNascimento}
+                endereco={newUser.veterinario.endereco}
+                descricao={newUser.veterinario.descricao}
+                onClose={() => setShowVeterinario(false)}
               />
             </div>
           }

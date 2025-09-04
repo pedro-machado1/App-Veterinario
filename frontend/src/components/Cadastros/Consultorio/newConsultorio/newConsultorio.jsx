@@ -14,6 +14,9 @@ const NewConsultorio = () => {
   const [descricao, setDescricao] = useState("");
   const [dataDeFundacao, setDataDeFundacao] = useState("");
   const [estado, setEstado] = useState("")
+  const [imagem, setImagem] = useState("");
+  const [previewImg, setPreviewImg] = useState(null);
+
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +66,9 @@ const NewConsultorio = () => {
     setEndereco("");
     setTelefone("");
     setDescricao("");
-    setEstado("")
+    setEstado("");
+    setImagem("");
+    setPreviewImg(null);
     setError(null);
     setSuccess(null);
   };
@@ -84,8 +89,21 @@ const NewConsultorio = () => {
       estado
     };
     setIsLoading(true);
+
+    const formData = new FormData();
+
+    const consultorioBlob = new Blob([JSON.stringify(newConsultorio)], { type: 'application/json' });
+    formData.append("consultorio", consultorioBlob);
+    
+    if (imagem) {
+      formData.append("imagem", imagem);
+    }
+
+
     try {
-      const response = await axios.post(`${apiUrl}/api/consultorio`, newConsultorio);
+      const response = await axios.post(`${apiUrl}/api/consultorio`,
+         formData
+        );
       console.log("New Consultorio:", response.data);
       handleReset();
       setSuccess("Consultório adicionado com sucesso!");
@@ -108,7 +126,17 @@ const NewConsultorio = () => {
       .slice(0, 15);
   }
 
-  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagem(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImg(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="consultorio-container">
@@ -153,25 +181,25 @@ const NewConsultorio = () => {
             <option value="Amazonas">Amazonas</option>
             <option value="Bahia">Bahia</option>
             <option value="Ceará">Ceará</option>
-            <option value="DistritoFederal">Distrito Federal</option>
-            <option value="EspíritoSanto">Espírito Santo</option>
+            <option value="Distrito Federal">Distrito Federal</option>
+            <option value="Espírito Santo">Espírito Santo</option>
             <option value="Goiás">Goiás</option>
             <option value="Maranhão">Maranhão</option>
-            <option value="MatoGrosso">Mato Grosso</option>
-            <option value="MatoGrossodoSul">Mato Grosso do Sul</option>
-            <option value="MinasGerais">Minas Gerais</option>
+            <option value="Mato Grosso">Mato Grosso</option>
+            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+            <option value="Minas Gerais">Minas Gerais</option>
             <option value="Pará">Pará</option>
             <option value="Paraíba">Paraíba</option>
             <option value="Paraná">Paraná</option>
             <option value="Pernambuco">Pernambuco</option>
             <option value="Piauí">Piauí</option>
             <option value="Rio de Janeiro">Rio de Janeiro</option>
-            <option value="RioGrandedoNorte">Rio Grande do Norte</option>
-            <option value="RioGrandedoSul">Rio Grande do Sul</option>
+            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
             <option value="Rondônia">Rondônia</option>
             <option value="Roraima">Roraima</option>
-            <option value="SantaCatarina">Santa Catarina</option>
-            <option value="SãoPaulo">São Paulo</option>
+            <option value="Santa Catarina">Santa Catarina</option>
+            <option value="São Paulo">São Paulo</option>
             <option value="Sergipe">Sergipe</option>
             <option value="Tocantins">Tocantins</option>
           </select>
@@ -215,6 +243,23 @@ const NewConsultorio = () => {
           onInvalid={(e)=> isInvalid(e)}
           required
         />
+
+        <InputField
+            label="URL da Imagem"
+            placeholder={"Coloque a Imagem de perfil do cliente"}
+            idInput="newImagem"
+            classNameDiv="inputImagem"
+            type="file"
+            onChange={handleImageChange}
+          />
+          {previewImg && (
+            <img
+              src={previewImg}
+              alt="Preview"
+              style={{ width: "150px", height: "auto", marginTop: "10px" }}
+            />
+          )}
+
         <button 
           type="button" 
           id="newVeterinarioButton"

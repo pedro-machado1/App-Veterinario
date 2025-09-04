@@ -43,7 +43,7 @@ public class AnimalController {
     @PostMapping()
     public ResponseEntity<AnimalDto> insert(
             @Validated @RequestPart("animal") AnimalDto animal,
-            @RequestPart("imagem") MultipartFile imagem
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem
     ) {
         AnimalDto newAnimalDto = animalService.insert(animal, imagem);
         URI uri = ServletUriComponentsBuilder
@@ -105,8 +105,12 @@ public class AnimalController {
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping("{id}")
-    public ResponseEntity<AnimalDto> update(@PathVariable Long id, @Validated @RequestBody AnimalUpdateDto animalUpdateDto){
-        AnimalDto animalDto = animalService.update(id, animalUpdateDto);
+    public ResponseEntity<AnimalDto> update(
+            @PathVariable Long id,
+            @Validated @RequestPart("animal") AnimalUpdateDto animalUpdateDto,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem
+    ){
+        AnimalDto animalDto = animalService.update(id, animalUpdateDto, imagem);
         if (animalDto == null) return ResponseEntity.status(403).build();
         return ResponseEntity.ok(animalDto);
     }

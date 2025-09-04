@@ -41,7 +41,7 @@ public class AnimalService {
         String imagemString = fileStorageService.saveFile(imagem);
         animalDto.setImagem(null);
         Animal animal = convertToEntity(animalDto, Animal.class);
-        animal.setImagem(imagemString);
+        if (imagemString != null )animal.setImagem(imagemString);
         animal = animalRepository.save(animal);
         return convertToDto(animal, AnimalDto.class);
     }
@@ -94,13 +94,18 @@ public class AnimalService {
     }
 
     @Transactional
-    public AnimalDto update(long id, AnimalUpdateDto animalDto){
+    public AnimalDto update(long id, AnimalUpdateDto animalDto, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
         existsById(id);
-        Animal animal = animalRepository.getReferenceById(id);
+        Optional<Animal> animalOptional = animalRepository.findById(id);
+        if (animalOptional.isEmpty()) throw new ResourceNotFoundException("Animal não encontrado");
+        Animal animal = animalOptional.get();
+        if (imagemString == null ) imagemString = animal.getImagem();
         Usersdto usersdto =authenticationService.authenticatedUser();
 
         if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == usersdto.getCliente().getId())) {
             convertToEntityVoid(animalDto, animal);
+            animal.setImagem(imagemString);
             animal = animalRepository.save(animal);
             return convertToDto(animal, AnimalDto.class);
         }

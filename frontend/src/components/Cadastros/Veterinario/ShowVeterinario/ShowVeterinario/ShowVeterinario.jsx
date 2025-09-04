@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import VeterinarioUpdate from "../../VeterinarioUpdate/VeterinarioUpdate.jsx";
+import notLogin from "../../../../../assets/images/notLogin.png"
 
-const ShowVeterinario = ({ onClose, veterinarioId }) => {
+const ShowVeterinario = ({ 
+  onClose,
+ veterinarioId 
+}) => {
   const [veterinario, setVeterinario] = useState(null);
+  const [newImagem, setImagem] = useState(null)
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,9 +32,19 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
         );
         console.log(response.data);
         setVeterinario(response.data);
+
+        const imagem = await axios.get(
+          `${apiUrl}/api/veterinario/${veterinarioId}/imagem`, {
+          responseType: 'blob'
+        }
+        )
+        const imageUrl = URL.createObjectURL(imagem.data);
+        setImagem(imageUrl);
+        setSuccess("Dados do veterinário e imagem carregados com sucesso!");
+
+
       } catch (err) {
         console.log(err);
-        setError("Erro ao carregar o veterinário");
       }
       setIsLoading(false);
     };
@@ -38,10 +53,12 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
 
   return (
     <div className="veterinario-container">
-      <h2 className="title">
-        {veterinario?.nome || "Nome não encontrado"}
-      </h2>
       <div className="presentVeterinarioContainer">
+        {newImagem ? (
+          <img src={newImagem} alt={`Foto de ${veterinario?.nome}`} className="veterinario-image" />
+        ) : (
+          <img src={notLogin} className="notFound-image" />
+        )}
         <p>
           <strong>CPF:</strong> {veterinario?.cpf || "CPF não encontrado"}
         </p>
@@ -60,13 +77,13 @@ const ShowVeterinario = ({ onClose, veterinarioId }) => {
           {veterinario?.endereco || "Endereço não encontrado"}
         </p>
       </div>
-      <button 
-      type="button" 
-      className="fechar"
-       onClick={onClose}>
+      <button
+        type="button"
+        className="fechar"
+        onClick={onClose}>
         Fechar
       </button>
-      
+
       {isLoading && <LoadingSpin />}
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}

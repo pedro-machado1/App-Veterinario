@@ -5,7 +5,6 @@ import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 
-// fzr para CRVM
 
 const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
   const [nome, setNome] = useState("");
@@ -15,6 +14,9 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
   const [dataDeNascimento, setDataDeNascimento] = useState("");
+  const [imagem, setImagem] = useState("");
+  const [prevImagem, setPrevImagem] = useState(null);
+
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,8 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
     setDataDeNascimento("")
     setTelefone("");
     setEndereco("");
+    setImagem("");
+    setPrevImagem(null);
     setError(null);
     setSuccess(null);
   };
@@ -73,9 +77,20 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
       dataDeNascimento
     };
     setIsLoading(true);
+    
+    const formData = new FormData();
+
+    const veterinarioBlob = new Blob([JSON.stringify(newVeterinario)], { type: 'application/json' });
+    formData.append("veterinario", veterinarioBlob);
+    
+    if (imagem) {
+      formData.append("imagem", imagem);
+    }
+
     try {
       const response = await axios.post(`${apiUrl}/api/veterinario?token=${token}`,
-         newVeterinario);
+         formData
+        );
       console.log("New Veterinario:", response.data);
       handleReset();
       setSuccess("Veterinário adicionado com sucesso!");
@@ -144,6 +159,18 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
           .replace(/(\d{5})(\d)/, '$1-$2')
           .slice(0, 15); 
       }
+
+      const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagem(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPrevImagem(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="veterinario-container">
@@ -272,6 +299,23 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
           onInvalid={(e)=> isInvalid(e)}
           required
         />
+
+        <InputField
+            label="URL da Imagem"
+            placeholder={"Coloque a Imagem de perfil do cliente"}
+            idInput="newImagem"
+            classNameDiv="inputImagem"
+            type="file"
+            onChange={handleImageChange}
+          />
+          {prevImagem && (
+            <img
+              src={prevImagem}
+              alt="Preview"
+              style={{ width: "150px", height: "auto", marginTop: "10px" }}
+            />
+          )}
+
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>
           <p style={{ color: "green" }}>{Success && Success}</p>

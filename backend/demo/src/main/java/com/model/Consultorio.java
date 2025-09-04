@@ -30,6 +30,9 @@ public class Consultorio {
 
     private Estado estado;
 
+    private String imagem;
+
+
     @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
     private Users users;
 

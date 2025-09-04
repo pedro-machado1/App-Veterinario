@@ -27,10 +27,10 @@ public class ClienteSimpleDto {
 
     private LocalDate dataDeNascimento;
 
-//    @NotBlank
-//    private Image imagem;
-
     private LocalDate dataDeCriacao;
 
     private LocalDate dataDeAlteracao;
-    }
+
+    private String imagem;
+
+}

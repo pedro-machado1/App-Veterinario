@@ -7,20 +7,19 @@ import com.dto.consultorio.ConsultorioUpdateDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.enums.Estado;
-import com.model.Cliente;
-import com.model.Consultorio;
-import com.model.Users;
-import com.model.Veterinario;
+import com.model.*;
 import com.repository.ConsultorioRepository;
 import com.repository.VeterinarioRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,10 +47,15 @@ public class ConsultorioService {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Transactional
-    public ConsultorioDto insert(ConsultorioDto consultorioDto) {
+    public ConsultorioDto insert(ConsultorioDto consultorioDto, MultipartFile imagem) {
+        String imagemString = fileStorageService.saveFile(imagem);
         Consultorio consultorio= convertToEntity(consultorioDto, Consultorio.class);
         consultorio.setDataDeCadastro(LocalDate.now());
+        if (imagemString != null ) consultorio.setImagem(imagemString);
         consultorio = consultorioRepository.save(consultorio);
         consultorioDto = convertToDto(consultorio, ConsultorioDto.class);
         usersService.addConsultorio(consultorioDto);
@@ -64,6 +68,19 @@ public class ConsultorioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
         return Optional.of(consultorio);
     }
+
+    @Transactional
+    public Resource findImagemByAnimal(Consultorio consultorio){
+        String imagemPath = consultorio.getImagem();
+
+        if (imagemPath == null || imagemPath.isEmpty()) {
+            throw new ResourceNotFoundException("Imagem não encontrada");
+        }
+
+        return fileStorageService.loadFileAsResource(imagemPath);
+
+    }
+
 
     @Transactional
     public Page<ConsultorioDto> findAll(Pageable pages, Estado estado){
@@ -79,12 +96,15 @@ public class ConsultorioService {
 
 
     @Transactional
-    public ConsultorioDto update(ConsultorioUpdateDto consultorioDto){
+    public ConsultorioDto update(ConsultorioUpdateDto consultorioDto, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
         Users users = usersService.findUsers();
         long id = users.getConsultorio().getId();
         existsById(id);
         Consultorio consultorio = consultorioRepository.getReferenceById(id);
+        if (imagemString == null ) imagemString = consultorio.getImagem();
         convertToEntityVoid(consultorioDto, consultorio);
+        consultorio.setImagem(imagemString);
         consultorio = consultorioRepository.save(consultorio);
         return convertToDto(consultorio, ConsultorioDto.class);
     }

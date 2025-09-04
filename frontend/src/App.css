@@ -37,3 +37,13 @@ body,html, body * {
 .logo:hover {
   filter: var(--primary-normal-hover);
 }
+
+.cliente-image,
+.veterinario-image,
+.consultorio-image,
+.animal-image {
+  height: 10em;
+  width: 10em;
+  border-radius: 50%;
+  object-fit: cover;
+}

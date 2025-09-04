@@ -31,6 +31,8 @@ public class Veterinario {
 
     private LocalDate dataDeNascimento;
 
+    private String imagem;
+
 
     @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private List<Consulta> consulta;

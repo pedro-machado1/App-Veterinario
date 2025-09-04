@@ -37,4 +37,7 @@ public class ConsultorioSimpleDto {
 
     private Estado estado;
 
+    private String imagem;
+
+
 }

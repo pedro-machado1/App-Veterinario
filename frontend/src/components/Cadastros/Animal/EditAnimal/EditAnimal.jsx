@@ -1,8 +1,9 @@
-import "./EditAnimal.css"
+import "./EditAnimal.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import InputField from "../../../Extras/InputField/InputField";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
+import notLogin from "../../../../assets/images/notLogin.png" 
 
 const EditAnimal = ({
     onClose,
@@ -20,6 +21,8 @@ const EditAnimal = ({
     const [doenca, setDoenca] = useState("");
     const [alergia, setAlergia] = useState("");
     const [raca, setRaca] = useState("");
+    const [imagem, setImagem] = useState(null); 
+    const [previewImg, setPreviewImg] = useState(null); 
   
     const [Error, setError] = useState(null);
     const [Success, setSuccess] = useState(null);
@@ -28,40 +31,64 @@ const EditAnimal = ({
     const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
-        const asyncFunction = async () => { 
-        if (!animalId) console.log("Erro na inicialização");
-        
-        try{ 
-            const response = await axios.get(`${apiUrl}/api/animal/${animalId}`)
-            console.log(response.data)
-            setSuccess("A API obteve sucesso")
-             if (response.data) {
-                setNome(response.data.nome)
-                setEspecie(response.data.especie);
-                setIdade(response.data.idade);
-                setGenero(response.data.genero);
-                setAltura(response.data.altura);
-                setComprimento(response.data.comprimento);
-                setPeso(response.data.peso);
-                setDoenca(response.data.doenca);
-                setAlergia(response.data.alergia);
-                setRaca(response.data.raca);
+        let currentImageUrl = null; 
 
-                setSuccess("Os dados do animal foram carregados com sucesso.");
-            } else {
-                setError("Resposta da API inválida.");
+        const asyncFunction = async () => { 
+            if (!show || !animalId) {
+                if (!animalId) {
+                    console.log("Erro na inicialização: animalId está faltando.");
+                }
+                setIsLoading(false);
+                return;
             }
             
-        }catch(err){
-            console.log(err)
-            setError("Erro no get do animal")
-        }
-        setIsLoading(false)
-    }
+            setIsLoading(true);
+            try { 
+                const animalResponse = await axios.get(`${apiUrl}/api/animal/${animalId}`);
+                console.log("Animal data:", animalResponse.data);
+                
+                if (animalResponse.data) {
+                    setNome(animalResponse.data.nome || "");
+                    setEspecie(animalResponse.data.especie || "");
+                    setIdade(animalResponse.data.idade || "");
+                    setGenero(animalResponse.data.genero || "");
+                    setAltura(animalResponse.data.altura || "");
+                    setComprimento(animalResponse.data.comprimento || "");
+                    setPeso(animalResponse.data.peso || "");
+                    setDoenca(animalResponse.data.doenca || "");
+                    setAlergia(animalResponse.data.alergia || "");
+                    setRaca(animalResponse.data.raca || "");
+                } else {
+                    setError("Resposta da API inválida para dados do animal.");
+                }
 
-    asyncFunction()
-    }, [show == true, animalId])
+                try {
+                    const imageResponse = await axios.get(
+                        `${apiUrl}/api/animal/${animalId}/imagem`,
+                        { responseType: 'blob' }
+                    );
+                    if (imageResponse.data.size > 0) {
+                        currentImageUrl = URL.createObjectURL(imageResponse.data);
+                        setPreviewImg(currentImageUrl); 
+                    } else {
+                        setPreviewImg(null); 
+                    }
+                } catch (imageErr) {
+                    console.error("Erro ao carregar a imagem do animal:", imageErr);
+                    setPreviewImg(null); 
+                }
+                
+            } catch (err) {
+                console.log(err);
+                setError("Erro no get do animal.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
+        asyncFunction();
+
+    }, [show, animalId]); 
 
     const isInvalid = (e) => {
       e.target.classList.add("isInvalid");
@@ -73,6 +100,21 @@ const EditAnimal = ({
       }
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImagem(file); 
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewImg(reader.result); 
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setImagem(null);
+            setPreviewImg(null); 
+        }
+    };
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       if (!document.getElementById("formseditAnimal").reportValidity()) {
@@ -80,32 +122,46 @@ const EditAnimal = ({
         return;
       }
       setIsLoading(true);
-      const newAnimal = {
-        nome: nome,
-        especie: especie,
-        idade: parseInt(idade, 10),
-        genero: genero,
-        altura: parseInt(altura, 10),
-        comprimento: parseInt(comprimento, 10),
-        peso: parseInt(peso, 10),
-        doenca: doenca,
-        alergia: alergia,
-        raca: raca,
-      };
+
+      
+      const updateAnimal = {
+      nome: nome,
+      especie: especie,
+      idade: parseInt(idade, 10),
+      genero: genero,
+      altura: parseInt(altura, 10),
+      comprimento: parseInt(comprimento, 10),
+      peso: parseInt(peso, 10),
+      doenca: doenca,
+      alergia: alergia,
+      raca: raca,
+    };
+
+    const formData = new FormData();
+
+    const animalBlob = new Blob([JSON.stringify(updateAnimal)], { type: 'application/json' });
+    formData.append("animal", animalBlob);
+    
+      if (imagem) { 
+        formData.append("imagem", imagem);
+      }
+      
       try {
         const response = await axios.put(
           `${apiUrl}/api/animal/${animalId}`, 
-          newAnimal
+          formData,
         );
-        console.log("Animal:", response.data);
-        setSuccess("Animal adicionado com sucesso!");
+        console.log("Animal updated:", response.data);
+        setSuccess("Animal atualizado com sucesso!");
         setIsLoading(false);
-        onClose()
+        onClose(); 
       } catch (err) {
         setIsLoading(false);
         console.error(err);
         if (err.response && err.response.data) {
           setError(`${err.response.data.message}`);
+        } else {
+            setError("Erro ao atualizar o animal. Verifique sua conexão ou tente novamente.");
         }
       }
     };
@@ -116,6 +172,30 @@ const EditAnimal = ({
         <form  
           id="formseditAnimal"
           onSubmit={handleSubmit}>
+
+            <div className="image-preview-section">
+                {previewImg ? (
+                    <img
+                        src={previewImg}
+                        alt="Preview do Animal"
+                        style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "50%", border: "2px solid #ccc" }}
+                    />
+                ) : (
+                    <img
+                        src={notLogin} 
+                        alt="Nenhuma imagem disponível"
+                        style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "50%", border: "2px solid #ccc" }}
+                    />
+                )}
+                <InputField
+                    label="Foto do Animal"
+                    idInput="newImagem"
+                    classNameDiv="inputImagem"
+                    type="file"
+                    onChange={handleImageChange}
+                />
+            </div>
+
           <div className="line1">
             <InputField
               label="Nome"
@@ -276,15 +356,15 @@ const EditAnimal = ({
           </div>
           <button 
             type="submit" 
-            onClick={handleSubmit}
+            onClick={handleSubmit} 
             className="submit">
             Enviar
           </button>
         </form>
         <button
-        type="buttom"
-        className="fechar"
-        onClick={onClose}>
+            type="button"
+            className="fechar"
+            onClick={onClose}>
             Fechar
         </button>
 
@@ -293,4 +373,4 @@ const EditAnimal = ({
     );
 }
 
-export default EditAnimal
+export default EditAnimal;
