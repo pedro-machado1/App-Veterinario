@@ -1,11 +1,14 @@
-import "./ConsultorioUpdate"
+import "./ConsultorioUpdate.css"
 import { useState, useEffect } from 'react';
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
+import notLogin from "../../../../assets/images/notLogin.png";
+
 
 const ConsultorioUpdate = ({
+  id,
   name,
   phone,
   dataDeFundacao,
@@ -17,12 +20,12 @@ const ConsultorioUpdate = ({
 
 }) => {
 
-  const [newName, setName] = useState("");
-  const [newPhone, setPhone] = useState("");
-  const [newDataDeFundacao, setDataDeFundacao] = useState("");
-  const [newEndereco, setEndereco] = useState("");
-  const [newDescricao, setNewDescricao] = useState("")
-  const [newEstado, setNewEstado] = useState("");
+  const [newName, setName] = useState(name || "");
+  const [newPhone, setPhone] = useState(phone || "");
+  const [newDataDeFundacao, setDataDeFundacao] = useState(dataDeFundacao || "");
+  const [newEndereco, setEndereco] = useState(endereco || "");
+  const [newDescricao, setNewDescricao] = useState(descricao || "")
+  const [newEstado, setNewEstado] = useState(estado || "");
   const [newImagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
   const [Error, setError] = useState(null);
@@ -34,14 +37,26 @@ const ConsultorioUpdate = ({
 
 
   useEffect(() => {
-    if (name) setName(name);
-    if (phone) setPhone(phone);
-    if (dataDeFundacao) setDataDeFundacao(dataDeFundacao);
-    if (endereco) setEndereco(endereco);
-    if (estado) setNewEstado(estado);
-    if (descricao) setNewDescricao(descricao);
-    if (imagem) setImagem(imagem);
-  }, [name, phone, dataDeFundacao, endereco, descricao, imagem, estado])
+    
+    const fetchInitialData = async () => {
+      
+      setIsLoading(true);
+      const imageResponse = await axios.get(
+            `${apiUrl}/api/consultorio/${id}/imagem`,
+            { responseType: 'blob' }
+          );
+          if (imageResponse.data.size > 0) {
+            let currentImageUrl = URL.createObjectURL(imageResponse.data);
+            setPreviewImg(currentImageUrl);
+          } else {
+            setPreviewImg(null);
+          }
+        }
+
+    fetchInitialData()
+    setIsLoading(false)
+
+  }, [id])
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -92,17 +107,26 @@ const ConsultorioUpdate = ({
       descricao: newDescricao,
       endereco: newEndereco,
       estado: newEstado
-      // imagem: newImagem
     };
     if (!document.getElementById("formsUpdateConsultorio").reportValidity()) {
       setError("Preencha todos os campos!");
       return;
     }
     setIsLoading(true);
+
+    const formData = new FormData();
+
+    const consultorioBlob = new Blob([JSON.stringify(UpdateConsultorio)], { type: 'application/json' });
+    formData.append("consultorio", consultorioBlob);
+    
+    if (newImagem) {
+      formData.append("imagem", newImagem);
+    }
+
     try {
       const response = await axios.put(
         `${apiUrl}/api/consultorio`,
-        UpdateConsultorio,
+        formData,
         { withCredentials: true }
       );
       console.log('New Consultorio:', response.data);
@@ -136,18 +160,39 @@ const ConsultorioUpdate = ({
         setPreviewImg(reader.result);
       };
       reader.readAsDataURL(file);
+    } else {
+      setImagem(null);
+      setPreviewImg(null);
     }
   };
 
   return (
     <div className="consultorio-container ">
-      <h1 className="title">
-        Atualize o Seu Constultório
-      </h1>
       <form
         id="formsUpdateConsultorio"
         onSubmit={handleUpdate}>
-
+        <InputField
+          label="URL da Imagem"
+          placeholder={"Coloque a Imagem de perfil do consultório"}
+          idInput="newImagem"
+          classNameDiv="inputImagem"
+          type="file"
+          onChange={handleImageChange}
+        />
+        {previewImg ? (
+          <img
+            src={previewImg}
+            alt="Preview"
+            className="consultorio-image"
+          />
+        ) : (
+          <img
+            src={notLogin}
+            alt="Sem imagem"
+            className="consultorio-image"
+          />
+        )}
+        
         <div className="line1">
           <InputField
             label="Nome"
@@ -251,21 +296,6 @@ const ConsultorioUpdate = ({
           onInvalid={(e) => isInvalid(e)}
           required
         />
-        <InputField
-          label="URL da Imagem"
-          placeholder={"Coloque a Imagem de perfil do consultório"}
-          idInput="newImagem"
-          classNameDiv="inputImagem"
-          type="file"
-          onChange={handleImageChange}
-        />
-        {previewImg && (
-          <img
-            src={previewImg}
-            alt="Preview"
-            style={{ width: "150px", height: "auto", marginTop: "10px" }}
-          />
-        )}
         <InputField
           label="Descrição"
           placeholder={"Digite o descrição do consultorio"}

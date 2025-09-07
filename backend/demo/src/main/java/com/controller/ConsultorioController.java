@@ -63,6 +63,25 @@ public class ConsultorioController {
         return ResponseEntity.ok(Optional.of(convertToDto(consultorio.get(), ConsultorioSimpleDto.class)));
     }
 
+    @GetMapping()
+    public ResponseEntity<Page<ConsultorioDto>> findAll(Pageable pages,
+                                                        @RequestParam(required = false) String estado,
+                                                        @RequestParam(required = false) String endereco){
+        Page<ConsultorioDto> responsePages;
+        if (estado != null ) {
+            try {
+            Estado estadoConsulta = Estado.valueOf(estado);
+            responsePages = consultorioService.findAll(pages, estadoConsulta);
+            }catch (Exception e){
+                return ResponseEntity.status(400).build();
+            }
+        }
+        else {
+            responsePages = consultorioService.findAll(pages, null);
+        }
+        return ResponseEntity.ok().body(responsePages);
+    }
+
     @GetMapping("/{id}/imagem")
     public ResponseEntity<Resource> findImagemById(@PathVariable Long id){
         Optional<Consultorio> consultorioOptional = consultorioService.findById(id);
@@ -89,23 +108,6 @@ public class ConsultorioController {
         }
     }
 
-
-    @GetMapping()
-    public ResponseEntity<Page<ConsultorioDto>> findAll(Pageable pages, @RequestParam(required = false) String estado, @RequestParam(required = false) String endereco){
-        Page<ConsultorioDto> responsePages;
-        if (estado != null ) {
-            try {
-            Estado estadoConsulta = Estado.valueOf(estado);
-            responsePages = consultorioService.findAll(pages, estadoConsulta);
-            }catch (Exception e){
-                return ResponseEntity.status(400).build();
-            }
-        }
-        else {
-            responsePages = consultorioService.findAll(pages, null);
-        }
-        return ResponseEntity.ok().body(responsePages);
-    }
     @PutMapping()
     public ResponseEntity<ConsultorioDto> update(
             @Validated @RequestPart("consultorio") ConsultorioUpdateDto consultorioUpdateDto,

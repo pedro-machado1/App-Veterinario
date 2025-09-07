@@ -26,6 +26,7 @@ import MainVeterinario from './components/Cadastros/Veterinario/MainVeterinario/
 import { useAuth } from './components/Security/Context/AuthContext.jsx'
 import SendEmailVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/SendEmailVeterinario.jsx'
 import MainCliente from './components/Cadastros/Cliente/MainCliente/MainCliente.jsx'
+import MainConsultaCliente from './components/Cadastros/Consulta/MainConsulta/MainConsultaCliente.jsx'
 
 function App() {
 

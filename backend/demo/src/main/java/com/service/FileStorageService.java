@@ -64,8 +64,8 @@ public class FileStorageService {
             } else {
                 throw new ResourceNotFoundException(fileName);
             }
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("Erro no caminho do arquivo " + fileName, ex);
+        }catch (Exception e){
+            throw new RuntimeException("Erro ao carregar o arquivo " + fileName, e);
         }
     }
 }

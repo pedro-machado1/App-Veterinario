@@ -105,7 +105,7 @@ const UserProfile = () => {
           setHasVeterinario(true)
 
           const imagem = await axios.get(
-            `${apiUrl}/api/cliente/${response.data.veterinario.id}/imagem`, {
+            `${apiUrl}/api/veterinario/${response.data.veterinario.id}/imagem`, {
             responseType: 'blob'
           }
           )
@@ -238,6 +238,7 @@ const UserProfile = () => {
           {showConsultorio &&
             <div className="popUpConsultorio">
               <ConsultorioUpdate
+                id = {newUser.consultorio.id}
                 name={newUser.consultorio.nome}
                 phone={newUser.consultorio.telefone}
                 dataDeFundacao={newUser.consultorio.dataDeFundacao}
@@ -301,6 +302,7 @@ const UserProfile = () => {
           {showVeterinario &&
             <div className="popUpConsultorio">
               <VeterinarioUpdate
+                id = {newUser.veterinario.id}
                 name={newUser.veterinario.nome}
                 cpf={newUser.veterinario.cpf}
                 crvm={newUser.veterinario.crvm}

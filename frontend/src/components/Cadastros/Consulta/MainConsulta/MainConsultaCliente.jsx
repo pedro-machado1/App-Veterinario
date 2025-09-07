@@ -35,7 +35,7 @@ const MainConsultaCliente = ({
         console.log(response.data.content)
         if (content.length === 0) {
           setConsultas([]);
-          setError("Nenhuma consulta encontrada para este consultório.");
+          setError("Nenhuma consulta encontrada para este cliente.");
         } else {
           setConsultas(content);
           setError(null);

@@ -82,16 +82,20 @@ public class ConsultaService {
     public ConsultaDto update(Long id, ConsultaUpdateDto consultaDto){
         existsById(id);
 
-        ClienteSimpleDto cliente = convertToDto(clienteService.findById(consultaDto.getCliente().getId())
+        ClienteSimpleDto clienteDto = convertToDto(clienteService.findById(consultaDto.getCliente().getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaDto.getCliente().getId() + " não foi encontrado."))
                 , ClienteSimpleDto.class);
 
-        VeterinarioSimpleDto veterinario = convertToDto(veterinarioService.findById(consultaDto.getVeterinario().getId())
+        VeterinarioSimpleDto veterinarioDto = convertToDto(veterinarioService.findById(consultaDto.getVeterinario().getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o veterinário da consulta" + consultaDto.getVeterinario().getId() + " não foi encontrado."))
                 , VeterinarioSimpleDto.class);
 
-        consultaDto.setVeterinario(veterinario);
-        consultaDto.setCliente(cliente);
+        Veterinario veterinario = usersService.findUsers().getVeterinario();
+        if (!Objects.equals(veterinarioDto.getId(), veterinario.getId())) {
+            throw new DataIntegrityViolationException("Somente o veterinário que criou a consulta pode modifica-la");
+        }
+        consultaDto.setVeterinario(veterinarioDto);
+        consultaDto.setCliente(clienteDto);
         consultaDto.setDataAlteracao(LocalDate.now());
         Consulta consultaaux = convertToEntity(consultaRepository.getReferenceById(id), Consulta.class);
         Consulta consulta =convertToEntity(consultaaux, Consulta.class);

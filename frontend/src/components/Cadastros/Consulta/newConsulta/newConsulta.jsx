@@ -11,7 +11,7 @@ const NewConsulta = () => {
   const [titulo, setTitulo] = useState("");
   const [texto, setTexto] = useState("");
   const [selectedClient, setSelectedClient] = useState(null);
-  const [selectedAnimals, setSelectedAnimals] = useState([]); // array de animais
+  const [selectedAnimals, setSelectedAnimals] = useState([]); 
   const [showSearch, setShowSearch] = useState(false);
   const [showSearchAnimal, setShowSearchAnimal] = useState(false);
   const [Error, setError] = useState(null);
@@ -75,6 +75,13 @@ const NewConsulta = () => {
     }
   };
 
+  const handleRemoveAnimal = () => {
+    setShowSearch(true)
+    setShowSearchAnimal(false)
+    setSelectedAnimals([])
+    setSelectedClient(null)
+  }
+
   const addAnimal = (animal) => {
     setSelectedAnimals((prev) => {
       if (!animal.id) return prev;
@@ -137,9 +144,9 @@ const NewConsulta = () => {
         {selectedClient && (
           <div className="selectedClient">
             <p>Cliente selecionado: {selectedClient.nome}</p>
+            <button onClick={handleRemoveAnimal}> Remover </button>
             <button onClick={() => setShowSearchAnimal(true)}>
-              {" "}
-              Selecionar Animal{" "}
+              Selecionar Animal
             </button>
           </div>
         )}
@@ -149,7 +156,7 @@ const NewConsulta = () => {
             <h4>Animais selecionados:</h4>
             {selectedAnimals.map((a) => (
               <div key={a.id}>
-                <span>{a.nome || `#${a.id}`}</span>
+                <span>{a.nome}</span>
                 <button type="button" onClick={() => removeAnimal(a.id)}>
                   Remover
                 </button>

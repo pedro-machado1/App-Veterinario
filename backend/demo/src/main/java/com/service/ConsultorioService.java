@@ -94,7 +94,6 @@ public class ConsultorioService {
         return consultorios.map(consultorio -> convertToDto(consultorio, ConsultorioDto.class));
     }
 
-
     @Transactional
     public ConsultorioDto update(ConsultorioUpdateDto consultorioDto, MultipartFile imagem){
         String imagemString = fileStorageService.saveFile(imagem);
