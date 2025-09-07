@@ -30,5 +30,7 @@ public class ConsultorioUpdateDto {
 
     private Estado estado;
 
+    private String imagem;
+
 
 }

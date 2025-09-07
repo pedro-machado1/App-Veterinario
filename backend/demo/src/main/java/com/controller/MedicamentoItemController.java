@@ -1,7 +1,9 @@
 package com.controller;
 
 import com.dto.medicamentoItem.MedicamentoItemDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
 import com.dto.medicamentoItem.MedicamentoItemUpdateDto;
+import com.model.MedicamentoItem;
 import com.service.MedicamentoItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
@@ -32,9 +36,10 @@ public class MedicamentoItemController {
         return ResponseEntity.created(uri).body(medicamentoItemDto);
     }
     @GetMapping("{id}")
-    public ResponseEntity<Optional<MedicamentoItemDto>> findById(@PathVariable Long id) {
-        Optional<MedicamentoItemDto> medicamentoItemDto = medicamentoItemService.findById(id);
-        return ResponseEntity.ok(medicamentoItemDto);
+    public ResponseEntity<Optional<MedicamentoItemSimpleDto>> findById(@PathVariable Long id) {
+        Optional<MedicamentoItem> medicamentoItem = medicamentoItemService.findById(id);
+        if (medicamentoItem.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Optional.of(convertToDto(medicamentoItem.get(), MedicamentoItemSimpleDto.class)));
     }
     @GetMapping
     public ResponseEntity<Page<MedicamentoItemDto>> findAll(Pageable page){

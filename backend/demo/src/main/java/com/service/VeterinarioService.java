@@ -11,12 +11,14 @@ import com.repository.VeterinarioRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -32,9 +34,14 @@ public class VeterinarioService {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Transactional
-    public VeterinarioDto insert(VeterinarioDto veterinarioDto){
+    public VeterinarioDto insert(VeterinarioDto veterinarioDto, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
         Veterinario veterinario = convertToEntity(veterinarioDto, Veterinario.class);
+        if (imagemString != null ) veterinario.setImagem(imagemString);
         veterinario = veterinarioRepository.save(veterinario);
         veterinarioDto = convertToDto(veterinario, VeterinarioDto.class);
         usersService.addVeterinario(veterinarioDto);
@@ -49,18 +56,34 @@ public class VeterinarioService {
     }
 
     @Transactional
+    public Resource findImagemByAnimal(Veterinario veterinario){
+        String imagemPath = veterinario.getImagem();
+
+        if (imagemPath == null || imagemPath.isEmpty()) {
+            throw new ResourceNotFoundException("Imagem não encontrada");
+        }
+
+        return fileStorageService.loadFileAsResource(imagemPath);
+
+    }
+
+
+    @Transactional
     public Page<VeterinarioDto> findAll(Pageable pages){
         Page<Veterinario> clientes = veterinarioRepository.findAll(pages);
         return clientes.map(veterinario -> convertToDto(veterinario, VeterinarioDto.class));
     }
 
     @Transactional
-    public VeterinarioDto update(VeterinarioUpdateDto veterinarioDto){
+    public VeterinarioDto update(VeterinarioUpdateDto veterinarioDto, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
         Users users =usersService.findUsers();
         long id = users.getVeterinario().getId();
         existsByid(id);
         Veterinario veterinario = veterinarioRepository.getReferenceById(id);
+        if (imagemString == null ) imagemString = veterinario.getImagem();
         convertToEntityVoid(veterinarioDto, veterinario);
+        veterinario.setImagem(imagemString);
         veterinario = veterinarioRepository.save(veterinario);
         return convertToDto(veterinario, VeterinarioDto.class);
     }

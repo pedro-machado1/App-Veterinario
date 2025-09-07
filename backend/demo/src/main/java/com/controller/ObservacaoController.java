@@ -1,7 +1,9 @@
 package com.controller;
 
 import com.dto.observacao.ObservacaoDto;
+import com.dto.observacao.ObservacaoSimpleDto;
 import com.dto.observacao.ObservacaoUpdateDto;
+import com.model.Observacao;
 import com.service.ObservacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
@@ -33,9 +37,10 @@ public class ObservacaoController {
         return ResponseEntity.created(uri).body(newClientDto);
     }
     @GetMapping("{id}")
-    public ResponseEntity<Optional<ObservacaoDto>> findById(@PathVariable Long id){
-        Optional<ObservacaoDto> observacaoDto =observacaoService.findById(id);
-        return ResponseEntity.ok(observacaoDto);
+    public ResponseEntity<Optional<ObservacaoSimpleDto>> findById(@PathVariable Long id){
+        Optional<Observacao> observacao =observacaoService.findById(id);
+        if (observacao.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Optional.of(convertToDto(observacao.get(), ObservacaoSimpleDto.class )));
     }
 
     // look into changing page size and changing to PageModel;

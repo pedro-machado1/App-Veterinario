@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/medicamento/**").authenticated()
 //                        .requestMatchers("/api/auth/registerVeterinario").hasRole("CONSULTORIO")
+//                                .requestMatchers("/api/cliente/{idCliente}/consulta").hasRole("Veterinario")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

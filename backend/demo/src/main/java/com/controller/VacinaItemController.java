@@ -1,7 +1,10 @@
 package com.controller;
 
+import com.dto.vacina.VacinaSimpleDto;
 import com.dto.vacinaItem.VacinaItemDto;
+import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.dto.vacinaItem.VacinaItemUpdateDto;
+import com.model.VacinaItem;
 import com.service.VacinaItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
@@ -34,9 +39,9 @@ public class VacinaItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<VacinaItemDto>> findById(@PathVariable Long id){
-        Optional<VacinaItemDto> vacinaItemDto = vacinaItemService.findById(id);
-        return ResponseEntity.ok(vacinaItemDto);
+    public ResponseEntity<Optional<VacinaItemSimpleDto>> findById(@PathVariable Long id){
+        Optional<VacinaItem> vacinaItemDto = vacinaItemService.findById(id);
+        return ResponseEntity.ok(Optional.of(convertToDto(vacinaItemDto, VacinaItemSimpleDto.class)));
     }
 
     @GetMapping()

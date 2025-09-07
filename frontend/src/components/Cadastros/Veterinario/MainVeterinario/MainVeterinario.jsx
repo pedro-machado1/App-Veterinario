@@ -2,10 +2,9 @@
 import "./MainVeterinario.css";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
-import ShowVeterinario from "../ShowVeterinario/ShowVeterinario";
+import { useSearchParams } from "react-router-dom";
+import ShowVeterinario from "../ShowVeterinario/ShowVeterinario/ShowVeterinario";
 
 const MainVeterinario = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -27,9 +26,8 @@ const MainVeterinario = () => {
 
   useEffect(() => {
     const fetchVeterinarios = async () => {
-      var consultorioId = params.get("consultorioId")
       setIsLoading(true)
-      
+      var consultorioId = params.get("consultorioId")
       setError(null);
       try {
           const response = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}/veterinario`);

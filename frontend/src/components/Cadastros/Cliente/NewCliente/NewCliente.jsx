@@ -12,7 +12,7 @@ const NewCliente = () => {
   const [newPhone, setPhone] = useState("");
   const [newdataDeNascimento, setdataDeNascimento] = useState("");
   const [newEndereco, setEndereco] = useState("");
-  const [newImagem, setImagem] = useState("");
+  const [imagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
@@ -96,22 +96,30 @@ const NewCliente = () => {
 
     const newClient = {
       nome: newName,
-      cpf: parseInt(newCpf.replace(/\D/g, "")),
-      telefone: parseInt(newPhone.replace(/\D/g, "")),
+      cpf: newCpf.replace(/\D/g, ""),
+      telefone: newPhone.replace(/\D/g, ""),
       dataDeNascimento: newdataDeNascimento,
       endereco: newEndereco
-      // imagem: newImagem,
     };
     if (!document.getElementById("formsNewClient").reportValidity()) {
       setError("Preencha todos os campos!");
       return;
     }
     setIsLoading(true);
+
+    const formData = new FormData();
+
+    const clienteBlob = new Blob([JSON.stringify(newClient)], { type: 'application/json' });
+    formData.append("cliente", clienteBlob);
+    
+    if (imagem) {
+      formData.append("imagem", imagem);
+    }
+
     try {
       const response = await axios.post(
         `${apiUrl}/api/cliente`,
-        newClient,
-        {withCredentials : true }
+        formData,
       );
       console.log('New Client:', response.data);
       handleReset();
@@ -244,20 +252,20 @@ const NewCliente = () => {
           required
         />
         <InputField
-          label="URL da Imagem"
-          placeholder={"Coloque a Imagem de perfil do cliente"}
-          idInput="newImagem"
-          classNameDiv="inputImagem"
-          type="file"
-          onChange={handleImageChange}
-        />
-        {previewImg && (
-          <img
-            src={previewImg}
-            alt="Preview"
-            style={{ width: "150px", height: "auto", marginTop: "10px" }}
+            label="URL da Imagem"
+            placeholder={"Coloque a Imagem de perfil do cliente"}
+            idInput="newImagem"
+            classNameDiv="inputImagem"
+            type="file"
+            onChange={handleImageChange}
           />
-        )}
+          {previewImg && (
+            <img
+              src={previewImg}
+              alt="Preview"
+              style={{ width: "150px", height: "auto", marginTop: "10px" }}
+            />
+          )}
         <button className="NovoAnimal"
           type="button"
           onClick={() => navigate('/animal')}>

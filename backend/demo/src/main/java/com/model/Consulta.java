@@ -3,6 +3,7 @@ package com.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class Consulta {
 
     private String texto;
 
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
-    private LocalDateTime dataAlteracao;
+    private LocalDate dataAlteracao;
 
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     private List<MedicamentoItem> medicamentoItem;

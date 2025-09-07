@@ -39,4 +39,7 @@ public class VeterinarioSimpleDto {
     private LocalDate dataDeNascimento;
 
     private String endereco;
+
+    private String imagem;
+
 }

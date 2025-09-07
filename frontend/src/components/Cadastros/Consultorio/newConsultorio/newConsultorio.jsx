@@ -14,6 +14,9 @@ const NewConsultorio = () => {
   const [descricao, setDescricao] = useState("");
   const [dataDeFundacao, setDataDeFundacao] = useState("");
   const [estado, setEstado] = useState("")
+  const [imagem, setImagem] = useState("");
+  const [previewImg, setPreviewImg] = useState(null);
+
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +66,9 @@ const NewConsultorio = () => {
     setEndereco("");
     setTelefone("");
     setDescricao("");
-    setEstado("")
+    setEstado("");
+    setImagem("");
+    setPreviewImg(null);
     setError(null);
     setSuccess(null);
   };
@@ -78,14 +83,27 @@ const NewConsultorio = () => {
     const newConsultorio = {
       nome,
       endereco,
-      telefone : parseInt(telefone.replace(/\D/g, "")),
+      telefone : telefone.replace(/\D/g, ""),
       descricao,
       dataDeFundacao,
       estado
     };
     setIsLoading(true);
+
+    const formData = new FormData();
+
+    const consultorioBlob = new Blob([JSON.stringify(newConsultorio)], { type: 'application/json' });
+    formData.append("consultorio", consultorioBlob);
+    
+    if (imagem) {
+      formData.append("imagem", imagem);
+    }
+
+
     try {
-      const response = await axios.post(`${apiUrl}/api/consultorio`, newConsultorio);
+      const response = await axios.post(`${apiUrl}/api/consultorio`,
+         formData
+        );
       console.log("New Consultorio:", response.data);
       handleReset();
       setSuccess("Consultório adicionado com sucesso!");
@@ -108,7 +126,17 @@ const NewConsultorio = () => {
       .slice(0, 15);
   }
 
-  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagem(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImg(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="consultorio-container">
@@ -186,7 +214,7 @@ const NewConsultorio = () => {
           value={maskPhone(telefone)}
           onChange={(e)=> {
              const masked = maskPhone(e.target.value);
-             sette(masked);
+             setTelefone(masked);
              isValid(e);
             }}
           onInvalid={(e)=> isInvalid(e)}
@@ -215,6 +243,23 @@ const NewConsultorio = () => {
           onInvalid={(e)=> isInvalid(e)}
           required
         />
+
+        <InputField
+            label="URL da Imagem"
+            placeholder={"Coloque a Imagem de perfil do cliente"}
+            idInput="newImagem"
+            classNameDiv="inputImagem"
+            type="file"
+            onChange={handleImageChange}
+          />
+          {previewImg && (
+            <img
+              src={previewImg}
+              alt="Preview"
+              style={{ width: "150px", height: "auto", marginTop: "10px" }}
+            />
+          )}
+
         <button 
           type="button" 
           id="newVeterinarioButton"

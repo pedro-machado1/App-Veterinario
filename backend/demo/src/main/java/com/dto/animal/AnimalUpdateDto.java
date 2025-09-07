@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,6 +45,8 @@ public class AnimalUpdateDto {
     private int alergia;
 
     private int raca;
+
+    private String imagem;
 
 }
 

@@ -28,7 +28,7 @@ public class VacinaItemDto {
     private String descricao;
 
     @NotNull(message = "Informe a data que a vacina foi aplicada vacina")
-    private LocalDateTime dataAplicacao;
+    private LocalDate dataAplicacao;
 
     @NotNull(message = "Informe até que data a vacina é válida")
     private Date dataValidade;

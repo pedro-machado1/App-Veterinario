@@ -31,6 +31,8 @@ public class Cliente {
 
     private LocalDate dataDeAlteracao;
 
+    private String imagem;
+
     @ManyToMany
     @JoinTable(
             name = "tb_cliente_animal",

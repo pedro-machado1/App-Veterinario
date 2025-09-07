@@ -4,8 +4,10 @@ import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
+import notLogin from "../../../../assets/images/notLogin.png"
 
 const VeterinarioUpdate = ({
+    id,
     name,
     cpf,
     crvm,
@@ -18,13 +20,13 @@ const VeterinarioUpdate = ({
 
 }) => {
 
-    const [newName, setName] = useState("");
-    const [newCpf, setCpf] = useState("");
-    const [newCRVM, setCRVM] = useState("");
-    const [newEstado, setEstado] = useState("");
-    const [newPhone, setPhone] = useState("");
-    const [newDataDeNascimento, setDataDeNascimento] = useState("");
-    const [newEndereco, setEndereco] = useState("");
+    const [newName, setName] = useState(name || "");
+    const [newCpf, setCpf] = useState(cpf || "");
+    const [newCRVM, setCRVM] = useState(crvm || "");
+    const [newEstado, setEstado] = useState(estado || "");
+    const [newPhone, setPhone] = useState(phone || "");
+    const [newDataDeNascimento, setDataDeNascimento] = useState(dataDeNascimento || "");
+    const [newEndereco, setEndereco] = useState(endereco || "");
     const [newImagem, setImagem] = useState("");
     const [previewImg, setPreviewImg] = useState(null);
     const [Error, setError] = useState(null);
@@ -36,15 +38,24 @@ const VeterinarioUpdate = ({
 
 
     useEffect(() => {
-        if (name) setName(name);
-        if (cpf) setCpf(cpf);
-        if (crvm) setCRVM(crvm);
-        if (estado) setEstado(estado);
-        if (phone) setPhone(phone);
-        if (dataDeNascimento) setDataDeNascimento(dataDeNascimento);
-        if (endereco) setEndereco(endereco);
-        if (imagem) setImagem(imagem);
-    }, [name, cpf, crvm, estado, phone, dataDeNascimento, endereco, imagem])
+        const fetchInitialData = async () => {
+
+            setIsLoading(true);
+            const imageResponse = await axios.get(
+                `${apiUrl}/api/veterinario/${id}/imagem`,
+                { responseType: 'blob' }
+            );
+            if (imageResponse.data.size > 0) {
+                let currentImageUrl = URL.createObjectURL(imageResponse.data);
+                setPreviewImg(currentImageUrl);
+            } else {
+                setPreviewImg(null);
+            }
+        }
+
+        fetchInitialData()
+        setIsLoading(false)
+    }, [id])
 
     const isInvalid = (e) => {
         e.target.classList.add("isInvalid");
@@ -108,13 +119,24 @@ const VeterinarioUpdate = ({
             telefone: parseInt(newPhone.replace(/\D/g, "")),
             dataDeNascimento: newDataDeNascimento,
             endereco: newEndereco
-            // imagem: newImagem,
         };
         if (!document.getElementById("formsUpdateVeterinario").reportValidity()) {
             setError("Preencha todos os campos!");
             return;
         }
         setIsLoading(true);
+
+
+
+        const formData = new FormData();
+
+        const veterinarioBlob = new Blob([JSON.stringify(newClient)], { type: 'application/json' });
+        formData.append("veterinario", veterinarioBlob);
+
+        if (newImagem) {
+            formData.append("imagem", newImagem);
+        }
+
         try {
             const response = await axios.put(
                 `${apiUrl}/api/veterinario`,
@@ -158,18 +180,39 @@ const VeterinarioUpdate = ({
                 setPreviewImg(reader.result);
             };
             reader.readAsDataURL(file);
+        } else {
+            setImagem(null);
+            setPreviewImg(null);
         }
     };
 
     return (
         <div className="veterinario-container ">
-            <h1 className="title">
-                Atualize o seu perfil
-            </h1>
             <form
                 id="formsUpdateVeterinario"
                 onSubmit={handleUpdate}>
 
+                <InputField
+                    label="URL da Imagem"
+                    placeholder={"Coloque a Imagem de perfil do cliente"}
+                    idInput="newImagem"
+                    classNameDiv="inputImagem"
+                    type="file"
+                    onChange={handleImageChange}
+                />
+                {previewImg ? (
+                    <img
+                        src={previewImg}
+                        alt="Preview"
+                        className="veterinario-image"
+                    />
+                ) : (
+                    <img
+                        src={notLogin}
+                        alt="Sem imagem"
+                        className="veterinario-image"
+                    />
+                )}
                 <div className="line1">
                     <InputField
                         label="Nome"
@@ -302,21 +345,6 @@ const VeterinarioUpdate = ({
                     onInvalid={(e) => isInvalid(e)}
                     required
                 />
-                <InputField
-                    label="URL da Imagem"
-                    placeholder={"Coloque a Imagem de perfil do veterinario"}
-                    idInput="newImagem"
-                    classNameDiv="inputImagem"
-                    type="file"
-                    onChange={handleImageChange}
-                />
-                {previewImg && (
-                    <img
-                        src={previewImg}
-                        alt="Preview"
-                        style={{ width: "150px", height: "auto", marginTop: "10px" }}
-                    />
-                )}
                 <div className="errorsOrSuccess">
                     <p style={{ color: "red" }}>{Error && Error}</p>
                     <p style={{ color: "green" }}>{Success && Success}</p>

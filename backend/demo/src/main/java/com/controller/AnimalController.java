@@ -1,20 +1,34 @@
 package com.controller;
 
 import com.dto.animal.AnimalDto;
+import com.dto.animal.AnimalSimpleDto;
 import com.dto.animal.AnimalUpdateDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
+import com.model.Animal;
 import com.service.AnimalService;
+import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+
+import static com.extras.Converters.convertToEntity;
 
 
 @Validated
@@ -27,8 +41,11 @@ public class AnimalController {
     private AnimalService animalService;
 
     @PostMapping()
-    public ResponseEntity<AnimalDto> insert(@Validated @RequestBody AnimalDto animal) {
-        AnimalDto newAnimalDto = animalService.insert(animal);
+    public ResponseEntity<AnimalDto> insert(
+            @Validated @RequestPart("animal") AnimalDto animal,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem
+    ) {
+        AnimalDto newAnimalDto = animalService.insert(animal, imagem);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -36,12 +53,50 @@ public class AnimalController {
                 .toUri();
         return ResponseEntity.created(uri).body(newAnimalDto);
     }
+
     @GetMapping("{id}")
-    public ResponseEntity<AnimalDto> findById(@PathVariable Long id){
-        Optional<AnimalDto> animalDto =animalService.findByIdwithAuthenticate(id);
-        if (animalDto.isEmpty()) return ResponseEntity.notFound().build();
-        AnimalDto animal = animalDto.get();
-        return ResponseEntity.ok(animal);
+    public ResponseEntity<AnimalSimpleDto> findById(@PathVariable Long id){
+        Optional<Animal> animal = animalService.findByIdwithAuthenticate(id, 0);
+        if (animal.isEmpty()) return ResponseEntity.notFound().build();
+        Animal animalentety = animal.get();
+
+        return ResponseEntity.ok(convertToEntity(animalentety, AnimalSimpleDto.class));
+    }
+
+    @GetMapping("/{id}/imagem")
+    public ResponseEntity<Resource> findImagemById(@PathVariable Long id){
+        Optional<Animal> animalOptional = animalService.findByIdwithAuthenticate(id, 0);
+
+        if (animalOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        try{
+        Animal animal = animalOptional.get();
+        Resource resource = animalService.findImagemByAnimal(animal);
+
+            Path filePath = ((UrlResource) resource).getFile().toPath();
+
+            String contentType = Files.probeContentType(filePath);
+            if(contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+        }catch (Exception e) {
+        return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/cliente")
+    public ResponseEntity<AnimalSimpleDto> findAnimalById(@PathVariable Long id, @RequestParam(required = true) long idCliente){
+
+        Optional<Animal> animal = animalService.findByIdwithAuthenticate(id, idCliente);
+
+        if (animal.isEmpty()) return ResponseEntity.notFound().build();
+        Animal animalentety = animal.get();
+        return ResponseEntity.ok(convertToEntity(animalentety, AnimalSimpleDto.class));
     }
 
     @GetMapping()
@@ -50,8 +105,12 @@ public class AnimalController {
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping("{id}")
-    public ResponseEntity<AnimalDto> update(@PathVariable Long id, @Validated @RequestBody AnimalUpdateDto animalUpdateDto){
-        AnimalDto animalDto = animalService.update(id, animalUpdateDto);
+    public ResponseEntity<AnimalDto> update(
+            @PathVariable Long id,
+            @Validated @RequestPart("animal") AnimalUpdateDto animalUpdateDto,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem
+    ){
+        AnimalDto animalDto = animalService.update(id, animalUpdateDto, imagem);
         if (animalDto == null) return ResponseEntity.status(403).build();
         return ResponseEntity.ok(animalDto);
     }

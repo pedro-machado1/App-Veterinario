@@ -31,10 +31,10 @@ public class MedicamentoService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<MedicamentoDto> findById(Long id){
+    public Optional<Medicamento> findById(Long id){
         Medicamento medicamento = medicamentoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));;
-        return Optional.of(convertToDto(medicamento, MedicamentoDto.class));
+        return Optional.of(medicamento);
     }
 
     @Transactional

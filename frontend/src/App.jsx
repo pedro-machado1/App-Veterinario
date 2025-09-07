@@ -3,7 +3,7 @@ import './assets/css/buttoms.css'
 import "./assets/css/text.css"
 import MainPage from './pages/MainPage/mainPage.jsx'
 import NewCliente from './components/Cadastros/Cliente/NewCliente/NewCliente.jsx'
-import NewConsulta from './components/Cadastros/Consulta/newConsulta.jsx'
+import NewConsulta from './components/Cadastros/Consulta/newConsulta/newConsulta.jsx'
 import NewConsultorio from './components/Cadastros/Consultorio/newConsultorio/newConsultorio.jsx'
 import NewMedicamento from './components/Cadastros/Medicamento/newMedicamento.jsx'
 import NewMedicamentoItem from './components/Cadastros/MedicamentoItem/NewMedicamentoItem.jsx'
@@ -25,6 +25,8 @@ import RegisterVeterinario from './components/Cadastros/Veterinario/RegisterVete
 import MainVeterinario from './components/Cadastros/Veterinario/MainVeterinario/MainVeterinario.jsx'
 import { useAuth } from './components/Security/Context/AuthContext.jsx'
 import SendEmailVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/SendEmailVeterinario.jsx'
+import MainCliente from './components/Cadastros/Cliente/MainCliente/MainCliente.jsx'
+import MainConsultaCliente from './components/Cadastros/Consulta/MainConsulta/MainConsultaCliente.jsx'
 
 function App() {
 
@@ -57,6 +59,7 @@ function App() {
           <Route path="/registerVeterinario" element={<ProtectedRoute><RegisterVeterinario /></ProtectedRoute>} />
           <Route path="/newVeterinario" element={<ProtectedRoute><NewVeterinario /></ProtectedRoute>} />
           <Route path="/userProfile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+          <Route path="/cliente" element={<ProtectedRoute><MainCliente /></ProtectedRoute>} />
           <Route path= "/home" element= {<ProtectedRoute><MainPage /></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>

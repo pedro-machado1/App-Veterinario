@@ -7,22 +7,23 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.users.Usersdto;
-import com.model.Animal;
-import com.model.Cliente;
-import com.model.Users;
+import com.model.*;
 import com.repository.AnimalRepository;
 import com.repository.ClienteRepository;
 import com.security.UsersRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,11 +42,16 @@ public class ClienteService {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
 
     @Transactional
-    public ClienteDto insert(ClienteDto clienteDTO){
+    public ClienteDto insert(ClienteDto clienteDTO, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
         Cliente cliente= convertToEntity(clienteDTO, Cliente.class);
         cliente.setDataDeCriacao(LocalDate.now());
+        if (imagemString != null )cliente.setImagem(imagemString);
         cliente = clienteRepository.save(cliente);
         clienteDTO = convertToDto(cliente, ClienteDto.class);
         usersService.addCliente(clienteDTO);
@@ -53,26 +59,48 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ClienteDto> findById(Long id){
+    public Optional<Cliente> findById(Long id){
         Cliente cliente = clienteRepository.findById(id)
                           .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(cliente, ClienteDto.class));
+        return Optional.of(cliente);
     }
 
     @Transactional
-    public Page<ClienteDto> findAll(Pageable pages){
-        Page<Cliente> clientes = clienteRepository.findAll(pages);
+    public Resource findImagemByAnimal(Cliente cliente){
+        String imagemPath = cliente.getImagem();
+
+        if (imagemPath == null || imagemPath.isEmpty()) {
+            throw new ResourceNotFoundException("Imagem não encontrada");
+        }
+
+        return fileStorageService.loadFileAsResource(imagemPath);
+
+    }
+
+
+    @Transactional
+    public Page<ClienteDto> findAll(Pageable pages, String cpf){
+        Page<Cliente> clientes;
+        if (cpf != null){
+            clientes = clienteRepository.findAllByCpf(cpf, pages);
+        }
+        else {
+            clientes = clienteRepository.findAll(pages);
+        }
         return clientes.map(cliente -> convertToDto(cliente, ClienteDto.class));
     }
 
     @Transactional
-    public ClienteDto update(ClienteUpdateDto clienteDto) {
+    public ClienteDto update(ClienteUpdateDto clienteDto, MultipartFile imagem) {
+            String imagemString = fileStorageService.saveFile(imagem);
             Users user  =usersService.findUsers();
             long id = user.getCliente().getId();
             existsById(id);
             Cliente cliente = clienteRepository.getReferenceById(id);
+            if (imagemString == null ) imagemString = cliente.getImagem();
             cliente.setDataDeAlteracao(LocalDate.now());
             convertToEntityVoid(clienteDto, cliente);
+            cliente.setImagem(imagemString);
             cliente = clienteRepository.save(cliente);
             return convertToDto(cliente, ClienteDto.class);
     }
@@ -141,8 +169,8 @@ public class ClienteService {
 
     }
     @Transactional
-    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages){
-        long idCliente =findClienteId();
+    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages, long idCliente){
+        if (idCliente == 0) idCliente = findClienteId();
         existsById(idCliente);
 
         Page<Animal> animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);
@@ -154,6 +182,18 @@ public class ClienteService {
     public long findClienteId(){
         Users user  =usersService.findUsers();
         return user.getCliente().getId();
+    }
+
+    @Transactional
+    public Page<ConsultaSimpleDto> findAllConsultaByCliente(Pageable pages, long id){
+        if (id == 0) {
+            id = findClienteId();
+            existsById(id);
+        }
+
+        Page<Consulta> consulta = clienteRepository.findAllConsultaByCliente(id, pages);
+
+        return consulta.map(consultas -> convertToDto(consultas, ConsultaSimpleDto.class));
     }
 
 

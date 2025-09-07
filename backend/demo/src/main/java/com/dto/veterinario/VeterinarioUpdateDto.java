@@ -34,5 +34,7 @@ public class VeterinarioUpdateDto {
 
     private String endereco;
 
+    private String imagem;
+
 
 }

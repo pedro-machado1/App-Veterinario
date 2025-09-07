@@ -43,6 +43,8 @@ public class ConsultorioDto {
 
     private LocalDate dataDeCadastro;
 
+    private String imagem;
+
     private List<VeterinarioSimpleDto> veterinario;
 
     private List<ClienteSimpleDto> Cliente;

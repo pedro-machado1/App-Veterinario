@@ -19,7 +19,7 @@ public enum Estado {
     MS("Mato Grosso do Sul"),
     MG("Minas Gerais"),
     PA("Pará"),
-    PB("Paraíba	"),
+    PB("Paraíba"),
     PR("Paraná"),
     PE("Pernambuco"),
     PI("Piauí"),

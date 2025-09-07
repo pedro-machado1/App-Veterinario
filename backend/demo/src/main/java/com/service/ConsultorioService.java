@@ -6,20 +6,20 @@ import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
-import com.model.Cliente;
-import com.model.Consultorio;
-import com.model.Users;
-import com.model.Veterinario;
+import com.enums.Estado;
+import com.model.*;
 import com.repository.ConsultorioRepository;
 import com.repository.VeterinarioRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,10 +47,15 @@ public class ConsultorioService {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Transactional
-    public ConsultorioDto insert(ConsultorioDto consultorioDto) {
+    public ConsultorioDto insert(ConsultorioDto consultorioDto, MultipartFile imagem) {
+        String imagemString = fileStorageService.saveFile(imagem);
         Consultorio consultorio= convertToEntity(consultorioDto, Consultorio.class);
         consultorio.setDataDeCadastro(LocalDate.now());
+        if (imagemString != null ) consultorio.setImagem(imagemString);
         consultorio = consultorioRepository.save(consultorio);
         consultorioDto = convertToDto(consultorio, ConsultorioDto.class);
         usersService.addConsultorio(consultorioDto);
@@ -58,26 +63,47 @@ public class ConsultorioService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ConsultorioDto> findById(Long id){
+    public Optional<Consultorio> findById(Long id){
         Consultorio consultorio = consultorioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(consultorio, ConsultorioDto.class));
+        return Optional.of(consultorio);
     }
 
     @Transactional
-    public Page<ConsultorioDto> findAll(Pageable pages){
-        Page<Consultorio> consultorios = consultorioRepository.findAll(pages);
+    public Resource findImagemByAnimal(Consultorio consultorio){
+        String imagemPath = consultorio.getImagem();
+
+        if (imagemPath == null || imagemPath.isEmpty()) {
+            throw new ResourceNotFoundException("Imagem não encontrada");
+        }
+
+        return fileStorageService.loadFileAsResource(imagemPath);
+
+    }
+
+
+    @Transactional
+    public Page<ConsultorioDto> findAll(Pageable pages, Estado estado){
+        Page<Consultorio> consultorios;
+        if (estado != null) {
+            consultorios = consultorioRepository.findAllByEstado(estado,pages);
+        }
+        else {
+            consultorios = consultorioRepository.findAll(pages);
+        }
         return consultorios.map(consultorio -> convertToDto(consultorio, ConsultorioDto.class));
     }
 
-
     @Transactional
-    public ConsultorioDto update(ConsultorioUpdateDto consultorioDto){
+    public ConsultorioDto update(ConsultorioUpdateDto consultorioDto, MultipartFile imagem){
+        String imagemString = fileStorageService.saveFile(imagem);
         Users users = usersService.findUsers();
         long id = users.getConsultorio().getId();
         existsById(id);
         Consultorio consultorio = consultorioRepository.getReferenceById(id);
+        if (imagemString == null ) imagemString = consultorio.getImagem();
         convertToEntityVoid(consultorioDto, consultorio);
+        consultorio.setImagem(imagemString);
         consultorio = consultorioRepository.save(consultorio);
         return convertToDto(consultorio, ConsultorioDto.class);
     }
@@ -106,23 +132,21 @@ public class ConsultorioService {
         Users users = usersService.findUsers();
         long idConsultorio = users.getConsultorio().getId();
         existsById(idConsultorio);
-        VeterinarioSimpleDto veterinario = convertToDto(
+        Veterinario veterinario =
                 veterinarioService.findById(idVeterinario)
-                        .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio)), VeterinarioSimpleDto.class
-        );
+                        .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio));
 
-        ConsultorioDto consultorioDto = convertToDto( consultorioRepository.getReferenceById(idConsultorio), ConsultorioDto.class);
-        if (consultorioDto.getVeterinario() == null) {
-            consultorioDto.setVeterinario(new ArrayList<>());
+        Consultorio consultorio = consultorioRepository.getReferenceById(idConsultorio);
+        if (consultorio.getVeterinario() == null) {
+            consultorio.setVeterinario(new ArrayList<>());
         }
-        if (consultorioDto.getVeterinario().contains(veterinario)) {
+        if (consultorio.getVeterinario().contains(veterinario)) {
             throw new DataBaseException("Consultório já está cadastrado no veterinário");
         }
-        consultorioDto.getVeterinario().add(veterinario);
-        Consultorio consultorioentity = convertToEntity(consultorioDto, Consultorio.class);
-         consultorioentity = consultorioRepository.save(consultorioentity);
+        consultorio.getVeterinario().add(veterinario);
+         consultorio = consultorioRepository.save(consultorio);
 
-        return convertToDto(consultorioentity, ConsultorioDto.class);
+        return convertToDto(consultorio, ConsultorioDto.class);
     }
     @Transactional
     public void addVeterinarioWithConsultorioId(Long idVeterinario, long idConsultorio) {
@@ -150,25 +174,24 @@ public class ConsultorioService {
     @Transactional
     public void removeVeterinario( Long idConsultorio, Long idVeterinario) {
         existsById(idVeterinario);
-        VeterinarioSimpleDto veterinario = convertToDto(
+        Veterinario veterinario =
                 veterinarioService.findById(idVeterinario)
-                        .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio)), VeterinarioSimpleDto.class
-        );
-        ConsultorioDto consultorioDto = convertToDto(consultorioRepository.getReferenceById(idVeterinario), ConsultorioDto.class);
-        if (consultorioDto.getVeterinario() == null) {
+                        .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio));
+
+        Consultorio consultorio = consultorioRepository.getReferenceById(idVeterinario);
+        if (consultorio.getVeterinario() == null) {
             throw new DataBaseException("Veterinário não possui consultórios cadastrados");
         }
-        if (!consultorioDto.getVeterinario().contains(veterinario)) {
+        if (!consultorio.getVeterinario().contains(veterinario)) {
             throw new DataBaseException("Consultório não está cadastrado no veterinário");
         }
-        consultorioDto.getVeterinario().remove(veterinario);
-        Consultorio consultorioentity = convertToEntity(consultorioDto, Consultorio.class);
-        consultorioRepository.save(consultorioentity);
+        consultorio.getVeterinario().remove(veterinario);
+        consultorioRepository.save(consultorio);
 
     }
     @Transactional
     public Page<VeterinarioSimpleDto> findAllVeterinario(long idConsultorio, Pageable pages){
-        existsById(idConsultorio);
+            existsById(idConsultorio);
 
         Page<Veterinario> veterinario = consultorioRepository.findAllVeterinarioByConsultorioId(idConsultorio, pages);
 
@@ -178,20 +201,18 @@ public class ConsultorioService {
     @Transactional
     public ConsultorioDto addCliente(Long idConsultorio, Long idCliente) {
         existsById(idConsultorio);
-        ClienteSimpleDto cliente = convertToDto(
+        Cliente cliente =
                 clienteService.findById(idCliente)
-                        .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idCliente)), ClienteSimpleDto.class
-        );
+                        .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idCliente));
 
-        ConsultorioDto consultorioDto = convertToDto( consultorioRepository.getReferenceById(idConsultorio), ConsultorioDto.class);
-        if (consultorioDto.getCliente() == null) {
-            consultorioDto.setCliente(new ArrayList<>());
+        Consultorio consultorio = consultorioRepository.getReferenceById(idConsultorio);
+        if (consultorio.getCliente() == null) {
+            consultorio.setCliente(new ArrayList<>());
         }
-        if (consultorioDto.getCliente().contains(cliente)) {
+        if (consultorio.getCliente().contains(cliente)) {
             throw new DataBaseException("Cliente já está cadastrado no veterinário");
         }
-        consultorioDto.getCliente().add(cliente);
-        Consultorio consultorio = convertToEntity(consultorioDto, Consultorio.class);
+        consultorio.getCliente().add(cliente);
 
         consultorio = consultorioRepository.save(consultorio);
 
@@ -200,19 +221,18 @@ public class ConsultorioService {
     @Transactional
     public void removeCliente(Long idConsultorio, Long idCliente) {
         existsById(idConsultorio);
-        ClienteSimpleDto cliente = convertToDto(
+        Cliente cliente =
                 clienteService.findById(idCliente)
-                        .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idCliente)), ClienteSimpleDto.class
-        );
-        ConsultorioDto consultorioDto = convertToDto( consultorioRepository.getReferenceById(idConsultorio), ConsultorioDto.class);
-        if (consultorioDto.getCliente() == null) {
+                        .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idCliente));
+
+        Consultorio consultorio = consultorioRepository.getReferenceById(idConsultorio);
+        if (consultorio.getCliente() == null) {
             throw new DataBaseException("Veterinário não possui clientes cadastrados");
         }
-        if (!consultorioDto.getCliente().contains(cliente)) {
+        if (!consultorio.getCliente().contains(cliente)) {
             throw new DataBaseException("Cliente não está cadastrado no veterinário");
         }
-        consultorioDto.getCliente().remove(cliente);
-        Consultorio consultorio = convertToEntity(consultorioDto, Consultorio.class);
+        consultorio.getCliente().remove(cliente);
         consultorioRepository.save(consultorio);
 
     }

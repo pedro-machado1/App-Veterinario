@@ -1,5 +1,6 @@
 package com.repository;
 
+import com.enums.Estado;
 import com.model.Cliente;
 import com.model.Consultorio;
 import com.model.Veterinario;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Repository;
 public interface ConsultorioRepository extends JpaRepository<Consultorio, Long> {
     @Query("SELECT DISTINCT v FROM Consultorio c JOIN c.veterinario v WHERE c.id = :consultorioId")
     Page<Veterinario> findAllVeterinarioByConsultorioId(@Param("consultorioId") Long consultorioId, Pageable pageable);
+
+    Page<Consultorio> findAllByEstado(Estado estado, Pageable pageable);
 
     @Query("SELECT DISTINCT cl FROM Consultorio c JOIN c.cliente cl WHERE c.id = :consultorioId")
     Page<Cliente> findAllClienteByConsultorioId(@Param("consultorioId") Long consultorioId, Pageable pageable);

@@ -31,10 +31,10 @@ public class VacinaService {
     }
 
     @Transactional
-    public Optional<VacinaDto> findById(Long id){
+    public Optional<Vacina> findById(Long id){
         Vacina vacina = vacinaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encontrado: " + id));
-        return Optional.of(convertToDto(vacina, VacinaDto.class));
+        return Optional.of(vacina);
     }
 
     @Transactional

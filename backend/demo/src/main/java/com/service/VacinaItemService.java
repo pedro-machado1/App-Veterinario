@@ -39,17 +39,17 @@ public class VacinaItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Id não encontrado: " + vacinaItemDto.getVacina().getId()))
                 ,VacinaSimpleDto.class);
         vacinaItemDto.setVacina(vacina);
-        vacinaItemDto.setDataAplicacao(LocalDateTime.now());
+        vacinaItemDto.setDataAplicacao(LocalDate.now());
         VacinaItem vacinaItem = convertToEntity(vacinaItemDto, VacinaItem.class);
         vacinaItem =vacinaItemRepository.save(vacinaItem);
         return convertToDto(vacinaItem, VacinaItemDto.class);
 
     }
     @Transactional
-    public Optional<VacinaItemDto> findById(Long id){
+    public Optional<VacinaItem> findById(Long id){
         VacinaItem vacinaItem = vacinaItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado: " + id));
-        return Optional.of(convertToDto(vacinaItem, VacinaItemDto.class));
+        return Optional.of(vacinaItem);
     }
 
     @Transactional
