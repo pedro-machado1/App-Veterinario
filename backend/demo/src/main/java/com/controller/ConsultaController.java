@@ -29,6 +29,7 @@ public class ConsultaController {
 
     @Autowired
     private ConsultaService consultaService;
+
     @PostMapping()
     public ResponseEntity<ConsultaDto> insert(@Validated @RequestBody ConsultaDto consultaDto) {
         ConsultaDto consulta = consultaService.insert(consultaDto);

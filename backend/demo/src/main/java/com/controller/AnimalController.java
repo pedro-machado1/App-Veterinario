@@ -99,6 +99,13 @@ public class AnimalController {
         return ResponseEntity.ok(convertToEntity(animalentety, AnimalSimpleDto.class));
     }
 
+
+    @GetMapping("/{id}/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsulta(Pageable pages, @PathVariable long id) {
+        Page<ConsultaSimpleDto> consultaPage = animalService.findAllConsultaByAnimal(pages, id);
+        return ResponseEntity.ok().body(consultaPage);
+    }
+
     @GetMapping()
     public ResponseEntity<Page<AnimalDto>> findAll(Pageable pages){
         Page<AnimalDto> responsePages =animalService.findAll(pages);

@@ -5,7 +5,6 @@ import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Security/Context/AuthContext";
 import { useEffect, useState, useRef } from "react";
-import InputField from "../../../Extras/InputField/InputField";
 import notLogin from "../../../../assets/images/notLogin.png"
 
 const MainConsultorio = () => {
@@ -127,11 +126,10 @@ const MainConsultorio = () => {
                 <div className="displayDeConsultorios">
                     {newConsultorio.map((consultorio) => (
                         <div key={consultorio.id} className="Consultorio"s>
-                            {console.log(consultorio)}
                             {consultorio.imagem ? (
                                 <img src={consultorio.url} alt={`Foto de ${consultorio.nome}`} className="consultorio-image" />
                             ) : (
-                                <img src={notLogin} className="notFound-image" />
+                                <img src={notLogin} className="consultorio-image" />
                             )}
                             <p>
                                 Nome: {consultorio.nome || "Erro nome não encontrado"}

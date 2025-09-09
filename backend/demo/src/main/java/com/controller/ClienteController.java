@@ -27,6 +27,9 @@ import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
+
+// look into changing page size and changing to PageModel;
+
 @Validated
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
@@ -82,7 +85,6 @@ public class ClienteController {
     }
 
 
-    // look into changing page size and changing to PageModel;
 
     @GetMapping()
     public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages, @RequestParam(required = false) String cpf){

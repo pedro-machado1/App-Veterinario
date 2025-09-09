@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.extras.Converters.*;
@@ -33,6 +34,10 @@ public class AnimalService {
     private AnimalRepository animalRepository;
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private UsersService usersService;
+
     @Autowired
     private FileStorageService fileStorageService;
 
@@ -124,6 +129,30 @@ public class AnimalService {
             throw new DataBaseException("Erro inesperado ao deletar o cliente");
         }
     }
+
+    @Transactional
+    public Page<ConsultaSimpleDto> findAllConsultaByAnimal(Pageable pages, long id){
+        boolean flag = false;
+        if (id == 0) {
+            List<Animal> animalList = usersService.findUsers().getCliente().getAnimal();
+            for (Animal animal : animalList){
+                if (animal.getId() == id) {
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                throw new DataIntegrityViolationException("Você não têm permissão para acessar esse animal");
+            }
+
+            existsById(id);
+        }
+
+        Page<Consulta> consulta = animalRepository.findAllConsultaByAnimalId(id, pages);
+
+        return consulta.map(consultas -> convertToDto(consultas, ConsultaSimpleDto.class));
+    }
+
+
     @Transactional
     public void existsById(Long id){
         if (!animalRepository.existsById(id)){

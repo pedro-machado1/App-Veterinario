@@ -3,6 +3,7 @@ package com.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
@@ -139,6 +140,14 @@ public class VeterinarioController {
         veterinarioService.delete(id);
         return ResponseEntity.ok().body("o veterinario " + id + " foi removido");
     }
+
+
+    @GetMapping("/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsulta(Pageable pages) {
+        Page<ConsultaSimpleDto> consultaPage = veterinarioService.findAllConsultaByVeterinario(pages, 0);
+        return ResponseEntity.ok().body(consultaPage);
+    }
+
 
 }
 

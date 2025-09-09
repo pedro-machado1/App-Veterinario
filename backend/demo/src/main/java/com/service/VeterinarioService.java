@@ -2,6 +2,7 @@ package com.service;
 
 
 import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
@@ -99,6 +100,20 @@ public class VeterinarioService {
             throw new DataBaseException("Erro inesperado ao deletar o cliente");
         }
     }
+
+    @Transactional
+    public Page<ConsultaSimpleDto> findAllConsultaByVeterinario(Pageable pages, long id){
+        if (id == 0) {
+            Users users = usersService.findUsers();
+            id = users.getVeterinario().getId();
+            existsByid(id);
+        }
+
+        Page<Consulta> consulta = veterinarioRepository.findAllConsultaByVeterinario(id, pages);
+
+        return consulta.map(consultas -> convertToDto(consultas, ConsultaSimpleDto.class));
+    }
+
     @Transactional
     public void existsByid(Long id){
         if(!veterinarioRepository.existsById(id)){

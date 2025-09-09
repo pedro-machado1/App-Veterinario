@@ -62,6 +62,7 @@ public class ConsultaService {
         consulta.setDataCriacao(LocalDate.now());
         consulta.setCliente(cliente);
         consulta.setVeterinario(veterinario);
+//        consulta.setAnimal();
         consulta = consultaRepository.save(consulta);
         return convertToDto(consulta, ConsultaDto.class);
     }

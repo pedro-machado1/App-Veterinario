@@ -2,7 +2,7 @@ import "./ShowCliente.css"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import MainConsultaCliente from "../../Consulta/MainConsulta/MainConsultaCliente.jsx";
+import MainConsultaCliente from "../../Consulta/MainConsulta/MainConsultaCliente/MainConsultaCliente.jsx";
 import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowCliente = ({
@@ -71,7 +71,7 @@ const ShowCliente = ({
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newCliente?.nome}`} className="cliente-image" />
                 ) : (
-                    <img src={notLogin} className="notFound-image" />
+                    <img src={notLogin} className="cliente-image" />
                 )}
 
                 <p>

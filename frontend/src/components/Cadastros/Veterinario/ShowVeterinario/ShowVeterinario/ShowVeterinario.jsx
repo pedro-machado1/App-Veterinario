@@ -57,7 +57,7 @@ const ShowVeterinario = ({
         {newImagem ? (
           <img src={newImagem} alt={`Foto de ${veterinario?.nome}`} className="veterinario-image" />
         ) : (
-          <img src={notLogin} className="notFound-image" />
+          <img src={notLogin} className="veterinario-image" />
         )}
         <p>
           <strong>CPF:</strong> {veterinario?.cpf || "CPF não encontrado"}
