@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import MainConsultaAnimal from "../../Consulta/MainConsulta/MainConsultaAnimal/MainConsultaAnimal.jsx";
+import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowAnimal = ({
     onClose,
@@ -73,7 +74,7 @@ const ShowAnimal = ({
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newAnimal?.nome}`} className="animal-image" />
                 ) : (
-                    <p>Imagem não encontrada.</p>
+                    <img src={notLogin} alt="Imagem não encontrada" className="animal-image"/>
                 )}
 
                 <p>

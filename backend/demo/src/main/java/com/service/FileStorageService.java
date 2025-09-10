@@ -68,5 +68,14 @@ public class FileStorageService {
             throw new RuntimeException("Erro ao carregar o arquivo " + fileName, e);
         }
     }
+
+    public void deleteFile(String fileName) {
+        try {
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Files.deleteIfExists(filePath);
+        }catch (Exception e){
+            throw new RuntimeException("Erro ao deletar o arquivo " + fileName, e);
+        }
+    }
 }
 

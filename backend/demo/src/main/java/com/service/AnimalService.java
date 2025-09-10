@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -150,6 +151,11 @@ public class AnimalService {
         Page<Consulta> consulta = animalRepository.findAllConsultaByAnimalId(id, pages);
 
         return consulta.map(consultas -> convertToDto(consultas, ConsultaSimpleDto.class));
+    }
+
+    @Transactional
+    public void deleteImagem(String filename){
+        fileStorageService.deleteFile(filename);
     }
 
 

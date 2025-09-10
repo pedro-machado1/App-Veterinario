@@ -23,12 +23,17 @@ const EditAnimal = ({
   const [raca, setRaca] = useState("");
   const [imagem, setImagem] = useState(null);
   const [previewImg, setPreviewImg] = useState(null);
+  const [newRemove , setRemove] = useState(true)
 
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  const toggleRemove = () => {
+    setRemove((prev) => !prev)
+  }
 
   useEffect(() => {
     let currentImageUrl = null;
@@ -80,7 +85,7 @@ const EditAnimal = ({
 
     asyncFunction();
 
-  }, [show, animalId]);
+  }, [show, animalId, newRemove]);
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -158,6 +163,21 @@ const EditAnimal = ({
     }
   };
 
+  const handleRemove =  async () => {
+    setIsLoading(true)
+    try {
+      const response = await axios.delete(
+        `${apiUrl}/api/animal/${animalId}/imagem`
+      )
+      console.log(response.data)
+      toggleRemove()
+      setPreviewImg(null)
+    }catch(err){
+      console.log(err)
+    }
+    setIsLoading(false)
+  }
+
   return (
     <div className="animal-container">
       <h1 className="title">Edite este animal</h1>
@@ -179,6 +199,14 @@ const EditAnimal = ({
               className="animal-image"
             />
           )}
+          <button
+          onClick={handleRemove}
+          type="button"
+          className="removeImagem"
+          >
+            Remover imagem
+          </button>
+                
           <InputField
             label="Foto do Animal"
             idInput="newImagem"
@@ -350,7 +378,7 @@ const EditAnimal = ({
           type="submit"
           onClick={handleSubmit}
           className="submit">
-          Enviar
+          Atualizar
         </button>
       </form>
       <button

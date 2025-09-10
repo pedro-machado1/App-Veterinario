@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -66,7 +68,7 @@ public class ClienteService {
     }
 
     @Transactional
-    public Resource findImagemByAnimal(Cliente cliente){
+    public Resource findImagemByCliente(Cliente cliente){
         String imagemPath = cliente.getImagem();
 
         if (imagemPath == null || imagemPath.isEmpty()) {
@@ -75,6 +77,12 @@ public class ClienteService {
 
         return fileStorageService.loadFileAsResource(imagemPath);
 
+    }
+
+    @Transactional
+    public void deleteImagem(){
+        Users user  =usersService.findUsers();
+        fileStorageService.deleteFile(findImagemByCliente(user.getCliente()).getFilename());
     }
 
 

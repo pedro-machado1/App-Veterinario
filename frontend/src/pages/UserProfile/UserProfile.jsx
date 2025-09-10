@@ -11,6 +11,7 @@ import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsult
 import notLogin from "../../assets/images/notLogin.png"
 import MainConsultaVeterinario from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaVeterinario/MainConsultaVeterinario";
 
+
 const UserProfile = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -34,7 +35,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(null);
 
   const toggleEditVeterinario = () => {
-    setshowNovoConsultorio((prev) => !prev)
+    setShowEditVeterinario((prev) => !prev)
   }
 
   const toggleConsultasVeterinario = () => {
@@ -46,7 +47,7 @@ const UserProfile = () => {
   }
 
   const toggleNovoConsultorio = () => {
-    setShowEditVeterinario((prev) => !prev)
+    setshowNovoConsultorio((prev) => !prev)
   }
 
   const toggleConsultorio = () => {
@@ -122,6 +123,7 @@ const UserProfile = () => {
       } catch (err) {
         setError("Não foi possível carregar o perfil do utilizador.");
         console.error("Erro na requisição:", err);
+        setImagem(null)
       } finally {
         setLoading(false);
       }
@@ -188,7 +190,6 @@ const UserProfile = () => {
                 phone={newUser.cliente.telefone}
                 dataDeNascimento={newUser.cliente.dataDeNascimento}
                 endereco={newUser.cliente.endereco}
-                imagem={newUser.cliente.imagem}
                 onClose={() => setShowCliente(false)}
                 />
             </div>

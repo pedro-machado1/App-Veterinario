@@ -91,7 +91,7 @@ public class ConsultorioController {
         }
         try{
             Consultorio consultorio = consultorioOptional.get();
-            Resource resource = consultorioService.findImagemByAnimal(consultorio);
+            Resource resource = consultorioService.findImagemByConsultorio(consultorio);
 
             Path filePath = ((UrlResource) resource).getFile().toPath();
 
@@ -106,6 +106,12 @@ public class ConsultorioController {
         }catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/imagem")
+    public ResponseEntity<String> deleteImagem(){
+        consultorioService.deleteImagem();
+        return ResponseEntity.ok().body("imagem removida");
     }
 
     @PutMapping()
@@ -130,7 +136,7 @@ public class ConsultorioController {
     @DeleteMapping("/removeveterinario/{idVeterinario}")
     public ResponseEntity<String> removeVeterinaro(@PathVariable Long idVeterinario) {
         Users users = usersService.findUsers();
-        consultorioService.removeVeterinario(users.getId(), idVeterinario);
+        consultorioService.removeVeterinario(users.getConsultorio().getId(), idVeterinario);
         return ResponseEntity.ok().body("o consultório foi removido");
     }
 

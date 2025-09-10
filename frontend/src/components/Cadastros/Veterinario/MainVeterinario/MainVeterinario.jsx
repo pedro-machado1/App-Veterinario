@@ -26,12 +26,20 @@ const MainVeterinario = () => {
 
   useEffect(() => {
     const fetchVeterinarios = async () => {
+      let response; 
       setIsLoading(true)
-      var veterinarioId = params.get("veterinarioId")
+      var consultorioId = params.get("consultorioId")
       setError(null);
       try {
-        const response = await axios.get(`${apiUrl}/api/veterinario`);
-        console.log(response.data)
+        
+        if (!consultorioId) { 
+          response= await axios.get(`${apiUrl}/api/veterinario`);
+          console.log(response.data)
+        }
+        else{
+          response = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}/veterinario`);
+          console.log(response.data)
+        }
         if (response.data.content.length === 0) {
           setError("Você não possui nenhum veterinário cadastrado");
         }

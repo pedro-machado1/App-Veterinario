@@ -70,7 +70,7 @@ public class ConsultorioService {
     }
 
     @Transactional
-    public Resource findImagemByAnimal(Consultorio consultorio){
+    public Resource findImagemByConsultorio(Consultorio consultorio){
         String imagemPath = consultorio.getImagem();
 
         if (imagemPath == null || imagemPath.isEmpty()) {
@@ -79,6 +79,12 @@ public class ConsultorioService {
 
         return fileStorageService.loadFileAsResource(imagemPath);
 
+    }
+
+    @Transactional
+    public void deleteImagem(){
+        Users user  =usersService.findUsers();
+        fileStorageService.deleteFile(findImagemByConsultorio(user.getConsultorio()).getFilename());
     }
 
 
@@ -151,7 +157,6 @@ public class ConsultorioService {
     @Transactional
     public void addVeterinarioWithConsultorioId(Long idVeterinario, long idConsultorio) {
 
-        // bug com dto
         existsById(idConsultorio);
             Consultorio consultorio = consultorioRepository.findById(idConsultorio)
                     .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio));
@@ -173,17 +178,17 @@ public class ConsultorioService {
     }
     @Transactional
     public void removeVeterinario( Long idConsultorio, Long idVeterinario) {
-        existsById(idVeterinario);
+        existsById(idConsultorio);
         Veterinario veterinario =
                 veterinarioService.findById(idVeterinario)
                         .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio));
 
-        Consultorio consultorio = consultorioRepository.getReferenceById(idVeterinario);
+        Consultorio consultorio = consultorioRepository.getReferenceById(idConsultorio);
         if (consultorio.getVeterinario() == null) {
             throw new DataBaseException("Veterinário não possui consultórios cadastrados");
         }
         if (!consultorio.getVeterinario().contains(veterinario)) {
-            throw new DataBaseException("Consultório não está cadastrado no veterinário");
+            throw new DataBaseException("Veterinario não está cadastrado no Consultório");
         }
         consultorio.getVeterinario().remove(veterinario);
         consultorioRepository.save(consultorio);

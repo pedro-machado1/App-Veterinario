@@ -11,6 +11,7 @@ import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -87,6 +89,16 @@ public class AnimalController {
         }catch (Exception e) {
         return ResponseEntity.notFound().build();
         }
+    }
+
+//    só vai poder deletar a sua própria imagem
+    @DeleteMapping("/{id}/imagem")
+    public ResponseEntity<String> deleteImagemById(@PathVariable Long id){
+        Optional<Animal> optionalAnimal = animalService.findByIdwithAuthenticate(id, 0);
+        if (optionalAnimal.isEmpty()) throw new DataIntegrityViolationException("não foi possível encontrar o animal");
+        Animal animal = optionalAnimal.get();
+        animalService.deleteImagem(animalService.findImagemByAnimal(animal).getFilename());
+        return ResponseEntity.ok().body("imagem do animal foi removida");
     }
 
     @GetMapping("/{id}/cliente")

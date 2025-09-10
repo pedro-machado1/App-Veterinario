@@ -104,8 +104,8 @@ public class VeterinarioController {
             return ResponseEntity.notFound().build();
         }
         try{
-            Veterinario animal = veterinarioOptional.get();
-            Resource resource = veterinarioService.findImagemByAnimal(animal);
+            Veterinario veterinario = veterinarioOptional.get();
+            Resource resource = veterinarioService.findImagemByVeterinario(veterinario);
 
             Path filePath = ((UrlResource) resource).getFile().toPath();
 
@@ -120,6 +120,12 @@ public class VeterinarioController {
         }catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/imagem")
+    public ResponseEntity<String> deleteImagem(){
+        veterinarioService.deleteImagem();
+        return ResponseEntity.ok().body("imagem removida");
     }
 
     @GetMapping()

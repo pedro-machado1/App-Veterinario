@@ -57,7 +57,7 @@ public class VeterinarioService {
     }
 
     @Transactional
-    public Resource findImagemByAnimal(Veterinario veterinario){
+    public Resource findImagemByVeterinario(Veterinario veterinario){
         String imagemPath = veterinario.getImagem();
 
         if (imagemPath == null || imagemPath.isEmpty()) {
@@ -66,6 +66,12 @@ public class VeterinarioService {
 
         return fileStorageService.loadFileAsResource(imagemPath);
 
+    }
+
+    @Transactional
+    public void deleteImagem(){
+        Users user  =usersService.findUsers();
+        fileStorageService.deleteFile(findImagemByVeterinario(user.getVeterinario()).getFilename());
     }
 
 

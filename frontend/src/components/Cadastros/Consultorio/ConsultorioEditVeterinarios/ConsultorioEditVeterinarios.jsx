@@ -14,7 +14,7 @@ const ConsultorioEditVeterinario = ({
     const navigate = useNavigate();
 
   const [veterinarios, setVeterinarios] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
   const [showMore, setShowMore] = useState(null);
   const [error, setError] = useState(null);
 
@@ -47,17 +47,18 @@ const ConsultorioEditVeterinario = ({
     fetchVeterinarios();
   }, [showMore, consultorioId]);
 
-  const HandleDelete = async (veterinarioId) => {
+  const handleDelete = async (veterinarioId) => {
     setIsLoading(true)
     try{
-        const response = axios.delete(`${apiUrl}/api/consultorio/removeveterinario/${veterinarioId}`)
-        console.log(response.data)
+      const response = await axios.delete(`${apiUrl}/api/consultorio/removeveterinario/${veterinarioId}`)
+      setVeterinarios((prev) => prev.filter((veterinario) => veterinario.id !== veterinarioId));
+      console.log(response.data)
     }catch(err){
-        setError("Erro ao Deletar esse Veterinario do seu Consultorio")
+      setError("Erro ao Deletar esse Veterinario do seu Consultorio")
     }
     setIsLoading(false)
   }
-
+  
   return (
     <div className="main-veterinario-container">
       
@@ -81,7 +82,7 @@ const ConsultorioEditVeterinario = ({
               Ver Mais
             </button>
             <button className="deletar" 
-            onClick={() => HandleDelete(vet.id)}
+            onClick={() => handleDelete(vet.id)}
             >
                 Deletar
             </button>

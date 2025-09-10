@@ -67,7 +67,7 @@ public class ClienteController {
         }
         try{
             Cliente cliente = clienteOptional.get();
-            Resource resource = clientService.findImagemByAnimal(cliente);
+            Resource resource = clientService.findImagemByCliente(cliente);
 
             Path filePath = ((UrlResource) resource).getFile().toPath();
 
@@ -84,7 +84,11 @@ public class ClienteController {
         }
     }
 
-
+    @DeleteMapping("/imagem")
+    public ResponseEntity<String> deleteImagem(){
+        clientService.deleteImagem();
+        return ResponseEntity.ok().body("imagem removida");
+    }
 
     @GetMapping()
     public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages, @RequestParam(required = false) String cpf){
