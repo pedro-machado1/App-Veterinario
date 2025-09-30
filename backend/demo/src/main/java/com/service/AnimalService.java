@@ -107,6 +107,7 @@ public class AnimalService {
         if (animalOptional.isEmpty()) throw new ResourceNotFoundException("Animal não encontrado");
         Animal animal = animalOptional.get();
         if (imagemString == null ) imagemString = animal.getImagem();
+        else fileStorageService.deleteFile(animal.getImagem());
         Usersdto usersdto =authenticationService.authenticatedUser();
 
         if (animal.getCliente().stream().anyMatch(cliente -> cliente.getId() == usersdto.getCliente().getId())) {

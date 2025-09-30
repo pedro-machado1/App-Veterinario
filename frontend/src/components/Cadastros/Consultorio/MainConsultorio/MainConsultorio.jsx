@@ -17,7 +17,7 @@ const MainConsultorio = () => {
     const [newImage, setNewImage] = useState("")
     const [show, setShow] = useState(false)
     const [showMore, setShowMore] = useState(null)
-    const [searchCpf, setSearchCpf] = useState("");
+    const [searchEstado , setSearchEstado] = useState("")
     const [Error, setError] = useState(null)
 
     const showMoreToggle = (consultorioid) => {
@@ -35,17 +35,17 @@ const MainConsultorio = () => {
         setIsLoading(true)
         setError(null)
         let url = `${apiUrl}/api/consultorio`
-        if (searchCpf != "") {
-            url += `?estado=${searchCpf}`
+        if (searchEstado != "") {
+            url += `?estado=${searchEstado}`
             response = await axios.get(url)
         }
         else {
             response = await axios.get(url)
         }
         if (response.data.content.length == 0) {
-            setError("Você não possui nenhum consultorio cadastrado")
+            setError("Nenhum Consultório cadastrado")
             setNewConsultorio([]);
-            console.log("Você não possui nenhum consultorio cadastrado ")
+            console.log("Nenhum Consultório cadastrado")
         }
         else {
             console.log(response.data.content)
@@ -71,7 +71,7 @@ const MainConsultorio = () => {
 
         useEffect(() => {
             asyncFunction()
-        }, [show, searchCpf])
+        }, [show, searchEstado])
 
         const navigate = useNavigate();
 
@@ -80,12 +80,15 @@ const MainConsultorio = () => {
                 <button className="botaoCadastrarConsultorio" onClick={() => { navigate("/registerConsultorio") }}>
                     Cadastrar Consultório
                 </button>
+                <h1>
+                    Consultórios
+                </h1>
                 <div className="inputEstado">
                     <label htmlFor="newEstado">Estado</label>
                     <select
-                        placeholder="Search by CPF"
-                        value={searchCpf}
-                        onChange={(e) => setSearchCpf(e.target.value)}
+                        placeholder="Pesquise por estado"
+                        value={searchEstado}
+                        onChange={(e) => setSearchEstado(e.target.value)}
                     >
                         <option value="" disabled>
                             Selecione...
@@ -118,14 +121,14 @@ const MainConsultorio = () => {
                         <option value="SE">Sergipe</option>
                         <option value="TO">Tocantins</option>
                     </select>
+                    <button onClick={() => asyncFunction()}>
+                         Pesquisar
+                    </button>
                 </div>
 
-                <h1>
-                    Consultórios
-                </h1>
                 <div className="displayDeConsultorios">
                     {newConsultorio.map((consultorio) => (
-                        <div key={consultorio.id} className="Consultorio"s>
+                        <div key={consultorio.id} className="Consultorio">
                             {consultorio.imagem ? (
                                 <img src={consultorio.url} alt={`Foto de ${consultorio.nome}`} className="consultorio-image" />
                             ) : (

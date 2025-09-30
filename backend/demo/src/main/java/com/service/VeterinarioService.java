@@ -76,8 +76,16 @@ public class VeterinarioService {
 
 
     @Transactional
-    public Page<VeterinarioDto> findAll(Pageable pages){
-        Page<Veterinario> clientes = veterinarioRepository.findAll(pages);
+    public Page<VeterinarioDto> findAll(Pageable pages, String crvm){
+
+        Page<Veterinario> clientes;
+        if (crvm == null) {
+            clientes= veterinarioRepository.findAll(pages);
+        }
+        else {
+            clientes= veterinarioRepository.findAllByCrvm(crvm, pages);
+        }
+
         return clientes.map(veterinario -> convertToDto(veterinario, VeterinarioDto.class));
     }
 
@@ -89,6 +97,7 @@ public class VeterinarioService {
         existsByid(id);
         Veterinario veterinario = veterinarioRepository.getReferenceById(id);
         if (imagemString == null ) imagemString = veterinario.getImagem();
+        else fileStorageService.deleteFile(veterinario.getImagem());
         convertToEntityVoid(veterinarioDto, veterinario);
         veterinario.setImagem(imagemString);
         veterinario = veterinarioRepository.save(veterinario);

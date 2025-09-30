@@ -35,7 +35,6 @@ import static com.extras.Converters.convertToEntity;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("api/animal")
 public class AnimalController {
 

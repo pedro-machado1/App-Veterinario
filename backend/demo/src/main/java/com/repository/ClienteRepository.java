@@ -17,6 +17,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     @Query("SELECT DISTINCT a FROM Cliente c JOIN c.animal a WHERE c.id = :clienteId")
     Page<Animal> findAllAnimalByCliente(@Param("clienteId") Long clienteId, Pageable pageable);
 
+    @Query("SELECT DISTINCT a FROM Cliente c JOIN c.animal a WHERE c.id = :clienteId AND a.nome LIKE :nome%")
+    Page<Animal> findAllAnimalByNome(Long clienteId, String nome, Pageable pageable);
+
     Page<Cliente> findAllByCpf(String cpf, Pageable pageable);
 
     @Query("SELECT DISTINCT ca FROM Cliente c JOIN c.consulta ca WHERE c.id = :clienteId")

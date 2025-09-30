@@ -34,7 +34,6 @@ import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("api/consultorio")
 public class ConsultorioController {
     @Autowired

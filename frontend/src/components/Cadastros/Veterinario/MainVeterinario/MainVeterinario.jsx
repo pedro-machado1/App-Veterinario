@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ShowVeterinario from "../ShowVeterinario/ShowVeterinario/ShowVeterinario";
 import notLogin from "../../../../assets/images/notLogin.png"
+import InputField from "../../../Extras/InputField/InputField";
+
 const MainVeterinario = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [params] = useSearchParams()
 
   const [veterinarios, setVeterinarios] = useState([]);
+  const [searchCrvm, setSearchCrvm] = useState("")
   const [isLoading, setIsLoading] = useState(true);
   const [showMore, setShowMore] = useState(null);
   const [error, setError] = useState(null);
@@ -24,50 +27,58 @@ const MainVeterinario = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchVeterinarios = async () => {
-      let response; 
-      setIsLoading(true)
-      var consultorioId = params.get("consultorioId")
-      setError(null);
-      try {
-        
-        if (!consultorioId) { 
+  const fetchVeterinarios = async () => {
+    let response; 
+    setIsLoading(true)
+    var consultorioId = params.get("consultorioId")
+    setError(null);
+    try {
+      
+      if (!consultorioId) { 
+        if (searchCrvm !== "") {
+          response = await axios.get(`${apiUrl}/api/veterinario?crvm=${searchCrvm}`)
+
+        }
+        else { 
           response= await axios.get(`${apiUrl}/api/veterinario`);
-          console.log(response.data)
         }
-        else{
-          response = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}/veterinario`);
-          console.log(response.data)
-        }
-        if (response.data.content.length === 0) {
-          setError("Você não possui nenhum veterinário cadastrado");
-        }
-        else {
-          console.log(response.data.content)
-          const veterinario = response.data.content
-          const veterinarioComImagens = await Promise.all(veterinario.map(async (veterinario) => {
-            try {
-              const imageResponse = await axios.get(`${apiUrl}/api/veterinario/${veterinario.id}/imagem`,
-                { responseType: 'blob' }
-              );
-              const image = URL.createObjectURL(imageResponse.data)
-              console.log(veterinario + " " + imageResponse.data)
-              return { ...veterinario, url: image };
-            } catch (error) {
-              return { ...veterinario, url: null };
-            }
-          }))
-          setVeterinarios(veterinarioComImagens)
-          console.log(veterinario)
+        console.log(response.data)
 
-        }
-      } catch (err) {
-        setError("Erro ao carregar os veterinários");
       }
-      setIsLoading(false);
-    };
+      else{
+        response = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}/veterinario`);
+        console.log(response.data)
+      }
+      if (response.data.content.length === 0) {
+        setVeterinarios([])
+        setError("Você não possui nenhum veterinário cadastrado");
+      }
+      else {
+        console.log(response.data.content)
+        const veterinario = response.data.content
+        const veterinarioComImagens = await Promise.all(veterinario.map(async (veterinario) => {
+          try {
+            const imageResponse = await axios.get(`${apiUrl}/api/veterinario/${veterinario.id}/imagem`,
+              { responseType: 'blob' }
+            );
+            const image = URL.createObjectURL(imageResponse.data)
+            console.log(veterinario + " " + imageResponse.data)
+            return { ...veterinario, url: image };
+          } catch (error) {
+            return { ...veterinario, url: null };
+          }
+        }))
+        setVeterinarios(veterinarioComImagens)
+        console.log(veterinario)
 
+      }
+    } catch (err) {
+      setError("Erro ao carregar os veterinários");
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     fetchVeterinarios();
   }, [showMore]);
 
@@ -75,6 +86,14 @@ const MainVeterinario = () => {
     <div className="main-veterinario-container">
 
       <h1>Veterinários</h1>
+      <div className="searchContainer">
+        <InputField
+            placeholder="Pesquisar por CRVM"
+            value={searchCrvm}
+            onChange={(e) => setSearchCrvm(e.target.value)}
+        />
+        <button onClick={() => fetchVeterinarios()}>Pesquisar</button>
+        </div>
 
       <div className="displayDeVeterinarios">
         {veterinarios.map((vet) => (

@@ -39,11 +39,9 @@ import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
-// criar endpoint que processa adiciona veterinarios para um certo escritorio e os envia um email;
 
 @Validated
 @RestController
-@CrossOrigin( origins = "http://localhost:8080")
 @RequestMapping("api/veterinario")
 public class VeterinarioController {
 
@@ -129,8 +127,11 @@ public class VeterinarioController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<VeterinarioDto>> findAll(Pageable pages){
-        Page<VeterinarioDto> responsePages =veterinarioService.findAll(pages);
+    public ResponseEntity<Page<VeterinarioDto>> findAll(Pageable pages,
+                                                        @RequestParam(required = false) String crvm
+    ){
+        Page<VeterinarioDto> responsePages;
+         responsePages =veterinarioService.findAll(pages, crvm);
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping()

@@ -32,7 +32,6 @@ import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("api/cliente")
 public class ClienteController {
 
@@ -120,11 +119,14 @@ public class ClienteController {
     }
 
     @GetMapping("/animal")
-    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages , @RequestParam(required = false) Long idCliente) {
+    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages ,
+                                                               @RequestParam(required = false) Long idCliente,
+                                                               @RequestParam(required = false) String nome
+    ) {
         Page<AnimalSimpleDto> animalPage;
-        if (idCliente == null) animalPage = clientService.findAllAnimal(pages, 0);
+        if (idCliente == null) animalPage = clientService.findAllAnimal(pages, 0, nome);
 
-        else animalPage = clientService.findAllAnimal(pages, idCliente);
+        else animalPage = clientService.findAllAnimal(pages, idCliente, nome);
 
         return ResponseEntity.ok().body(animalPage);
     }

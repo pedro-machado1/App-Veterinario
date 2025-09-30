@@ -106,6 +106,7 @@ public class ClienteService {
             existsById(id);
             Cliente cliente = clienteRepository.getReferenceById(id);
             if (imagemString == null ) imagemString = cliente.getImagem();
+            else fileStorageService.deleteFile(cliente.getImagem());
             cliente.setDataDeAlteracao(LocalDate.now());
             convertToEntityVoid(clienteDto, cliente);
             cliente.setImagem(imagemString);
@@ -177,12 +178,17 @@ public class ClienteService {
 
     }
     @Transactional
-    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages, long idCliente){
+    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages, long idCliente, String nome){
+        Page<Animal> animal;
         if (idCliente == 0) idCliente = findClienteId();
         existsById(idCliente);
 
-        Page<Animal> animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);
-
+        if (nome == null) {
+            animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);
+        }
+        else {
+            animal = clienteRepository.findAllAnimalByNome(idCliente, nome, pages);
+        }
         return animal.map(animais -> convertToDto(animais, AnimalSimpleDto.class));
     }
 

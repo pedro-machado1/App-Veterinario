@@ -133,7 +133,7 @@ const VeterinarioUpdate = ({
 
         const formData = new FormData();
 
-        const veterinarioBlob = new Blob([JSON.stringify(newClient)], { type: 'application/json' });
+        const veterinarioBlob = new Blob([JSON.stringify(UpdateVeterinario)], { type: 'application/json' });
         formData.append("veterinario", veterinarioBlob);
 
         if (newImagem) {
@@ -143,7 +143,7 @@ const VeterinarioUpdate = ({
         try {
             const response = await axios.put(
                 `${apiUrl}/api/veterinario`,
-                UpdateVeterinario,
+                formData,
             );
             console.log('Updated Vetererinario:', response.data);
             setIsLoading(false);

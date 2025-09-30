@@ -20,13 +20,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -67,7 +65,19 @@ public class AuthController {
             accessTokenCookie.setMaxAge(60* 15);
             response.addCookie(accessTokenCookie);
 
-            return ResponseEntity.ok().build();
+            if (users.getRole() == Role.VETERINARIO) {
+                return ResponseEntity.ok("VETERINARIO");
+
+            }
+            else if (users.getRole() == Role.CLIENTE) {
+                return ResponseEntity.ok("CLIENTE");
+
+
+            }
+            else if (users.getRole() == Role.CONSULTORIO) {
+                return ResponseEntity.ok("CONSULTORIO");
+            }
+            return ResponseEntity.badRequest().body("algo deu errado");
         } catch (AuthenticationCredentialsNotFoundException e) {
             throw new AuthenticationCredentialsNotFoundException("Email ou senha inválidos");
         }

@@ -108,6 +108,7 @@ public class ConsultorioService {
         existsById(id);
         Consultorio consultorio = consultorioRepository.getReferenceById(id);
         if (imagemString == null ) imagemString = consultorio.getImagem();
+        else fileStorageService.deleteFile(consultorio.getImagem());
         convertToEntityVoid(consultorioDto, consultorio);
         consultorio.setImagem(imagemString);
         consultorio = consultorioRepository.save(consultorio);

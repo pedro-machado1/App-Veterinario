@@ -19,5 +19,6 @@ public interface VeterinarioRepository extends JpaRepository<Veterinario, Long> 
     @Query("SELECT DISTINCT ca FROM Veterinario v JOIN v.consulta ca WHERE v.id = :veterinarioId")
     Page<Consulta> findAllConsultaByVeterinario(@Param("veterinarioId") long veterinarioId, Pageable pageable) ;
 
-
+    @Query
+    Page<Veterinario> findAllByCrvm(String crvm, Pageable pageable);
 }
