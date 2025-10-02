@@ -23,12 +23,12 @@ import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("api/consulta")
 public class ConsultaController {
 
     @Autowired
     private ConsultaService consultaService;
+
     @PostMapping()
     public ResponseEntity<ConsultaDto> insert(@Validated @RequestBody ConsultaDto consultaDto) {
         ConsultaDto consulta = consultaService.insert(consultaDto);

@@ -78,6 +78,18 @@ const LoginComponents = () => {
             HandleReset();
             console.log(response)
             setSucess("Login realizado com Sucesso")
+
+            new Promise(resolve => setTimeout(resolve, 1000));
+
+            if (response.data == "CLIENTE") {
+                navigate("/animal")
+            }
+            if (response.data == "CONSULTORIO") {
+                navigate("/userProfile")
+            }
+            if (response.data == "VETERINARIO") {
+                navigate("/cliente")
+            }
         } catch (err) {
             HandleReset();
             console.error(err);

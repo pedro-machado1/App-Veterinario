@@ -1,13 +1,13 @@
 import "./ShowVeterinario.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import VeterinarioUpdate from "../../VeterinarioUpdate/VeterinarioUpdate.jsx";
-import notLogin from "../../../../../assets/images/notLogin.png"
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import VeterinarioUpdate from "../VeterinarioUpdate/VeterinarioUpdate.jsx";
+import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowVeterinario = ({ 
   onClose,
- veterinarioId 
+  veterinarioId 
 }) => {
   const [veterinario, setVeterinario] = useState(null);
   const [newImagem, setImagem] = useState(null)
@@ -17,6 +17,30 @@ const ShowVeterinario = ({
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  function maskCpf(value) {
+        try { 
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        }catch(err) {
+            return value
+        }
+
+    }
+
+    function maskPhone(value) {
+        try { 
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{2})(\d)/, '($1) $2')
+            .replace(/(\d{5})(\d)/, '$1-$2')
+            .slice(0, 15);
+        }catch(err) {
+            return value
+        }
+    }
 
   useEffect(() => {
     const fetchVeterinario = async () => {
@@ -42,7 +66,6 @@ const ShowVeterinario = ({
         setImagem(imageUrl);
         setSuccess("Dados do veterinário e imagem carregados com sucesso!");
 
-
       } catch (err) {
         console.log(err);
       }
@@ -57,25 +80,37 @@ const ShowVeterinario = ({
         {newImagem ? (
           <img src={newImagem} alt={`Foto de ${veterinario?.nome}`} className="veterinario-image" />
         ) : (
-          <img src={notLogin} className="notFound-image" />
+          <img src={notLogin} className="veterinario-image" />
         )}
-        <p>
-          <strong>CPF:</strong> {veterinario?.cpf || "CPF não encontrado"}
-        </p>
-        <p>
-          <strong>CRVM:</strong> {veterinario?.crvm || "CRVM não encontrado"}
-        </p>
-        <p>
-          <strong>Estado:</strong> {veterinario?.estado || "estado não encontrado"}
-        </p>
-        <p>
-          <strong>Telefone:</strong>{" "}
-          {veterinario?.telefone || "Telefone não encontrado"}
-        </p>
-        <p>
-          <strong>Endereço:</strong>{" "}
-          {veterinario?.endereco || "Endereço não encontrado"}
-        </p>
+        <div className="griditens">
+          <div className="item">
+            <p>
+              <strong>CPF:</strong> {maskCpf(veterinario?.cpf) || "CPF não encontrado"}
+            </p>
+          </div>
+          <div className="item">
+            <p>
+              <strong>CRVM:</strong> {veterinario?.crvm || "CRVM não encontrado"}
+            </p>
+          </div>
+          <div className="item">
+            <p>
+              <strong>Estado:</strong> {veterinario?.estado || "estado não encontrado"}
+            </p>
+          </div>
+          <div className="item">
+            <p>
+              <strong>Telefone:</strong>{" "}
+              {maskPhone(veterinario?.telefone) || "Telefone não encontrado"}
+            </p>
+          </div>
+          <div className="item full">
+            <p>
+              <strong>Endereço:</strong>{" "}
+              {veterinario?.endereco || "Endereço não encontrado"}
+            </p>
+          </div>
+        </div>
       </div>
       <button
         type="button"
@@ -86,7 +121,6 @@ const ShowVeterinario = ({
 
       {isLoading && <LoadingSpin />}
       {error && <div className="error">{error}</div>}
-      {success && <div className="success">{success}</div>}
     </div>
   );
 };

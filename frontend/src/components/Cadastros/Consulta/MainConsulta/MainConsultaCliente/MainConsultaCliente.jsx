@@ -1,8 +1,8 @@
 import "./MainConsultaCliente.css";
 import axios from "axios";
-import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
+import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin";
 import { useEffect, useState } from "react";
-import ShowConsulta from "../ShowConsulta/ShowConsulta";
+import ShowConsulta from "../../ShowConsulta/ShowConsulta";
 
 const MainConsultaCliente = ({
     onClose

@@ -1,14 +1,16 @@
+import "./UserProfile.css"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./UserProfile.css"
 import ClienteUpdate from "../../components/Cadastros/Cliente/ClienteUpdate/ClienteUpdate";
 import LoadingSpin from "../../components/Extras/LoadingSpin/LoadingSpin";
 import axios from "axios";
 import ConsultorioUpdate from "../../components/Cadastros/Consultorio/ConsultorioUpdate/ConsultorioUpdate";
 import VeterinarioUpdate from "../../components/Cadastros/Veterinario/VeterinarioUpdate/VeterinarioUpdate";
 import ConsultorioEditVeterinario from "../../components/Cadastros/Consultorio/ConsultorioEditVeterinarios/ConsultorioEditVeterinarios";
-import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaCliente";
+import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaCliente/MainConsultaCliente";
 import notLogin from "../../assets/images/notLogin.png"
+import MainConsultaVeterinario from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaVeterinario/MainConsultaVeterinario";
+
 
 const UserProfile = () => {
 
@@ -18,6 +20,7 @@ const UserProfile = () => {
   const [imagem, setImagem] = useState(null)
   const [Error, setError] = useState(null)
 
+  const [showConsultasVeterinario, setshowConsultasVeterinarios] = useState(false)
   const [showCliente, setShowCliente] = useState(false)
   const [showConsultorio, setShowConsultorio] = useState(false)
   const [showNovoConsultorio, setshowNovoConsultorio] = useState(false)
@@ -32,7 +35,11 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(null);
 
   const toggleEditVeterinario = () => {
-    setshowNovoConsultorio((prev) => !prev)
+    setShowEditVeterinario((prev) => !prev)
+  }
+
+  const toggleConsultasVeterinario = () => {
+    setshowConsultasVeterinarios((prev) => !prev)
   }
 
   const toggleConsultasCliente = () => {
@@ -40,7 +47,7 @@ const UserProfile = () => {
   }
 
   const toggleNovoConsultorio = () => {
-    setShowEditVeterinario((prev) => !prev)
+    setshowNovoConsultorio((prev) => !prev)
   }
 
   const toggleConsultorio = () => {
@@ -59,7 +66,6 @@ const UserProfile = () => {
     return `${day}/${month}/${year}`;
   }
 
-
   useEffect(() => {
     setHasClient(false)
     setHasConsultorio(false)
@@ -69,9 +75,7 @@ const UserProfile = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/auth/authentication`,
-          {
-            withCredentials: true,
-          });
+          );
         if (response.data.cliente) {
           setNewUser(response.data);
           console.log(response.data);
@@ -117,6 +121,7 @@ const UserProfile = () => {
       } catch (err) {
         setError("Não foi possível carregar o perfil do utilizador.");
         console.error("Erro na requisição:", err);
+        setImagem(null)
       } finally {
         setLoading(false);
       }
@@ -130,14 +135,14 @@ const UserProfile = () => {
   }
 
   return (
-    <div>
+    <div className="userContainer">
 
       {hasCliente && (
-        <div>
+        <div className="ClienteContainer">
           {imagem ? (
             <img src={imagem} alt={`Foto de ${newUser?.cliente?.nome}`} className="cliente-image" />
           ) : (
-            <img src={notLogin} className="notFound-image" />
+            <img src={notLogin} className="cliente-image" />
           )}
           <p className="text-gray-600">
             E-mail: {newUser?.email || "E-mail não encontrado"}
@@ -161,22 +166,17 @@ const UserProfile = () => {
           <button
             onClick={toggleConsultasCliente}
           >
-            Consultas
+            Ver Consultas
           </button>
-          {showConsultasCliente &&
-            <MainConsultaCliente
-              onClose={() => setShowConsultasCliente(false)}
-            />
-          }
           <button
             onClick={toggleCliente}
-          >
-            Editar
+            >
+            Editar Informações
           </button>
           <button
             type="buttom"
             onClick={() => navigate("/animal")}
-          >
+            >
             Editar os animais
           </button>
           {showCliente &&
@@ -188,20 +188,24 @@ const UserProfile = () => {
                 phone={newUser.cliente.telefone}
                 dataDeNascimento={newUser.cliente.dataDeNascimento}
                 endereco={newUser.cliente.endereco}
-                imagem={newUser.cliente.imagem}
                 onClose={() => setShowCliente(false)}
-              />
+                />
             </div>
+          }
+          {showConsultasCliente &&
+            <MainConsultaCliente
+              onClose={() => setShowConsultasCliente(false)}
+            />
           }
         </div>
       )}
 
       {hasConsultorio && (
-        <div>
+        <div className="ConsultorioContainer">
           {imagem ? (
             <img src={imagem} alt={`Foto de ${newUser?.consultorio?.nome}`} className="consultorio-image" />
           ) : (
-            <img src={notLogin} className="notFound-image" />
+            <img src={notLogin} className="consultorio-image" />
           )}
 
           <p className="text-gray-600">
@@ -228,7 +232,7 @@ const UserProfile = () => {
           <button
             onClick={toggleConsultorio}
           >
-            Editar
+            Editar Informações
           </button>
           <button
             onClick={toggleEditVeterinario}
@@ -238,7 +242,7 @@ const UserProfile = () => {
           {showConsultorio &&
             <div className="popUpConsultorio">
               <ConsultorioUpdate
-                id = {newUser.consultorio.id}
+                id={newUser.consultorio.id}
                 name={newUser.consultorio.nome}
                 phone={newUser.consultorio.telefone}
                 dataDeFundacao={newUser.consultorio.dataDeFundacao}
@@ -260,11 +264,11 @@ const UserProfile = () => {
         </div>
       )}
       {hasVeterinario && (
-        <div>
+        <div className="VeterinarioContainer">
           {imagem ? (
             <img src={imagem} alt={`Foto de ${newUser?.veterinario?.nome}`} className="veterinario-image" />
           ) : (
-            <img src={notLogin} className="notFound-image" />
+            <img src={notLogin} className="veterinario-image" />
           )}
           <p>
             E-mail: {newUser?.email || "E-mail não encontrado"}
@@ -291,18 +295,26 @@ const UserProfile = () => {
             className="EditarVeterinario"
             onClick={toggleVeterinario}
           >
-            Editar
+            Editar Informações
           </button>
+
           <button
             className="novoConsultorio"
             onClick={toggleNovoConsultorio}
           >
             Novo Consultorio
           </button>
+          
+          <button
+            className="consulta"
+            onClick={toggleConsultasVeterinario}
+          >
+            Mostrar consultas
+          </button>
           {showVeterinario &&
             <div className="popUpConsultorio">
               <VeterinarioUpdate
-                id = {newUser.veterinario.id}
+                id={newUser.veterinario.id}
                 name={newUser.veterinario.nome}
                 cpf={newUser.veterinario.cpf}
                 crvm={newUser.veterinario.crvm}
@@ -315,18 +327,18 @@ const UserProfile = () => {
               />
             </div>
           }
-          {/* // substituir */}
-          {/* {showNovoConsultorio && 
-            <div className="displayNovoConsultorio">
-              <MainConsultorio/>
-            </div>
-
-          } */}
+          {showConsultasVeterinario && (
+            <MainConsultaVeterinario
+              onClose={() => setshowConsultasVeterinarios(false)}
+            />
+          )}
         </div>
       )}
       {!hasCliente && !hasConsultorio && !hasVeterinario && (
         <div>
-          <h1 onClick={() => navigate("/newCliente")}> Você precisar registrar suas informações pessoais</h1>
+          <h1 onClick={() => navigate("/newCliente")}> 
+            Você precisar registrar suas informações pessoais
+            </h1>
         </div>
       )}
     </div>

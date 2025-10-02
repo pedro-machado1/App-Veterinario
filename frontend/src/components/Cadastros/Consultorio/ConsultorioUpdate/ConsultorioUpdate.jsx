@@ -14,9 +14,8 @@ const ConsultorioUpdate = ({
   dataDeFundacao,
   endereco,
   estado,
-  imagem,
   descricao,
-  onClose,
+  onClose
 
 }) => {
 
@@ -28,12 +27,17 @@ const ConsultorioUpdate = ({
   const [newEstado, setNewEstado] = useState(estado || "");
   const [newImagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
+  const [newRemove , setRemove] = useState(true)
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+
+  const toggleRemove = () => {
+    setRemove((prev) => !prev)
+  }
 
 
   useEffect(() => {
@@ -56,7 +60,7 @@ const ConsultorioUpdate = ({
     fetchInitialData()
     setIsLoading(false)
 
-  }, [id])
+  }, [id, newRemove])
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -166,6 +170,21 @@ const ConsultorioUpdate = ({
     }
   };
 
+  const handleRemove =  async () => {
+    setIsLoading(true)
+    try {
+      const response = await axios.delete(
+        `${apiUrl}/api/consultorio/imagem`
+      )
+      console.log(response.data)
+      toggleRemove()
+      setPreviewImg(null)
+    }catch(err){
+      console.log(err)
+    }
+    setIsLoading(false)
+  }  
+
   return (
     <div className="consultorio-container ">
       <form
@@ -192,6 +211,13 @@ const ConsultorioUpdate = ({
             className="consultorio-image"
           />
         )}
+        <button
+          onClick={handleRemove}
+          type="button"
+          className="removeImagem"
+        >
+          Remover imagem
+        </button>
         
         <div className="line1">
           <InputField

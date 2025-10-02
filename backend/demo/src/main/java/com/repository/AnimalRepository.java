@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
+
     @Query("SELECT c FROM Consulta c JOIN c.animal a WHERE a.id = :animalId")
     Page<Consulta> findAllConsultaByAnimalId(@Param("animalId") Long animalId, Pageable pageable);
 }

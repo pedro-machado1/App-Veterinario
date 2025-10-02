@@ -27,9 +27,11 @@ import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
+
+// look into changing page size and changing to PageModel;
+
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("api/cliente")
 public class ClienteController {
 
@@ -64,7 +66,7 @@ public class ClienteController {
         }
         try{
             Cliente cliente = clienteOptional.get();
-            Resource resource = clientService.findImagemByAnimal(cliente);
+            Resource resource = clientService.findImagemByCliente(cliente);
 
             Path filePath = ((UrlResource) resource).getFile().toPath();
 
@@ -81,8 +83,11 @@ public class ClienteController {
         }
     }
 
-
-    // look into changing page size and changing to PageModel;
+    @DeleteMapping("/imagem")
+    public ResponseEntity<String> deleteImagem(){
+        clientService.deleteImagem();
+        return ResponseEntity.ok().body("imagem removida");
+    }
 
     @GetMapping()
     public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages, @RequestParam(required = false) String cpf){
@@ -114,11 +119,14 @@ public class ClienteController {
     }
 
     @GetMapping("/animal")
-    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages , @RequestParam(required = false) Long idCliente) {
+    public ResponseEntity<Page<AnimalSimpleDto>> findAllAnimal(Pageable pages ,
+                                                               @RequestParam(required = false) Long idCliente,
+                                                               @RequestParam(required = false) String nome
+    ) {
         Page<AnimalSimpleDto> animalPage;
-        if (idCliente == null) animalPage = clientService.findAllAnimal(pages, 0);
+        if (idCliente == null) animalPage = clientService.findAllAnimal(pages, 0, nome);
 
-        else animalPage = clientService.findAllAnimal(pages, idCliente);
+        else animalPage = clientService.findAllAnimal(pages, idCliente, nome);
 
         return ResponseEntity.ok().body(animalPage);
     }

@@ -3,6 +3,7 @@ package com.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
@@ -38,11 +39,9 @@ import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
-// criar endpoint que processa adiciona veterinarios para um certo escritorio e os envia um email;
 
 @Validated
 @RestController
-@CrossOrigin( origins = "http://localhost:8080")
 @RequestMapping("api/veterinario")
 public class VeterinarioController {
 
@@ -103,8 +102,8 @@ public class VeterinarioController {
             return ResponseEntity.notFound().build();
         }
         try{
-            Veterinario animal = veterinarioOptional.get();
-            Resource resource = veterinarioService.findImagemByAnimal(animal);
+            Veterinario veterinario = veterinarioOptional.get();
+            Resource resource = veterinarioService.findImagemByVeterinario(veterinario);
 
             Path filePath = ((UrlResource) resource).getFile().toPath();
 
@@ -121,9 +120,18 @@ public class VeterinarioController {
         }
     }
 
+    @DeleteMapping("/imagem")
+    public ResponseEntity<String> deleteImagem(){
+        veterinarioService.deleteImagem();
+        return ResponseEntity.ok().body("imagem removida");
+    }
+
     @GetMapping()
-    public ResponseEntity<Page<VeterinarioDto>> findAll(Pageable pages){
-        Page<VeterinarioDto> responsePages =veterinarioService.findAll(pages);
+    public ResponseEntity<Page<VeterinarioDto>> findAll(Pageable pages,
+                                                        @RequestParam(required = false) String crvm
+    ){
+        Page<VeterinarioDto> responsePages;
+         responsePages =veterinarioService.findAll(pages, crvm);
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping()
@@ -139,6 +147,14 @@ public class VeterinarioController {
         veterinarioService.delete(id);
         return ResponseEntity.ok().body("o veterinario " + id + " foi removido");
     }
+
+
+    @GetMapping("/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsulta(Pageable pages) {
+        Page<ConsultaSimpleDto> consultaPage = veterinarioService.findAllConsultaByVeterinario(pages, 0);
+        return ResponseEntity.ok().body(consultaPage);
+    }
+
 
 }
 

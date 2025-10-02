@@ -2,7 +2,7 @@ import "./ShowCliente.css"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import MainConsultaCliente from "../../Consulta/MainConsulta/MainConsultaCliente.jsx";
+import MainConsultaCliente from "../../Consulta/MainConsulta/MainConsultaCliente/MainConsultaCliente.jsx";
 import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowCliente = ({
@@ -21,19 +21,28 @@ const ShowCliente = ({
 
 
     function maskCpf(value) {
+        try { 
         return value
             .replace(/\D/g, '')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d)/, '$1.$2')
             .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        }catch(err) {
+            return value
+        }
+
     }
 
     function maskPhone(value) {
+        try { 
         return value
             .replace(/\D/g, '')
             .replace(/(\d{2})(\d)/, '($1) $2')
             .replace(/(\d{5})(\d)/, '$1-$2')
             .slice(0, 15);
+        }catch(err) {
+            return value
+        }
     }
 
 
@@ -71,7 +80,7 @@ const ShowCliente = ({
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newCliente?.nome}`} className="cliente-image" />
                 ) : (
-                    <img src={notLogin} className="notFound-image" />
+                    <img src={notLogin} className="cliente-image" />
                 )}
 
                 <p>

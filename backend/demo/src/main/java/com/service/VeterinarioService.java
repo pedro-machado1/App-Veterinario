@@ -2,6 +2,7 @@ package com.service;
 
 
 import com.dto.cliente.ClienteSimpleDto;
+import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
@@ -56,7 +57,7 @@ public class VeterinarioService {
     }
 
     @Transactional
-    public Resource findImagemByAnimal(Veterinario veterinario){
+    public Resource findImagemByVeterinario(Veterinario veterinario){
         String imagemPath = veterinario.getImagem();
 
         if (imagemPath == null || imagemPath.isEmpty()) {
@@ -67,10 +68,24 @@ public class VeterinarioService {
 
     }
 
+    @Transactional
+    public void deleteImagem(){
+        Users user  =usersService.findUsers();
+        fileStorageService.deleteFile(findImagemByVeterinario(user.getVeterinario()).getFilename());
+    }
+
 
     @Transactional
-    public Page<VeterinarioDto> findAll(Pageable pages){
-        Page<Veterinario> clientes = veterinarioRepository.findAll(pages);
+    public Page<VeterinarioDto> findAll(Pageable pages, String crvm){
+
+        Page<Veterinario> clientes;
+        if (crvm == null) {
+            clientes= veterinarioRepository.findAll(pages);
+        }
+        else {
+            clientes= veterinarioRepository.findAllByCrvm(crvm, pages);
+        }
+
         return clientes.map(veterinario -> convertToDto(veterinario, VeterinarioDto.class));
     }
 
@@ -82,6 +97,7 @@ public class VeterinarioService {
         existsByid(id);
         Veterinario veterinario = veterinarioRepository.getReferenceById(id);
         if (imagemString == null ) imagemString = veterinario.getImagem();
+        else fileStorageService.deleteFile(veterinario.getImagem());
         convertToEntityVoid(veterinarioDto, veterinario);
         veterinario.setImagem(imagemString);
         veterinario = veterinarioRepository.save(veterinario);
@@ -99,6 +115,20 @@ public class VeterinarioService {
             throw new DataBaseException("Erro inesperado ao deletar o cliente");
         }
     }
+
+    @Transactional
+    public Page<ConsultaSimpleDto> findAllConsultaByVeterinario(Pageable pages, long id){
+        if (id == 0) {
+            Users users = usersService.findUsers();
+            id = users.getVeterinario().getId();
+            existsByid(id);
+        }
+
+        Page<Consulta> consulta = veterinarioRepository.findAllConsultaByVeterinario(id, pages);
+
+        return consulta.map(consultas -> convertToDto(consultas, ConsultaSimpleDto.class));
+    }
+
     @Transactional
     public void existsByid(Long id){
         if(!veterinarioRepository.existsById(id)){

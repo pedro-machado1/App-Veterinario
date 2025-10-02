@@ -18,7 +18,7 @@ import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx
 import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import UserProfile from './pages/UserProfile/UserProfile.jsx'
-import EditAnimal from './components/Cadastros/Animal/MainAnimal/MainAnimal.jsx'
+import MainAnimal from './components/Cadastros/Animal/MainAnimal/MainAnimal.jsx'
 import MainConsultorio from './components/Cadastros/Consultorio/MainConsultorio/MainConsultorio.jsx' 
 import RegisterConsultorio from './components/Cadastros/Consultorio/RegisterConsultorio/RegisterConsultorio.jsx'
 import RegisterVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/RegisterVeterinario.jsx'
@@ -26,8 +26,7 @@ import MainVeterinario from './components/Cadastros/Veterinario/MainVeterinario/
 import { useAuth } from './components/Security/Context/AuthContext.jsx'
 import SendEmailVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/SendEmailVeterinario.jsx'
 import MainCliente from './components/Cadastros/Cliente/MainCliente/MainCliente.jsx'
-import MainConsultaCliente from './components/Cadastros/Consulta/MainConsulta/MainConsultaCliente.jsx'
-
+  
 function App() {
 
   const {isAuthenticated} = useAuth();
@@ -44,7 +43,7 @@ function App() {
           <Route path="/register" element={<RegisterComponent />} />
           <Route path="/registerConsultorio" element={<RegisterConsultorio />} />
           <Route path="/newConsulta" element={<ProtectedRoute><NewConsulta /></ProtectedRoute>} />
-          <Route path="/animal" element={<ProtectedRoute><EditAnimal /></ProtectedRoute>} />
+          <Route path="/animal" element={<ProtectedRoute><MainAnimal /></ProtectedRoute>} />
           <Route path="/newCliente" element={<ProtectedRoute><NewCliente /></ProtectedRoute>} />
           <Route path="/navbar" element={<ProtectedRoute><Navbar /></ProtectedRoute>} />
           <Route path="/newConsultorio" element={<ProtectedRoute><NewConsultorio /></ProtectedRoute>} />

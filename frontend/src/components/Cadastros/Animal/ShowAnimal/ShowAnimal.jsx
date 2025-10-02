@@ -2,6 +2,8 @@ import "./ShowAnimal.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import MainConsultaAnimal from "../../Consulta/MainConsulta/MainConsultaAnimal/MainConsultaAnimal.jsx";
+import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowAnimal = ({
     onClose,
@@ -9,6 +11,7 @@ const ShowAnimal = ({
     clienteId,
 }) => {
 
+    const [newShowConsulta, setNewShowConsulta] = useState(null)
     const [newAnimal, setAnimal] = useState(null)
     const [newImagem, setImagem] = useState(null)
     const [Error, setError] = useState(null);
@@ -16,6 +19,11 @@ const ShowAnimal = ({
     const [isLoading, setIsLoading] = useState(true);
 
     const apiUrl = import.meta.env.VITE_API_URL;
+
+    const toggleShowConsulta = () => {
+        setNewShowConsulta((prev) => !prev)
+    }
+
 
     useEffect(() => {
         const asyncFunction = async () => {
@@ -66,7 +74,7 @@ const ShowAnimal = ({
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newAnimal?.nome}`} className="animal-image" />
                 ) : (
-                    <p>Imagem não encontrada.</p>
+                    <img src={notLogin} alt="Imagem não encontrada" className="animal-image"/>
                 )}
 
                 <p>
@@ -104,6 +112,22 @@ const ShowAnimal = ({
                 onClick={onClose}>
                 Fechar
             </button>
+            <button
+              type="buttom"
+              className="consultas"
+              onClick={toggleShowConsulta}
+            >
+                Ver Consultas
+            </button>
+
+            {newShowConsulta && (
+                <MainConsultaAnimal
+                    onClose={() => setNewShowConsulta(false)}
+                    animalId={animalId}
+                />
+            )
+
+            }
             {isLoading && <LoadingSpin />}
         </div>
     );

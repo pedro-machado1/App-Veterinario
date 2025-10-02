@@ -38,13 +38,11 @@ public class AnimalUpdateDto {
 
     private int peso;
 
-    private int vacina;
+    private String doenca;
 
-    private int doenca;
+    private String alergia;
 
-    private int alergia;
-
-    private int raca;
+    private String raca;
 
     private String imagem;
 

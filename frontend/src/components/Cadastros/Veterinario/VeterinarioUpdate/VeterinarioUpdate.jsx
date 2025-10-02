@@ -15,7 +15,6 @@ const VeterinarioUpdate = ({
     phone,
     dataDeNascimento,
     endereco,
-    imagem,
     onClose,
 
 }) => {
@@ -29,6 +28,7 @@ const VeterinarioUpdate = ({
     const [newEndereco, setEndereco] = useState(endereco || "");
     const [newImagem, setImagem] = useState("");
     const [previewImg, setPreviewImg] = useState(null);
+    const [newRemove , setRemove] = useState(true)
     const [Error, setError] = useState(null);
     const [Success, setSuccess] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +36,9 @@ const VeterinarioUpdate = ({
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
+    const toggleRemove = () => {
+        setRemove((prev) => !prev)
+    }
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -55,7 +58,7 @@ const VeterinarioUpdate = ({
 
         fetchInitialData()
         setIsLoading(false)
-    }, [id])
+    }, [id, newRemove])
 
     const isInvalid = (e) => {
         e.target.classList.add("isInvalid");
@@ -130,7 +133,7 @@ const VeterinarioUpdate = ({
 
         const formData = new FormData();
 
-        const veterinarioBlob = new Blob([JSON.stringify(newClient)], { type: 'application/json' });
+        const veterinarioBlob = new Blob([JSON.stringify(UpdateVeterinario)], { type: 'application/json' });
         formData.append("veterinario", veterinarioBlob);
 
         if (newImagem) {
@@ -140,7 +143,7 @@ const VeterinarioUpdate = ({
         try {
             const response = await axios.put(
                 `${apiUrl}/api/veterinario`,
-                UpdateVeterinario,
+                formData,
             );
             console.log('Updated Vetererinario:', response.data);
             setIsLoading(false);
@@ -186,6 +189,21 @@ const VeterinarioUpdate = ({
         }
     };
 
+    const handleRemove =  async () => {
+    setIsLoading(true)
+    try {
+      const response = await axios.delete(
+        `${apiUrl}/api/veterinario/imagem`
+      )
+      console.log(response.data)
+      toggleRemove()
+      setPreviewImg(null)
+    }catch(err){
+      console.log(err)
+    }
+    setIsLoading(false)
+  }
+
     return (
         <div className="veterinario-container ">
             <form
@@ -213,6 +231,14 @@ const VeterinarioUpdate = ({
                         className="veterinario-image"
                     />
                 )}
+                <button
+                onClick={handleRemove}
+                type="button"
+                className="removeImagem"
+                >
+                    Remover imagem
+                </button>
+                    
                 <div className="line1">
                     <InputField
                         label="Nome"

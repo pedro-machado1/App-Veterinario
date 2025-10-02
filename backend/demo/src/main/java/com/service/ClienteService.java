@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -66,7 +68,7 @@ public class ClienteService {
     }
 
     @Transactional
-    public Resource findImagemByAnimal(Cliente cliente){
+    public Resource findImagemByCliente(Cliente cliente){
         String imagemPath = cliente.getImagem();
 
         if (imagemPath == null || imagemPath.isEmpty()) {
@@ -75,6 +77,12 @@ public class ClienteService {
 
         return fileStorageService.loadFileAsResource(imagemPath);
 
+    }
+
+    @Transactional
+    public void deleteImagem(){
+        Users user  =usersService.findUsers();
+        fileStorageService.deleteFile(findImagemByCliente(user.getCliente()).getFilename());
     }
 
 
@@ -98,6 +106,7 @@ public class ClienteService {
             existsById(id);
             Cliente cliente = clienteRepository.getReferenceById(id);
             if (imagemString == null ) imagemString = cliente.getImagem();
+            else fileStorageService.deleteFile(cliente.getImagem());
             cliente.setDataDeAlteracao(LocalDate.now());
             convertToEntityVoid(clienteDto, cliente);
             cliente.setImagem(imagemString);
@@ -128,12 +137,12 @@ public class ClienteService {
     public ClienteDto addAnimal(Long idAnimal ) {
         long idCliente =findClienteId();
         existsById(idCliente);
-        AnimalSimpleDto animal = convertToDto(
+        Animal animal =
                 animalService.findById(idAnimal)
-                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class
-        );
+                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal));
 
-        ClienteUpdateDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteUpdateDto.class);
+        Cliente clienteDto = clienteRepository.getReferenceById(idCliente);
+
         if (clienteDto.getAnimal() == null) {
             clienteDto.setAnimal(new ArrayList<>());
         }
@@ -152,11 +161,12 @@ public class ClienteService {
     public void removeAnimal(Long idAnimal) {
         long idCliente =findClienteId();
         existsById(idCliente);
-        AnimalSimpleDto animal = convertToDto(
+        Animal animal =
                 animalService.findById(idAnimal)
-                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class
-        );
-        ClienteUpdateDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteUpdateDto.class);
+                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal));
+        Cliente clienteDto = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idAnimal));
+
         if (clienteDto.getAnimal() == null) {
             throw new DataBaseException("Cliente não possui cadastrados");
         }
@@ -169,12 +179,17 @@ public class ClienteService {
 
     }
     @Transactional
-    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages, long idCliente){
+    public Page<AnimalSimpleDto> findAllAnimal(Pageable pages, long idCliente, String nome){
+        Page<Animal> animal;
         if (idCliente == 0) idCliente = findClienteId();
         existsById(idCliente);
 
-        Page<Animal> animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);
-
+        if (nome == null) {
+            animal = clienteRepository.findAllAnimalByCliente(idCliente, pages);
+        }
+        else {
+            animal = clienteRepository.findAllAnimalByNome(idCliente, nome, pages);
+        }
         return animal.map(animais -> convertToDto(animais, AnimalSimpleDto.class));
     }
 

@@ -55,7 +55,7 @@ const ShowNewConsultorio = ({
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newConsultorio?.nome}`} className="consultorio-image" />
                 ) : (
-                    <img src={notLogin} className="notFound-image" />
+                    <img src={notLogin} className="consultorio-image" />
                 )}
                 <p>
                     Endereço: {newConsultorio?.endereco || "Endereço não encontrada"}

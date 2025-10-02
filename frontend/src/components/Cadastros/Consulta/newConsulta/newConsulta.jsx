@@ -85,7 +85,9 @@ const NewConsulta = () => {
   const addAnimal = (animal) => {
     setSelectedAnimals((prev) => {
       if (!animal.id) return prev;
+      
       // some pq é object
+
       if (prev.some((a) => a.id === animal.id)) return prev;
       return [...prev, animal];
     });
@@ -144,8 +146,16 @@ const NewConsulta = () => {
         {selectedClient && (
           <div className="selectedClient">
             <p>Cliente selecionado: {selectedClient.nome}</p>
-            <button onClick={handleRemoveAnimal}> Remover </button>
-            <button onClick={() => setShowSearchAnimal(true)}>
+            <button 
+            onClick={handleRemoveAnimal}
+            type="button"
+            > 
+            Remover
+            </button>
+            <button
+             onClick={() => setShowSearchAnimal(true)}
+             type="button"
+             >
               Selecionar Animal
             </button>
           </div>
@@ -165,6 +175,25 @@ const NewConsulta = () => {
           </div>
         )}
 
+        {showSearch && (
+          <SearchCliente
+            onClose={() => setShowSearch(false)}
+            onClientSelect={(cliente) => setSelectedClient(cliente)}
+          />
+        )}
+        {showSearchAnimal && selectedClient?.id &&  (
+          <div>
+            <SearchAnimal
+              onClose={() => setShowSearchAnimal(false)}
+              onAnimalSelect={(animal) => {
+                addAnimal(animal);
+                setShowSearchAnimal(false);
+              }}
+              clienteId={selectedClient.id}
+            />
+          </div>
+        )}
+
         {isLoading && <LoadingSpin />}
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>
@@ -177,24 +206,6 @@ const NewConsulta = () => {
           Cancelar
         </button>
       </form>
-      {showSearch && (
-        <SearchCliente
-          onClose={() => setShowSearch(false)}
-          onClientSelect={(cliente) => setSelectedClient(cliente)}
-        />
-      )}
-      {showSearchAnimal && (
-        <div>
-          <SearchAnimal
-            onClose={() => setShowSearchAnimal(false)}
-            onAnimalSelect={(animal) => {
-              addAnimal(animal);
-              setShowSearchAnimal(false);
-            }}
-            clienteId={selectedClient.id}
-          />
-        </div>
-      )}
     </div>
   );
 };

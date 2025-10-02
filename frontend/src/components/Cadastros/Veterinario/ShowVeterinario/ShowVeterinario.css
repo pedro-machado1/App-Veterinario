@@ -1,0 +1,66 @@
+.veterinario-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.presentVeterinarioContainer {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.veterinario-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  border: 2px solid #ffffff;
+}
+
+.griditens {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 colunas */
+  gap: 1rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.item {
+  background: #fafafa;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.item.full {
+  grid-column: span 2;
+}
+
+.fechar {
+  position: absolute;
+  bottom: 3rem;
+  right: 3rem;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding:  1.5rem 3rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.fechar:hover {
+  background: #c0392b;
+}
+
+

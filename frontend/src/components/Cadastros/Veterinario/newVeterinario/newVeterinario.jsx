@@ -70,9 +70,9 @@ const NewVeterinario = ({ onVeterinarioSubmit, onClose }) => {
     const newVeterinario = {
       nome,
       crvm,
-      cpf,
+      cpf: cpf.replace(/\D/g, ""),
+      telefone: telefone.replace(/\D/g, ""),
       estado,
-      telefone,
       endereco,
       dataDeNascimento
     };

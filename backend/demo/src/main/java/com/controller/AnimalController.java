@@ -11,6 +11,7 @@ import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -33,7 +35,6 @@ import static com.extras.Converters.convertToEntity;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("api/animal")
 public class AnimalController {
 
@@ -89,6 +90,16 @@ public class AnimalController {
         }
     }
 
+//    só vai poder deletar a sua própria imagem
+    @DeleteMapping("/{id}/imagem")
+    public ResponseEntity<String> deleteImagemById(@PathVariable Long id){
+        Optional<Animal> optionalAnimal = animalService.findByIdwithAuthenticate(id, 0);
+        if (optionalAnimal.isEmpty()) throw new DataIntegrityViolationException("não foi possível encontrar o animal");
+        Animal animal = optionalAnimal.get();
+        animalService.deleteImagem(animalService.findImagemByAnimal(animal).getFilename());
+        return ResponseEntity.ok().body("imagem do animal foi removida");
+    }
+
     @GetMapping("/{id}/cliente")
     public ResponseEntity<AnimalSimpleDto> findAnimalById(@PathVariable Long id, @RequestParam(required = true) long idCliente){
 
@@ -97,6 +108,13 @@ public class AnimalController {
         if (animal.isEmpty()) return ResponseEntity.notFound().build();
         Animal animalentety = animal.get();
         return ResponseEntity.ok(convertToEntity(animalentety, AnimalSimpleDto.class));
+    }
+
+
+    @GetMapping("/{id}/consulta")
+    public ResponseEntity<Page<ConsultaSimpleDto>> findAllConsulta(Pageable pages, @PathVariable long id) {
+        Page<ConsultaSimpleDto> consultaPage = animalService.findAllConsultaByAnimal(pages, id);
+        return ResponseEntity.ok().body(consultaPage);
     }
 
     @GetMapping()

@@ -21,7 +21,6 @@ import static com.extras.Converters.convertToDto;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/api/vacinaItem")
 public class VacinaItemController {
     @Autowired
