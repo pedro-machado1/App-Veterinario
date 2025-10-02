@@ -75,9 +75,7 @@ const UserProfile = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/auth/authentication`,
-          {
-            withCredentials: true,
-          });
+          );
         if (response.data.cliente) {
           setNewUser(response.data);
           console.log(response.data);
@@ -137,10 +135,10 @@ const UserProfile = () => {
   }
 
   return (
-    <div>
+    <div className="userContainer">
 
       {hasCliente && (
-        <div>
+        <div className="ClienteContainer">
           {imagem ? (
             <img src={imagem} alt={`Foto de ${newUser?.cliente?.nome}`} className="cliente-image" />
           ) : (
@@ -173,7 +171,7 @@ const UserProfile = () => {
           <button
             onClick={toggleCliente}
             >
-            Editar
+            Editar Informações
           </button>
           <button
             type="buttom"
@@ -203,7 +201,7 @@ const UserProfile = () => {
       )}
 
       {hasConsultorio && (
-        <div>
+        <div className="ConsultorioContainer">
           {imagem ? (
             <img src={imagem} alt={`Foto de ${newUser?.consultorio?.nome}`} className="consultorio-image" />
           ) : (
@@ -234,7 +232,7 @@ const UserProfile = () => {
           <button
             onClick={toggleConsultorio}
           >
-            Editar
+            Editar Informações
           </button>
           <button
             onClick={toggleEditVeterinario}
@@ -266,7 +264,7 @@ const UserProfile = () => {
         </div>
       )}
       {hasVeterinario && (
-        <div>
+        <div className="VeterinarioContainer">
           {imagem ? (
             <img src={imagem} alt={`Foto de ${newUser?.veterinario?.nome}`} className="veterinario-image" />
           ) : (
@@ -297,10 +295,9 @@ const UserProfile = () => {
             className="EditarVeterinario"
             onClick={toggleVeterinario}
           >
-            Editar
+            Editar Informações
           </button>
 
-          {/* add novo consultorio para esse veterinario novo relacionamento */}
           <button
             className="novoConsultorio"
             onClick={toggleNovoConsultorio}

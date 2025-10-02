@@ -140,7 +140,9 @@ public class ConsultorioController {
     }
 
     @GetMapping("{id}/veterinario")
-    public ResponseEntity<Page<VeterinarioSimpleDto>> findAllVeterinario(@PathVariable Long id, Pageable pages) {
+    public ResponseEntity<Page<VeterinarioSimpleDto>> findAllVeterinario(@PathVariable Long id,
+                                                                         Pageable pages
+    ) {
         Page<VeterinarioSimpleDto> veterinario = consultorioService.findAllVeterinario(id, pages);
         return ResponseEntity.ok().body(veterinario);
     }

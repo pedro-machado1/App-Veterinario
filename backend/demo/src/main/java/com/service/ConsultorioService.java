@@ -197,9 +197,10 @@ public class ConsultorioService {
     }
     @Transactional
     public Page<VeterinarioSimpleDto> findAllVeterinario(long idConsultorio, Pageable pages){
-            existsById(idConsultorio);
+        existsById(idConsultorio);
+        Page<Veterinario> veterinario;
+        veterinario = consultorioRepository.findAllVeterinarioByConsultorioId(idConsultorio, pages);
 
-        Page<Veterinario> veterinario = consultorioRepository.findAllVeterinarioByConsultorioId(idConsultorio, pages);
 
         return veterinario.map(veterinarios -> convertToDto(veterinarios, VeterinarioSimpleDto.class));
     }

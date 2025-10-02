@@ -42,13 +42,13 @@ const MainAnimal = () => {
 
 
 
-    const asyncFunction = async () => {
+    const asyncFunction = async (searchname) => {
         setIsLoading(true)
         setError(null)
 
         let url = `${apiUrl}/api/cliente/animal`
-        if (searchName !== "") {
-            url += `?nome=${searchName}`
+        if (searchname !== "") {
+            url += `?nome=${searchname}`
         }
 
         const response = await axios.get(url 
@@ -81,7 +81,7 @@ const MainAnimal = () => {
     }
 
     useEffect(() => {
-        asyncFunction()
+        asyncFunction(searchName)
     }, [show, showEdit])
 
 
@@ -95,7 +95,7 @@ const MainAnimal = () => {
     }
 
     return (
-        <div>
+        <div className="AnimalContainer">
             <h1>
                 Seus Animais
             </h1>
@@ -105,78 +105,93 @@ const MainAnimal = () => {
                     value={searchName}
                     onChange={(e) => setSearchNome(e.target.value)}
                 />
-                <button onClick={() => asyncFunction()}>Pesquisar</button>
+                <button className= "botaoPesquisar" onClick={() => asyncFunction(searchName)}>Pesquisar</button>
+                <button className= "botaoLimpar" onClick={() => {  
+                    asyncFunction("")
+                    setSearchNome("")
+                    } } >
+                        LimparFiltro
+                    </button>
             </div>
             <div className="displayDeAnimais">
                 {newAnimal.map((animal) => (
                     <div key={animal.id} className="Animal">
-                        {animal.url ? (
-                            <img src={animal.url} alt={`Foto de ${animal.nome}`} className="animal-image" />
-                        ) : (
-                            <img src={notLogin} alt="Imagem não encontrada" className="animal-image" />
-                        )}
-
-                        <p>
-                            Nome: {animal.nome || "Erro nome não encontrado"}
-                        </p>
-                        <p>
-                            Especie: {animal.especie || "Erro especie não encontrada"}
-                        </p>
-                        <button
-                            className="Edit"
-                            onClick={() => showMoreToggle(animal.id)}
-                        >
-                            Ver Mais
-                        </button>
-
-                        <button
-                            className="Edit"
-                            onClick={() => showEditToggle(animal.id)}
-                        >
-                            Editar
-                        </button>
-
-                        <button
-                            className="deletar"
-                            onClick={() => { onDelete(animal.id) }}
-                        >
-                            Deletar
-                        </button>`
-                        {showMore == animal.id &&
-                            <ShowAnimal
-                                onClose={() => setShowMore(null)}
-                                animalId={animal.id}
-                                show={showMore}
-                            />}`
-                        {showEdit == animal.id && (
-                            <div>
-                                <EditAnimal
-                                    onClose={() => setShowEdit(null)}
-                                    animalId={animal.id}
-                                    show={showEdit}
-                                />
+                        <div className="ImagemInformacoes">
+                            {animal.url ? (
+                                <img src={animal.url} alt={`Foto de ${animal.nome}`} className="animal-image" />
+                            ) : (
+                                <img src={notLogin} alt="Imagem não encontrada" className="animal-image" />
+                            )}
+                            <div className="informacoesAnimais">
+                                <p>
+                                    Nome: {animal.nome || "Erro nome não encontrado"}
+                                </p>
+                                <p>
+                                    Especie: {animal.especie || "Erro especie não encontrada"}
+                                </p>
                             </div>
-                        )
-                        }
+                        </div>
+                        <div className="botoesAnimais"> 
+                            <button
+                                className="verMais"
+                                onClick={() => showMoreToggle(animal.id)}
+                            >
+                                Ver Mais
+                            </button>
+
+                            <button
+                                className="Edit"
+                                onClick={() => showEditToggle(animal.id)}
+                            >
+                                Editar
+                            </button>
+
+                            <button
+                                className="deletar"
+                                onClick={() => { onDelete(animal.id) }}
+                            >
+                                Deletar
+                            </button>
+                        </div>
+                        
                     </div>
                 ))}
-                <button
-                    className="novoAnimalButtom"
-                    type="buttom"
-                    onClick={() => {
-                        if (show == true) { setShow(false) }
-                        else { setShow(true) }
-                    }}
-                >
-                    Novo Animal
-                </button>
-                {show &&
-                    <div>
-                        <NewAnimal
-                            onClose={() => setShow(false)}
-                        />
-                    </div>}
             </div>
+            <button
+                className="novoAnimalButtom"
+                type="buttom"
+                onClick={() => {
+                    if (show == true) { setShow(false) }
+                    else { setShow(true) }
+                }}
+            >
+                Novo Animal
+            </button>
+            {show &&
+                <div className="overlay"> 
+                    <NewAnimal
+                        onClose={() => setShow(false)}
+                    />
+                </div>
+            }
+            {showMore && ( 
+                <div className="overlay">
+                    <ShowAnimal
+                        onClose={() => setShowMore(null)}
+                        animalId={showMore}
+                        show={showMore}
+                    />
+                </div>
+            )}
+            {showEdit && ( 
+                <div>
+                    <EditAnimal
+                        onClose={() => setShowEdit(null)}
+                        animalId={showEdit}
+                        show={showEdit}
+                    />
+                </div>
+            )}
             {IsLoading && <LoadingSpin />}
         </div>
     )

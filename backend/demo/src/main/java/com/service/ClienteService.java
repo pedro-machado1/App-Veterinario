@@ -137,12 +137,12 @@ public class ClienteService {
     public ClienteDto addAnimal(Long idAnimal ) {
         long idCliente =findClienteId();
         existsById(idCliente);
-        AnimalSimpleDto animal = convertToDto(
+        Animal animal =
                 animalService.findById(idAnimal)
-                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class
-        );
+                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal));
 
-        ClienteUpdateDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteUpdateDto.class);
+        Cliente clienteDto = clienteRepository.getReferenceById(idCliente);
+
         if (clienteDto.getAnimal() == null) {
             clienteDto.setAnimal(new ArrayList<>());
         }
@@ -161,11 +161,12 @@ public class ClienteService {
     public void removeAnimal(Long idAnimal) {
         long idCliente =findClienteId();
         existsById(idCliente);
-        AnimalSimpleDto animal = convertToDto(
+        Animal animal =
                 animalService.findById(idAnimal)
-                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal)), AnimalSimpleDto.class
-        );
-        ClienteUpdateDto clienteDto = convertToDto( clienteRepository.getReferenceById(idCliente), ClienteUpdateDto.class);
+                        .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado com ID: " + idAnimal));
+        Cliente clienteDto = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + idAnimal));
+
         if (clienteDto.getAnimal() == null) {
             throw new DataBaseException("Cliente não possui cadastrados");
         }

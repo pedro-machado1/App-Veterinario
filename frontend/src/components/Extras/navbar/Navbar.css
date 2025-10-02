@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #1e293b;
+    background-color: #2cb32c;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     z-index: 50;
     display: flex;
@@ -24,13 +24,10 @@
     font-weight: 500;
 }
 
-/* Estilo para o hover do link de navegação */
 .navbar-link:hover {
-    /* Cor de fundo escura ao passar o rato, equivalente a hover:bg-slate-700 */
     background-color: #334155;
 }
 
-/* Estilo para o rótulo do link */
 .link-label {
     cursor: pointer;
 }

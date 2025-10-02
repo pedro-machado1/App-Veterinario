@@ -1,9 +1,9 @@
 import "./ShowVeterinario.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import VeterinarioUpdate from "../../VeterinarioUpdate/VeterinarioUpdate.jsx";
-import notLogin from "../../../../../assets/images/notLogin.png"
+import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import VeterinarioUpdate from "../VeterinarioUpdate/VeterinarioUpdate.jsx";
+import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowVeterinario = ({ 
   onClose,
@@ -82,23 +82,35 @@ const ShowVeterinario = ({
         ) : (
           <img src={notLogin} className="veterinario-image" />
         )}
-        <p>
-          <strong>CPF:</strong> {maskCpf(veterinario?.cpf) || "CPF não encontrado"}
-        </p>
-        <p>
-          <strong>CRVM:</strong> {veterinario?.crvm || "CRVM não encontrado"}
-        </p>
-        <p>
-          <strong>Estado:</strong> {veterinario?.estado || "estado não encontrado"}
-        </p>
-        <p>
-          <strong>Telefone:</strong>{" "}
-          {maskPhone(veterinario?.telefone) || "Telefone não encontrado"}
-        </p>
-        <p>
-          <strong>Endereço:</strong>{" "}
-          {veterinario?.endereco || "Endereço não encontrado"}
-        </p>
+        <div className="griditens">
+          <div className="item">
+            <p>
+              <strong>CPF:</strong> {maskCpf(veterinario?.cpf) || "CPF não encontrado"}
+            </p>
+          </div>
+          <div className="item">
+            <p>
+              <strong>CRVM:</strong> {veterinario?.crvm || "CRVM não encontrado"}
+            </p>
+          </div>
+          <div className="item">
+            <p>
+              <strong>Estado:</strong> {veterinario?.estado || "estado não encontrado"}
+            </p>
+          </div>
+          <div className="item">
+            <p>
+              <strong>Telefone:</strong>{" "}
+              {maskPhone(veterinario?.telefone) || "Telefone não encontrado"}
+            </p>
+          </div>
+          <div className="item full">
+            <p>
+              <strong>Endereço:</strong>{" "}
+              {veterinario?.endereco || "Endereço não encontrado"}
+            </p>
+          </div>
+        </div>
       </div>
       <button
         type="button"
@@ -109,7 +121,6 @@ const ShowVeterinario = ({
 
       {isLoading && <LoadingSpin />}
       {error && <div className="error">{error}</div>}
-      {success && <div className="success">{success}</div>}
     </div>
   );
 };
