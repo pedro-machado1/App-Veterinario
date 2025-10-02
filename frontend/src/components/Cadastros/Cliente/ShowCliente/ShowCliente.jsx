@@ -75,7 +75,7 @@ const ShowCliente = ({
     }, [clienteId])
 
     return (
-        <div className="animal-container">
+        <div className="animalContainer">
             <div className="presentAnimalContainer">
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newCliente?.nome}`} className="cliente-image" />

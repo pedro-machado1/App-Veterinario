@@ -30,13 +30,13 @@ const MainConsultorio = () => {
     }
 
 
-    const asyncFunction = async () => {
+    const asyncFunction = async (estado) => {
         let response
         setIsLoading(true)
         setError(null)
         let url = `${apiUrl}/api/consultorio`
-        if (searchEstado != "") {
-            url += `?estado=${searchEstado}`
+        if (estado != "") {
+            url += `?estado=${estado}`
             response = await axios.get(url)
         }
         else {
@@ -70,16 +70,13 @@ const MainConsultorio = () => {
 
 
         useEffect(() => {
-            asyncFunction()
-        }, [show, searchEstado])
+            asyncFunction(searchEstado)
+        }, [show])
 
         const navigate = useNavigate();
 
         return (
-            <div>
-                <button className="botaoCadastrarConsultorio" onClick={() => { navigate("/registerConsultorio") }}>
-                    Cadastrar Consultório
-                </button>
+            <div className="consultorioContainer">
                 <h1>
                     Consultórios
                 </h1>
@@ -121,8 +118,17 @@ const MainConsultorio = () => {
                         <option value="SE">Sergipe</option>
                         <option value="TO">Tocantins</option>
                     </select>
-                    <button onClick={() => asyncFunction()}>
+                    <button 
+                    onClick={() => asyncFunction(searchEstado)}
+                    className="botaoEstado"
+                    >
                          Pesquisar
+                    </button>
+                    <button className= "botaoLimpar" onClick={() => {  
+                    asyncFunction("")
+                    setSearchEstado("")
+                    } } >
+                        LimparFiltro
                     </button>
                 </div>
 
@@ -146,15 +152,23 @@ const MainConsultorio = () => {
                             >
                                 Ver Mais
                             </button>
-                            {showMore == consultorio.id &&
-                                <ShowConsultorio
-                                    onClose={() => setShowMore(null)}
-                                    consultorioId={consultorio.id}
-                                />
-                            }`
+                                {showMore == consultorio.id &&
+                                <div className="overlay">
+                                    <ShowConsultorio
+                                        onClose={() => setShowMore(null)}
+                                        consultorioId={consultorio.id}
+                                    />
+                                </div>
+                                }`
                         </div>
                     ))}
                 </div>
+                <button 
+                className="botaoCadastrarConsultorio"
+                onClick={() => { navigate("/registerConsultorio") }}
+                 >
+                    Cadastrar Consultório
+                </button>
                 {IsLoading && <LoadingSpin />}
                 {Error && <div style={{ color: "red" }}>{Error}</div>}
 

@@ -28,7 +28,6 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -54,3 +53,77 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.confirmationContainer {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    
+    width: 90%;
+    max-width: 30rem; 
+    text-align: center;
+    
+    margin: 0 auto 0 auto; 
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.confirmationContainer h2 {
+    color: #333;
+    font-size: 2rem;
+    margin: 0;
+}
+
+.confirmationContainer button {
+    padding: 0.8rem 4rem;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+}
+
+.confirmationContainer .confirmation {
+    background-color: #bdc3c7;
+    color: white;
+}
+
+.confirmationContainer .confirmation:hover {
+    background-color: #95a5a6;
+}
+
+.confirmationContainer .cancelar {
+    background-color: #d01a29;
+    color: #fff;
+}
+
+.confirmationContainer .cancelar:hover {
+    background-color: #a52e2e;
+}
+
+.botoesConfirmation {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+
+.overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;   
+    height: 100vh;
+    
+    z-index: 9999; 
+    
+    background-color: rgba(55, 48, 48, 0.7);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

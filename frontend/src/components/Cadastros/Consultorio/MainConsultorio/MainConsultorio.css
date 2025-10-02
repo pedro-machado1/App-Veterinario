@@ -1,0 +1,155 @@
+.consultorioContainer {
+    padding: 6rem 1.5rem; 
+    min-width: 95vw;
+    margin: 0 auto;
+}
+
+.consultorioContainer h1,
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-size: 4rem;
+}
+
+.botaoCadastrarConsultorio:hover {
+    background-color: #2980b9;
+}
+
+
+.inputEstado {
+    display: flex;
+    justify-content:center; 
+    align-items:center;
+    gap: 1.25rem; 
+    margin-bottom: 2.5rem; 
+    padding: 1.25rem; 
+    border-radius: 0.5rem;
+    background-color: #f7f9fb;
+}
+
+.inputEstado label, .inputEstado option { 
+    font-weight: 600;
+    color: #000000;
+    min-width: 4rem;
+}
+
+.inputEstado select {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    border: 0.01rem solid #c7d0d9;
+    border-radius: 0.35rem;
+    max-width: 25rem; 
+    cursor: pointer;
+    background-color: white;
+    color: #000000;
+}
+
+
+.inputEstado .botaoEstado {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 600;
+    background-color: #2ecc71; 
+    color: white;
+}
+.inputEstado .botaoEstado:hover {
+    background-color: #27ae60;
+}
+
+.inputEstado .botaoLimpar {
+    padding: 1rem 1.75rem; 
+    font-size: 1rem; 
+    border-radius: 0.5rem;
+    cursor: pointer;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+
+}
+
+
+.inputEstado .botaoLimpar:hover {
+    background-color: #ab2819;
+}
+
+
+
+.displayDeConsultorios {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 1.8rem; 
+    padding-bottom: 3rem;
+    justify-content: flex-start;
+}
+
+.Consultorio {
+    
+    width: calc(33.33% - 1.25rem); 
+    
+    background: white;
+    border-radius: 0.75rem;
+    
+    display: flex;
+    flex-direction: column; 
+    padding: 1.25rem;
+    box-sizing: border-box; 
+}
+
+
+.consultorio-image {
+    width: 100%;
+    height: 12.5rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    border: 0.01rem solid #eee;
+}
+
+.Consultorio p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.3rem 0;
+    padding-bottom: 0.3rem;
+    border-bottom: 0.01rem dashed #f0f0f0;
+}
+.Consultorio p:last-of-type {
+    border-bottom: none;
+    margin-bottom: 1rem;
+}
+
+.Consultorio button {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.Consultorio .Edit { 
+    background-color: #3498db;
+    color: white;
+}
+.Consultorio .Edit:hover {
+    background-color: #2980b9;
+}
+
+.botaoCadastrarConsultorio {
+    display: block;
+    width: 100%;
+    max-width: 15rem;
+    margin: 0 auto 1.5rem auto;
+    padding: 0.75rem 1.5625rem;
+    background-color: #3498db; 
+    color: white;
+    border: none;
+    border-radius: 0.35rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}

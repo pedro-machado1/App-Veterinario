@@ -159,22 +159,22 @@ public class ConsultorioService {
     public void addVeterinarioWithConsultorioId(Long idVeterinario, long idConsultorio) {
 
         existsById(idConsultorio);
-            Consultorio consultorio = consultorioRepository.findById(idConsultorio)
-                    .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio));
+        Consultorio consultorio = consultorioRepository.findById(idConsultorio)
+                .orElseThrow(() -> new ResourceNotFoundException("Consultório não encontrado com ID: " + idConsultorio));
 
-            Veterinario veterinario = veterinarioService.findById(idVeterinario)
-                    .orElseThrow(() -> new ResourceNotFoundException("Veterinário não encontrado com ID: " + idVeterinario));
+        Veterinario veterinario = veterinarioService.findById(idVeterinario)
+                .orElseThrow(() -> new ResourceNotFoundException("Veterinário não encontrado com ID: " + idVeterinario));
 
-            if (consultorio.getVeterinario() == null) {
-                consultorio.setVeterinario(new ArrayList<>());
-            }
+        if (consultorio.getVeterinario() == null) {
+            consultorio.setVeterinario(new ArrayList<>());
+        }
 
-            if (consultorio.getVeterinario().contains(veterinario)) {
-                throw new DataBaseException("Veterinário já está cadastrado neste consultório");
-            }
-            consultorio.getVeterinario().add(veterinario);
+        if (consultorio.getVeterinario().contains(veterinario)) {
+            throw new DataBaseException("Veterinário já está cadastrado neste consultório");
+        }
+        consultorio.getVeterinario().add(veterinario);
 
-            consultorioRepository.save(consultorio);
+        consultorioRepository.save(consultorio);
 
     }
     @Transactional

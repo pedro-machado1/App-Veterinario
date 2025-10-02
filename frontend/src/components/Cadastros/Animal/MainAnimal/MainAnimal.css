@@ -1,8 +1,11 @@
 /* dados pagina */
 .AnimalContainer {
+    position:relative;
     padding: 6rem 0rem; 
-    min-width: 100vw;
+    min-width: 98vw;
+    min-height: 100vh;
     margin: 0 auto;
+    margin-top: 0rem;
 }
 
 .AnimalContainer h1 {
@@ -16,8 +19,8 @@
 /* barra de pesquisa */
 .searchContainer {
     display: flex;
-    justify-content: flex-start; 
-    gap: 2rem; 
+    justify-content:center;
+    margin-left: 1vw; 
     margin-bottom: 2.5rem; 
     padding: 2rem; 
     border-radius: 0.5rem;
@@ -65,7 +68,7 @@
     display: block; 
     width: 100%;
     max-width: 18rem; 
-    margin: 0 auto 2rem auto; 
+    margin: 0  3rem ; 
     padding: 0.75rem 1.5rem;
     background-color: #2ecc71;
     color: white;
@@ -156,6 +159,19 @@
     cursor: pointer;
 }
 
+.botoesAnimais a.verMaisLink {
+    
+    color: #3498db; 
+    cursor: pointer;
+    text-align: right; 
+    font-size: 1.3rem;
+}
+
+.botoesAnimais a.verMaisLink:hover {
+    color: #2980b9; 
+    text-decoration:underline; 
+}
+
 .botoesAnimais .Edit { 
     background-color: #3498db;
     color: white;
@@ -171,18 +187,3 @@
     background-color: #c0392b;
 }
     
-.overlay {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100vw;   
-    height: 100vh;
-    
-    z-index: 9999; 
-    
-    background-color: rgba(55, 48, 48, 0.7);
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}

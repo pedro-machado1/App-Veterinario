@@ -17,6 +17,7 @@ const MainAnimal = () => {
     const [newAnimal, setAnimal] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
     const [show, setShow] = useState(false)
+    const [showConfirmation, setShowConfirmation] = useState(null)
     const [showMore, setShowMore] = useState(null)
     const [showEdit, setShowEdit] = useState(false)
     const [searchName, setSearchNome] = useState("")
@@ -31,6 +32,14 @@ const MainAnimal = () => {
         }
     }
 
+    const showConfirmationToggle = (animalId) => {
+        if (showMore == animalId) {
+            setShowConfirmation(null)
+        }
+        else {
+            setShowConfirmation(animalId)
+        }
+    }
     const showEditToggle = (animalId) => {
         if (showEdit == animalId) {
             setShowEdit(null)
@@ -55,6 +64,7 @@ const MainAnimal = () => {
         )
         if (response.data.content.length == 0) {
             setError("Você não possui nenhum animal cadastrado")
+            setAnimal([])
 
             console.error("Você não possui nenhum animal cadastrado ")
         }
@@ -84,7 +94,6 @@ const MainAnimal = () => {
         asyncFunction(searchName)
     }, [show, showEdit])
 
-
     const onDelete = async (animalId) => {
         try {
             const response = await axios.delete(`${apiUrl}/api/cliente/removeanimal/${animalId}`)
@@ -100,18 +109,23 @@ const MainAnimal = () => {
                 Seus Animais
             </h1>
             <div className="searchContainer">
+                <form onSubmit={(e) => {
+                    e.preventDefault()
+                    asyncFunction(searchName)
+                }}>
                 <InputField
                     placeholder="Pesquisar por nome"
                     value={searchName}
                     onChange={(e) => setSearchNome(e.target.value)}
                 />
+                </form>
                 <button className= "botaoPesquisar" onClick={() => asyncFunction(searchName)}>Pesquisar</button>
                 <button className= "botaoLimpar" onClick={() => {  
                     asyncFunction("")
                     setSearchNome("")
                     } } >
                         LimparFiltro
-                    </button>
+                </button>
             </div>
             <div className="displayDeAnimais">
                 {newAnimal.map((animal) => (
@@ -132,13 +146,7 @@ const MainAnimal = () => {
                             </div>
                         </div>
                         <div className="botoesAnimais"> 
-                            <button
-                                className="verMais"
-                                onClick={() => showMoreToggle(animal.id)}
-                            >
-                                Ver Mais
-                            </button>
-
+                            
                             <button
                                 className="Edit"
                                 onClick={() => showEditToggle(animal.id)}
@@ -148,10 +156,20 @@ const MainAnimal = () => {
 
                             <button
                                 className="deletar"
-                                onClick={() => { onDelete(animal.id) }}
+                                onClick={() => { showConfirmationToggle(animal.id) }}
                             >
                                 Deletar
                             </button>
+                            <a
+                                href="#" 
+                                className="verMaisLink"
+                                onClick={(e) => {
+                                    e.preventDefault(); 
+                                    showMoreToggle(animal.id);
+                                }}
+                            >
+                                Ver Mais
+                            </a>
                         </div>
                         
                     </div>
@@ -192,6 +210,28 @@ const MainAnimal = () => {
                     />
                 </div>
             )}
+            
+            { showConfirmation &&  
+            <div className="overlay">
+                <div className="confirmationContainer">
+                <h2>
+                    Você quer deletar esse animal? 
+                </h2>
+                <div className="botoesConfirmation">
+                    <button className = "confirmation" onClick={() => 
+                        {
+                            onDelete(showConfirmation)
+                            setShowConfirmation(null)
+                        }}>
+                        Confirmar
+                    </button>
+                    <button className= "cancelar" onClick={() => setShowConfirmation(null)}>
+                        Cancelar
+                    </button>
+                </div>
+                </div>
+            </div>
+            }
             {IsLoading && <LoadingSpin />}
         </div>
     )

@@ -32,6 +32,8 @@ import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
+
+// separar api de add cliente
 @Validated
 @RestController
 @RequestMapping("api/consultorio")

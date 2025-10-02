@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import ShowCliente from "../ShowCliente/ShowCliente.jsx";
+import ShowCliente from "../../ShowCliente/ShowCliente.jsx";
 import axios from "axios";
-import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
+import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import { useNavigate } from "react-router-dom";
-import InputField from "../../../Extras/InputField/InputField";
+import InputField from "../../../../Extras/InputField/InputField.jsx";
 import "./MainCliente.css"; 
 
 const MainCliente = () => {
@@ -33,13 +33,13 @@ const MainCliente = () => {
         }
     };
 
-    const fetchClientes = async () => {
+    const fetchClientes = async (cpf) => {
         setIsLoading(true);
         setError(null);
         
         let url = `${apiUrl}/api/cliente`;
-        if (searchCpf !== "") {
-            url += `?cpf=${searchCpf}`;
+        if (cpf !== "") {
+            url += `?cpf=${cpf}`;
         }
         
         try {
@@ -49,6 +49,7 @@ const MainCliente = () => {
                 setClientes([]);
             } else {
                 setClientes(response.data.content);
+                console.log(response.data.content)
             }
         } catch (err) {
             console.error("Erro ao carregar os clientes:", err);
@@ -58,33 +59,48 @@ const MainCliente = () => {
     };
 
     useEffect(() => {
-        fetchClientes();
+        fetchClientes(searchCpf);
     }, []); 
 
     const navigate = useNavigate();
 
-    return(
-        <div>
-            <button className="botaoCadastrar" onClick={() => navigate("/registerCliente")}>
-                Cadastrar Cliente
-            </button>
+    return (
+        <div className= "clienteContainer">
+            
+            <h1>Clientes</h1>
             <div className="searchContainer">
+                <form onSubmit={(e) => {
+                    e.preventDefault()
+                    fetchClientes(searchCpf)
+                }}>
                 <InputField
                     placeholder="Pesquisar por CPF"
                     value={maskCpf(searchCpf)}
                     onChange={(e) => setSearchCpf(e.target.value)}
-                />
-                <button onClick={fetchClientes}>Pesquisar</button>
+                    />
+                </form>
+                <button 
+                onClick={fetchClientes}
+                className="botaoPesquisar"
+                >Pesquisar</button>
+                <button className= "botaoLimpar" onClick={() => {  
+                    fetchClientes("")
+                    setSearchCpf("")
+                    } } >
+                        LimparFiltro
+                    </button>
             </div>
-            <h1>Clientes</h1>
             <div className="displayDeClientes">
                 {clientes.map((cliente) => (
                     <div key={cliente.id} className="ClienteCard">
-                        <p>
+                        <p className="clienteNome">
                             <strong>Nome:</strong> {cliente.nome || "Nome não encontrado"}
                         </p>
-                        <p>
+                        <p className="cpfNome">
                             <strong>CPF:</strong> {maskCpf(cliente.cpf) || "CPF não encontrado"} 
+                        </p> 
+                        <p className="dataDeCadastro">
+                            <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
                         </p> 
                         <button 
                             className="showMoreButton"
@@ -92,15 +108,22 @@ const MainCliente = () => {
                         > 
                             Ver Mais
                         </button>
-                        {showMoreCliente === cliente.id && 
-                            <ShowCliente
-                                onClose={() => setShowMoreCliente(null)}
-                                clienteId={cliente.id}
-                            />
-                        }
+                            {showMoreCliente === cliente.id && 
+                                <div className="overlay">
+                                    <ShowCliente
+                                        onClose={() => setShowMoreCliente(null)}
+                                        clienteId={cliente.id}
+                                    />
+                                </div>
+                            }
                     </div> 
                 ))}
             </div>
+            <button className="botaoCadastrar" 
+            onClick={() => navigate("/registerCliente")}
+            >
+                Cadastrar Cliente
+            </button>
             {isLoading && <LoadingSpin />}
             {error && <div className="error">{error}</div>}
         </div>

@@ -16,7 +16,7 @@ import Navbar from './components/Extras/navbar/Navbar.jsx'
 import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
 import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import UserProfile from './pages/UserProfile/UserProfile.jsx'
 import MainAnimal from './components/Cadastros/Animal/MainAnimal/MainAnimal.jsx'
 import MainConsultorio from './components/Cadastros/Consultorio/MainConsultorio/MainConsultorio.jsx' 
@@ -25,7 +25,7 @@ import RegisterVeterinario from './components/Cadastros/Veterinario/RegisterVete
 import MainVeterinario from './components/Cadastros/Veterinario/MainVeterinario/MainVeterinario.jsx'
 import { useAuth } from './components/Security/Context/AuthContext.jsx'
 import SendEmailVeterinario from './components/Cadastros/Veterinario/RegisterVeterinario/SendEmailVeterinario.jsx'
-import MainCliente from './components/Cadastros/Cliente/MainCliente/MainCliente.jsx'
+import MainCliente from './components/Cadastros/Cliente/MainCliente/MainClienteSee/MainCliente.jsx'
   
 function App() {
 

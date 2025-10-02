@@ -1,0 +1,114 @@
+
+.consultorio-container form {
+    background-color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 0.75rem;     
+
+    max-width: 40rem; 
+    width: 95%;
+    max-height: 90vh; 
+    overflow-y: auto; 
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+    margin-bottom: 0.5rem; 
+}
+
+.consultorio-container .line1,
+.consultorio-container .line2 {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.consultorio-container .line2 > div {
+    flex: 1;
+}
+
+.consultorio-container .inputImagem {
+    align-self: flex-start;
+}
+
+.consultorio-container .consultorio-image {
+    width: 8rem; 
+    height: 8rem;
+    object-fit: cover;
+    border-radius: 50%; 
+    align-self: center; 
+    margin-bottom: 0.5rem;
+    border: 3px solid #3498db;
+}
+
+.consultorio-container .removeImagem {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    align-self: center;
+    max-width: 15rem;
+    margin-bottom: 1rem;
+}
+.consultorio-container .removeImagem:hover {
+    background-color: #e67e22;
+}
+
+.consultorio-container .inputEstado {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.consultorio-container .inputEstado label {
+    font-weight: 600;
+    color: #333;
+}
+.consultorio-container .inputEstado select {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #c7d0d9;
+    border-radius: 0.35rem;
+    background-color: white;
+    cursor: pointer;
+}
+
+
+.consultorio-container .errorsOrSuccess {
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+.consultorio-container .submit {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    background-color: #2ecc71; 
+    color: white;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+.consultorio-container .submit:hover {
+    background-color: #27ae60;
+}
+
+.consultorio-container .fechar {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    background-color: #e74c3c; 
+    color: white;
+    font-weight: 500;
+    width: 100%;
+    max-width: 10rem; 
+}
+.consultorio-container .fechar:hover {
+    background-color: #c0392b;
+}
+
+

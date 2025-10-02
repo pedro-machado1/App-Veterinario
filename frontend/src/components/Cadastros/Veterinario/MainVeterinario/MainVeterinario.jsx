@@ -27,7 +27,7 @@
       }
     };
 
-    const fetchVeterinarios = async () => {
+    const fetchVeterinarios = async (crvm) => {
       let response; 
       setIsLoading(true)
       var consultorioId = params.get("consultorioId")
@@ -35,8 +35,8 @@
       try {
         
         if (!consultorioId) { 
-          if (searchCrvm !== "") {
-            response = await axios.get(`${apiUrl}/api/veterinario?crvm=${searchCrvm}`)
+          if (crvm !== "") {
+            response = await axios.get(`${apiUrl}/api/veterinario?crvm=${crvm}`)
           }
           else { 
             response= await axios.get(`${apiUrl}/api/veterinario`);
@@ -78,7 +78,7 @@
     };
 
     useEffect(() => {
-      fetchVeterinarios();
+      fetchVeterinarios(searchCrvm);
     }, [showMore]);
 
     return (
@@ -91,7 +91,13 @@
               value={searchCrvm}
               onChange={(e) => setSearchCrvm(e.target.value)}
           />
-          <button onClick={() => fetchVeterinarios()}>Pesquisar</button>
+          <button onClick={() => fetchVeterinarios(searchCrvm)}>Pesquisar</button>
+          <button className= "botaoLimpar" onClick={() => {  
+                    fetchVeterinarios("")
+                    setSearchCrvm("")
+                    } } >
+                        LimparFiltro
+                    </button>
           </div>
 
         <div className="displayDeVeterinarios">
@@ -123,7 +129,7 @@
             </div>
           ))}
         </div>
-
+          
         {isLoading && <LoadingSpin />}
         {error && <div style={{ color: "red" }}>{error}</div>}
       </div>

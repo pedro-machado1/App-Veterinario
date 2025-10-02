@@ -1,6 +1,6 @@
 .containerVeterinario {
     padding: 6rem 0rem; 
-    min-width:  100vw;
+    min-width:  98vw;
     margin: 0 auto;
 }
 
@@ -36,6 +36,7 @@
 .displayDeVeterinarios {
     display: flex;
     flex-wrap: wrap;
+    padding-left: 1vw;
     gap: 3vw; 
     justify-content: left; 
 }
