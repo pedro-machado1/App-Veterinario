@@ -7,9 +7,11 @@ import axios from "axios";
 import ConsultorioUpdate from "../../components/Cadastros/Consultorio/ConsultorioUpdate/ConsultorioUpdate";
 import VeterinarioUpdate from "../../components/Cadastros/Veterinario/VeterinarioUpdate/VeterinarioUpdate";
 import ConsultorioEditVeterinario from "../../components/Cadastros/Consultorio/ConsultorioEditVeterinarios/ConsultorioEditVeterinarios";
+import ConsultorioEditClientes from "../../components/Cadastros/Consultorio/ConsultorioEditClientes/ConsultorioEditClientes";
 import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaCliente/MainConsultaCliente";
 import notLogin from "../../assets/images/notLogin.png"
 import MainConsultaVeterinario from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaVeterinario/MainConsultaVeterinario";
+import MainClienteAdmin from "../../components/Cadastros/Cliente/MainCliente/MainClienteAdmin/MainClienteAdmin";
 
 
 const UserProfile = () => {
@@ -26,6 +28,7 @@ const UserProfile = () => {
   const [showNovoConsultorio, setshowNovoConsultorio] = useState(false)
   const [showConsultasCliente, setShowConsultasCliente] = useState(false)
   const [showEditVeterinario, setShowEditVeterinario] = useState(false)
+  const [showEditCliente, setShowEditCliente] = useState(false)
   const [showVeterinario, setShowVeterinario] = useState(false)
 
   const [hasCliente, setHasClient] = useState(null)
@@ -36,6 +39,10 @@ const UserProfile = () => {
 
   const toggleEditVeterinario = () => {
     setShowEditVeterinario((prev) => !prev)
+  }
+  
+  const toggleEditCliente = () => {
+    setShowEditCliente((prev) => !prev)
   }
 
   const toggleConsultasVeterinario = () => {
@@ -175,12 +182,13 @@ const UserProfile = () => {
           </button>
           <button
             type="buttom"
+            className="editAnimal"
             onClick={() => navigate("/animal")}
             >
             Editar os animais
           </button>
           {showCliente &&
-            <div className="popUpCliente">
+            <div className="overlay">
               <ClienteUpdate
                 id={newUser.cliente.id}
                 name={newUser.cliente.nome}
@@ -237,10 +245,15 @@ const UserProfile = () => {
           <button
             onClick={toggleEditVeterinario}
           >
-            Editar os veterinarios do Consultorio
+            Gerencinar os veterinarios do Consultorio
+          </button>
+          <button
+            onClick={toggleEditCliente}
+          >
+            Gerenciar clientes
           </button>
           {showConsultorio &&
-            <div className="popUpConsultorio">
+            <div className="overlay">
               <ConsultorioUpdate
                 id={newUser.consultorio.id}
                 name={newUser.consultorio.nome}
@@ -254,12 +267,21 @@ const UserProfile = () => {
             </div>
           }
           {showEditVeterinario &&
-            <div className="displayShowEditVeterinario">
+            <div className="overlay">
               <ConsultorioEditVeterinario
                 consultorioId={newUser.consultorio.id}
-                onClose={() => { setShowEditVeterinario(false) }}
+                onClose={() => setShowEditVeterinario(false) }
               />
             </div>
+          }
+          { showEditCliente && 
+            <div className="overlay">
+              <MainClienteAdmin
+                consultorioId={newUser.consultorio.id}
+                onClose={() => setShowEditCliente(false)}              
+              />
+            </div>
+
           }
         </div>
       )}
@@ -298,6 +320,7 @@ const UserProfile = () => {
             Editar Informações
           </button>
 
+          {/* nao feito */}
           <button
             className="novoConsultorio"
             onClick={toggleNovoConsultorio}
@@ -312,7 +335,7 @@ const UserProfile = () => {
             Mostrar consultas
           </button>
           {showVeterinario &&
-            <div className="popUpConsultorio">
+            <div className="overlay">
               <VeterinarioUpdate
                 id={newUser.veterinario.id}
                 name={newUser.veterinario.nome}

@@ -225,8 +225,12 @@ public class ConsultorioService {
 
         return convertToDto(consultorio, ConsultorioDto.class);
     }
+
     @Transactional
-    public void removeCliente(Long idConsultorio, Long idCliente) {
+    public void removeCliente(Long idCliente) {
+        Users users  =usersService.findUsers();
+        long idConsultorio = users.getConsultorio().getId();
+
         existsById(idConsultorio);
         Cliente cliente =
                 clienteService.findById(idCliente)
@@ -245,7 +249,7 @@ public class ConsultorioService {
     }
     @Transactional
     public Page<ClienteSimpleDto> findAllCliente(long idConsultorio, Pageable pages){
-        existsById(idConsultorio);
+        existsById(idConsultorio);  
 
         Page<Cliente> clientes = consultorioRepository.findAllClienteByConsultorioId(idConsultorio, pages);
 

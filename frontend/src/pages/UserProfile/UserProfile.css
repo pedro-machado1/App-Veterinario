@@ -1,0 +1,116 @@
+.userContainer {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    min-height: 100vh; 
+    min-width: 100vw;
+    background-color: #f8f9fa;
+}
+
+.ClienteContainer,
+.ConsultorioContainer,
+.VeterinarioContainer {
+    width: 100%;
+    max-width: 700px; 
+    
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.cliente-image,
+.veterinario-image {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%; 
+    object-fit: cover;
+    margin-bottom: 1.5rem; 
+    border: 5px solid #4a90e2; 
+}
+
+.consultorio-image {
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
+    margin-bottom: 1.5rem; 
+    margin-top: 2rem;
+    border: 5px solid #4a90e2; 
+
+}
+
+.ClienteContainer p,
+.ConsultorioContainer p,
+.VeterinarioContainer p {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0;
+    margin: 0;
+    border-bottom: 1px solid #eeeeee; 
+    color: #495057; 
+    font-size: 1rem;
+}
+
+.ClienteContainer strong,
+.ConsultorioContainer strong,
+.VeterinarioContainer strong {
+    display: inline-block;
+    min-width: 8rem; 
+}
+
+
+.ClienteContainer button,
+.ConsultorioContainer button,
+.VeterinarioContainer button {
+    width: 100%;
+    padding: 0.8rem 1.8rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.ClienteContainer button,
+.ConsultorioContainer button,
+.VeterinarioContainer button {
+    background-color: #4a90e2; 
+    color: white;
+    font-weight: 600;
+}
+
+.ClienteContainer .editAnimal, 
+.VeterinarioContainer .novoConsultorio,
+.VeterinarioContainer .consulta {
+    background-color: #e9ecef; 
+    color: #495057;
+}
+
+.ClienteContainer button:hover,
+.ConsultorioContainer button:hover,
+.VeterinarioContainer button:hover {
+    background-color: #3b7ad1;
+    transform: translateY(-1px);
+}
+
+.ClienteContainer .editAnimal:hover,
+.VeterinarioContainer .novoConsultorio:hover,
+.VeterinarioContainer .consulta:hover {
+    background-color: #dee2e6;
+    color: #212529;
+}
+
+.userContainer > div:last-child h1 {
+    text-align: center;
+    color: #495057;
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 1.5rem;
+    border: 1px dashed #ced4da;
+    border-radius: 0.5rem;
+    background-color: #fff;
+}

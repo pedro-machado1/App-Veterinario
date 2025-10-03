@@ -1,7 +1,8 @@
+
 import "./ConsultorioEditClientes.css"
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import AddCliente from "../addCliente/addCliente";
 import ShowCliente from "../../Cliente/ShowCliente/ShowCliente";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 
@@ -11,20 +12,24 @@ const ConsultorioEditClientes = ({
 }) => {
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const navigate = useNavigate();
 
   const [clientes, setClientes] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
   const [showMore, setShowMore] = useState(null);
+  const [showAddAnimal, setShowAddAnimal] = useState(null);
   const [error, setError] = useState(null);
 
-   const showConfirmationToggle = (animalId) => {
-        if (showMore == animalId) {
+
+  const toggleShowAddAnimal = () => {
+    setShowAddAnimal((prev) => !prev)
+  }
+   const showConfirmationToggle = (clienteId) => {
+        if (showMore == clienteId) {
             setShowConfirmation(null)
         }
         else {
-            setShowConfirmation(animalId)
+            setShowConfirmation(clienteId)
         }
     }
 
@@ -55,19 +60,8 @@ const ConsultorioEditClientes = ({
     };
 
     fetchClientes();
-  }, [showMore, consultorioId]);
+  }, [showMore, consultorioId, showAddAnimal]);
 
-  const handleDelete = async (clienteId) => {
-    setIsLoading(true)
-    try{
-      const response = await axios.delete(`${apiUrl}/api/consultorio/${consultorioId}/removecliente/${clienteId}`)
-      setClientes((prev) => prev.filter((cliente) => cliente.id !== clienteId));
-      console.log(response.data)
-    }catch(err){
-      setError("Erro ao Deletar esse Cliente do seu Consultorio")
-    }
-    setIsLoading(false)
-  }
   
   return (
     <div className="main-cliente-container">
@@ -106,6 +100,7 @@ const ConsultorioEditClientes = ({
       </div>
       <button 
         className="AddCliente"
+        onClick={toggleShowAddAnimal}
       >
         Adicionar Veterinário
       </button>
@@ -115,27 +110,38 @@ const ConsultorioEditClientes = ({
       >
         Fechar Essa Janela
       </button>
-            { showConfirmation &&  
-            <div className="overlay">
-                <div className="confirmationContainer">
-                <h2>
-                    Você quer deletar esse animal? 
-                </h2>
-                <div className="botoesConfirmation">
-                    <button className = "confirmation" onClick={() => 
-                        {
-                            handleDelete(showConfirmation)
-                            setShowConfirmation(null)
-                        }}>
-                        Confirmar
-                    </button>
-                    <button className= "cancelar" onClick={() => setShowConfirmation(null)}>
-                        Cancelar
-                    </button>
-                </div>
-                </div>
+      { showAddAnimal && (
+        <div className="overlay">
+          <AddCliente
+            onClose = {() => setShowAddAnimal(false)}
+            consultorioId = {consultorioId}
+          />
+        </div>
+      )
+
+      }
+
+        { showConfirmation &&  
+        <div className="overlay">
+            <div className="confirmationContainer">
+            <h2>
+                Você quer deletar esse cliente? 
+            </h2>
+            <div className="botoesConfirmation">
+                <button className = "confirmation" onClick={() => 
+                    {
+                        handleDelete(showConfirmation)
+                        setShowConfirmation(null)
+                    }}>
+                    Confirmar
+                </button>
+                <button className= "cancelar" onClick={() => setShowConfirmation(null)}>
+                    Cancelar
+                </button>
             </div>
-            }
+            </div>
+        </div>
+        }
       {isLoading && <LoadingSpin />}
       {error && <div style={{ color: "red" }}>{error}</div>}
     </div>

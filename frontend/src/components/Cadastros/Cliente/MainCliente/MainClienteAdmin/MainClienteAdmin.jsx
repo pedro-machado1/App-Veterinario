@@ -4,14 +4,20 @@ import axios from "axios";
 import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../../../Extras/InputField/InputField.jsx";
-import "./MainCliente.css"; 
+import "./MainClienteAdmin.css"; 
+import AddCliente from "../../../Consultorio/addCliente/addCliente.jsx";
 
-const MainCliente = () => {
+const MainClienteAdmin = ( { 
+    onClose,
+    consultorioId
+}) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     
     const [clientes, setClientes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showAddCliente, setShowAddCliente] = useState(false);
     const [showMoreCliente, setShowMoreCliente] = useState(null);
+
     const [searchCpf, setSearchCpf] = useState("");
     const [error, setError] = useState(null);
 
@@ -25,6 +31,10 @@ const MainCliente = () => {
       }
 
 
+    const ToggleshowAdd = () => {
+        setShowAddCliente((prev) => !prev)
+    };
+
     const showMoreToggle = (clienteId) => {
         if (showMoreCliente === clienteId) {
             setShowMoreCliente(null);
@@ -32,12 +42,11 @@ const MainCliente = () => {
             setShowMoreCliente(clienteId);
         }
     };
-
     const fetchClientes = async (cpf) => {
         setIsLoading(true);
         setError(null);
         
-        let url = `${apiUrl}/api/cliente`;
+        let url = `${apiUrl}/api/${consultorioId}/cliente`;
         if (cpf !== "") {
             url += `?cpf=${cpf}`;
         }
@@ -62,6 +71,18 @@ const MainCliente = () => {
         fetchClientes(searchCpf);
     }, []); 
 
+    const handleDelete = async (clienteId) => {
+        setIsLoading(true)
+        try{
+        const response = await axios.delete(`${apiUrl}/api/consultorio/removecliente/${clienteId}`)
+        setClientes((prev) => prev.filter((cliente) => cliente.id !== clienteId));
+        console.log(response.data)
+        }catch(err){
+        setError("Erro ao Deletar esse Cliente do seu Consultorio")
+        }
+        setIsLoading(false)
+    }
+  
     const navigate = useNavigate();
 
     return (
@@ -102,6 +123,13 @@ const MainCliente = () => {
                         <p className="dataDeCadastro">
                             <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
                         </p> 
+                        {/* fzr double confimation */}
+                        <button
+                            type="button"
+                            onClick={() => handleDelete(cliente.id)}
+                        >
+                            Remover
+                        </button>
                         <button 
                             className="showMoreButton"
                             onClick={() => showMoreToggle(cliente.id)}
@@ -118,6 +146,27 @@ const MainCliente = () => {
                             }
                     </div> 
                 ))}
+                <button
+                    onClick={ToggleshowAdd}
+                    type="button"
+                >
+                    Adicionar Cliente
+                </button>
+                <button
+                    onClick={onClose}
+                >
+                    Fechar  
+                </button>
+                { showAddCliente && (
+                    <div className="overlay">
+                        <AddCliente 
+                            onClose = {() => setShowAddCliente(false)}
+                            consultorioId = {consultorioId}
+                        /> 
+                    </div>
+                )
+                }
+
             </div>
             {isLoading && <LoadingSpin />}
             {error && <div className="error">{error}</div>}
@@ -125,4 +174,4 @@ const MainCliente = () => {
     );
 };
 
-export default MainCliente;
+export default MainClienteAdmin;

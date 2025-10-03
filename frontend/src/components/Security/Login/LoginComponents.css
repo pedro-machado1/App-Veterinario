@@ -1,8 +1,113 @@
-
-.h1 {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid var(--primary-dark);
-  font-size: 16px;
+.loginContainer {
+    width: 100%;
+    height: calc(100vh - 60px); 
+    display: flex;
+    justify-content: center;   
+    align-items: center;      
+    background-color: #f5f7fa;
+    position: relative;
+    padding-top: 30rem;
+    padding: 20px;
+    box-sizing: border-box;
 }
+
+.loginForms {
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
+
+    width: 100%;
+    max-width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.loginForms h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #34495e;
+}
+
+#formsLogin {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+
+    background-color: #fff;
+    color:  #000;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+input.isInvalid {
+    border-color: #e74c3c !important;
+}
+
+#formsLogin button[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#formsLogin button[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+.errorsOrSuccess {
+    text-align: center;
+    font-size: 0.95rem;
+    margin-top: -0.5rem;
+}
+
+.login-form-container p {
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0;
+    color: #7f8c8d;
+}
+
+.login-form-container a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-form-container a:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+.login-page-container > .LoadingSpin {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+}
+

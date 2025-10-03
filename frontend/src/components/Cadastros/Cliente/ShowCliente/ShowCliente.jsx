@@ -14,7 +14,6 @@ const ShowCliente = ({
     const [newCliente, setNewCliente] = useState(null)
     const [newImagem, setImagem] = useState(null)
     const [Error, setError] = useState(null);
-    const [Success, setSuccess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const apiUrl = import.meta.env.VITE_API_URL;

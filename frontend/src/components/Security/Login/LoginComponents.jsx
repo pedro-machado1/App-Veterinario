@@ -1,5 +1,4 @@
-import React from 'react';
-import axios from "axios";
+import "./LoginComponents.css"
 import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';
 import { Link, useNavigate } from 'react-router-dom';
@@ -101,49 +100,52 @@ const LoginComponents = () => {
     }
     
     return (
-        <div>
-            <h1>Login</h1>
-            <form
-            id='formsLogin' 
-            onSubmit={HandleSubmit} 
-            >
+        <div className='loginContainer'>
+            <div className='loginForms'>
+                <h1>Login</h1>
+                <form
+                id='formsLogin' 
+                onSubmit={HandleSubmit} 
+                >
                 <InputField 
                 label="Email"
-                 type="email"
-                 value = {newemail}
-                 onChange={(e) => { 
+                type="email"
+                value = {newemail}
+                onChange={(e) => { 
                     setEmail(e.target.value);
                     isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required 
-                 />
-                <InputField 
-                 label="Senha"
-                 type="password"
-                 value={newpassword}
-                 onChange={(e) => { 
-                    setPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required />
-                <button 
-                type="submit"
-                >
-                    Entrar
-                </button>
-                <div className="errorsOrSuccess">
-                    <p style={{ color: "red" }}>{Error && Error}</p>
-                    <p style={{ color: "green" }}>{Sucess && Sucess}</p>
-                </div>
-                <p>
-                    Esqueceu a senha? <Link to="/reset-password">Clique aqui</Link>
-                </p>
-                <p>
-                    Não tem uma conta? <Link to="/register">Registre-se</Link>
-                </p>
-            </form>
+                }}
+                onInvalid={(e) => isInvalid(e)}
+                required 
+                />
+                    <InputField 
+                    label="Senha"
+                    type="password"
+                    value={newpassword}
+                    onChange={(e) => { 
+                        setPassword(e.target.value)
+                        isValid(e)
+                    }}
+                    onInvalid={(e) => isInvalid(e)}
+                    required />
+                    <button 
+                    id="submitbotao"
+                    type="submit"
+                    >
+                        Entrar
+                    </button>
+                    <div className="errorsOrSuccess">
+                        <p style={{ color: "red" }}>{Error && Error}</p>
+                        <p style={{ color: "green" }}>{Sucess && Sucess}</p>
+                    </div>
+                    <p>
+                        Esqueceu a senha? <Link to="/reset-password">Clique aqui</Link>
+                    </p>
+                    <p>
+                        Não tem uma conta? <Link to="/register">Registre-se</Link>
+                    </p>
+                </form>
+            </div>
             {isLoading && <LoadingSpin/>}
         </div>
     );
