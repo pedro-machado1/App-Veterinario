@@ -17,6 +17,7 @@ const MainAnimal = () => {
     const [newAnimal, setAnimal] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
     const [show, setShow] = useState(false)
+    const [newSwitch, setNewSwitch] = useState(false)
     const [showConfirmation, setShowConfirmation] = useState(null)
     const [showMore, setShowMore] = useState(null)
     const [showEdit, setShowEdit] = useState(false)
@@ -127,54 +128,109 @@ const MainAnimal = () => {
                         LimparFiltro
                 </button>
             </div>
-            <div className="displayDeAnimais">
-                {newAnimal.map((animal) => (
-                    <div key={animal.id} className="Animal">
-                        <div className="ImagemInformacoes">
-                            {animal.url ? (
-                                <img src={animal.url} alt={`Foto de ${animal.nome}`} className="animal-image" />
-                            ) : (
-                                <img src={notLogin} alt="Imagem não encontrada" className="animal-image" />
-                            )}
-                            <div className="informacoesAnimais">
-                                <p>
-                                    Nome: {animal.nome || "Erro nome não encontrado"}
-                                </p>
-                                <p>
-                                    Especie: {animal.especie || "Erro especie não encontrada"}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="botoesAnimais"> 
-                            
-                            <button
-                                className="Edit"
-                                onClick={() => showEditToggle(animal.id)}
-                            >
-                                Editar
-                            </button>
 
-                            <button
-                                className="deletar"
-                                onClick={() => { showConfirmationToggle(animal.id) }}
-                            >
-                                Deletar
-                            </button>
-                            <a
-                                href="#" 
-                                className="verMaisLink"
-                                onClick={(e) => {
-                                    e.preventDefault(); 
-                                    showMoreToggle(animal.id);
-                                }}
-                            >
-                                Ver Mais
-                            </a>
-                        </div>
-                        
-                    </div>
-                ))}
+            <div className="toggleContainer">
+                <span className="toggleLabel">Estilo:</span>
+                
+                <label className="switch">
+                    <input 
+                        type="checkbox" 
+                        checked={newSwitch} 
+                        onChange={() => setNewSwitch(!newSwitch)} 
+                    />
+                    <span className="slider round"></span>
+                </label>
             </div>
+
+
+            {!newSwitch && (
+                <div className="displayDeAnimais">
+                    {newAnimal.map((animal) => (
+                        <div key={animal.id} className="Animal">
+                            <div className="ImagemInformacoes">
+                                {animal.url ? (
+                                    <img src={animal.url} alt={`Foto de ${animal.nome}`} className="animal-image" />
+                                ) : (
+                                    <img src={notLogin} alt="Imagem não encontrada" className="animal-image" />
+                                )}
+                                <div className="informacoesAnimais">
+                                    <p>
+                                        Nome: {animal.nome || "Erro nome não encontrado"}
+                                    </p>
+                                    <p>
+                                        Especie: {animal.especie || "Erro especie não encontrada"}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="botoesAnimais"> 
+                                
+                                <button
+                                    className="Edit"
+                                    onClick={() => showEditToggle(animal.id)}
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    className="deletar"
+                                    onClick={() => { showConfirmationToggle(animal.id) }}
+                                >
+                                    Deletar
+                                </button>
+                                <a
+                                    href="#" 
+                                    className="verMaisLink"
+                                    onClick={(e) => {
+                                        e.preventDefault(); 
+                                        showMoreToggle(animal.id);
+                                    }}
+                                >
+                                    Ver Mais
+                                </a>
+                            </div>
+                            
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {newSwitch && (
+                <div className="displayDeAnimaisLista">
+                    {newAnimal.map((animal) => (
+                        <div key={animal.id} className="AnimalCard">
+                            <p className="animalNome">
+                                <strong>Nome:</strong> {animal.nome || "Nome não encontrado"}
+                            </p>
+                            <p className="especieLista">
+                                Espécie: {animal.especie || "Erro espécie não encontrada"}
+                            </p>
+                             <button
+                                    className="botaoEditLista"
+                                    onClick={() => showEditToggle(animal.id)}
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    className="botaoEditLista"
+                                    onClick={() => { showConfirmationToggle(animal.id) }}
+                                >
+                                    Deletar
+                                </button>
+                                <button
+                                    className="botaoEditLista"
+                                    onClick={(e) => {
+                                        e.preventDefault(); 
+                                        showMoreToggle(animal.id);
+                                    }}
+                                >
+                                    Ver Mais
+                                </button>
+                        </div> 
+                    ))}
+                </div>
+            )}
+
             <button
                 className="novoAnimalButtom"
                 type="buttom"

@@ -153,3 +153,47 @@ h1 {
     font-weight: 600;
     cursor: pointer;
 }
+
+.displayDeConsultoriosLista {
+    display: flex;
+    flex-direction: column; 
+    gap: 0;
+    border: 0.05rem solid #ddd; 
+    overflow: hidden;
+}
+
+.ConsultorioCard {
+    display: flex;
+    align-items: center;
+    padding: 0.1rem 1rem; 
+    border-bottom: 0.08rem solid #eee; 
+}
+
+.ConsultorioCard:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ConsultorioCard p {
+    margin: 0;
+    padding: 0 1rem;
+    color: #555;
+    font-size: 1.2rem; 
+}
+
+.ConsultorioCard .consultorioNome { 
+    flex-basis: 30%;
+    color: #333;
+    text-align: left; 
+}
+
+.ConsultorioCard .endereco { 
+    flex-basis: 30%;
+    font-family: monospace;
+    text-align: left; 
+}
+
+.ConsultorioCard .estado { 
+    flex-basis: 20%;
+    font-family: monospace;
+    text-align: left; 
+}

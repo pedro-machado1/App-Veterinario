@@ -4,7 +4,8 @@ import axios from "axios";
 import LoadingSpin from "../../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../../../Extras/InputField/InputField.jsx";
-import "./MainCliente.css"; 
+import notLogin from "../../../../../assets/images/notLogin.png"
+import "./MainCliente.css";
 
 const MainCliente = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -12,6 +13,7 @@ const MainCliente = () => {
     const [clientes, setClientes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showMoreCliente, setShowMoreCliente] = useState(null);
+    const [newSwitch, setNewSwitch] = useState(false)
     const [searchCpf, setSearchCpf] = useState("");
     const [error, setError] = useState(null);
 
@@ -25,7 +27,7 @@ const MainCliente = () => {
       }
 
 
-    const showMoreToggle = (clienteId) => {
+    const ToggleshowMore = (clienteId) => {
         if (showMoreCliente === clienteId) {
             setShowMoreCliente(null);
         } else {
@@ -33,7 +35,7 @@ const MainCliente = () => {
         }
     };
 
-    const fetchClientes = async (cpf) => {
+    const fetchClientes = async (cpf, switchValue) => {
         setIsLoading(true);
         setError(null);
         
@@ -47,10 +49,27 @@ const MainCliente = () => {
             if (response.data.content.length === 0) {
                 setError("Nenhum cliente encontrado.");
                 setClientes([]);
-            } else {
-                setClientes(response.data.content);
+            } 
+            else if (!switchValue) {
                 console.log(response.data.content)
-            }
+                const cliente = response.data.content
+                const clienteComImagens = await Promise.all(cliente.map(async (cliente) => {
+                    try {
+                    const imageResponse = await axios.get(`${apiUrl}/api/cliente/${cliente.id}/imagem`,
+                        { responseType: 'blob' }
+                    );
+                    const image = URL.createObjectURL(imageResponse.data)
+                    return { ...cliente, url: image };
+                    } catch (error) {
+                    return { ...cliente, url: null };
+                    }
+                }))
+                setClientes(clienteComImagens)
+                console.log(cliente)
+                }
+                else {
+                setClientes(response.data.content)
+                }
         } catch (err) {
             console.error("Erro ao carregar os clientes:", err);
             setError("Ocorreu um erro ao carregar os clientes.");
@@ -90,35 +109,94 @@ const MainCliente = () => {
                         LimparFiltro
                     </button>
             </div>
-            <div className="displayDeClientes">
-                {clientes.map((cliente) => (
-                    <div key={cliente.id} className="ClienteCard">
-                        <p className="clienteNome">
-                            <strong>Nome:</strong> {cliente.nome || "Nome não encontrado"}
-                        </p>
-                        <p className="cpfNome">
-                            <strong>CPF:</strong> {maskCpf(cliente.cpf) || "CPF não encontrado"} 
-                        </p> 
-                        <p className="dataDeCadastro">
-                            <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
-                        </p> 
-                        <button 
-                            className="showMoreButton"
-                            onClick={() => showMoreToggle(cliente.id)}
-                        > 
+            
+            <div className="toggleContainer">
+                <span className="toggleLabel">Estilo:</span>
+                
+                <label className="switch">
+                    <input 
+                        type="checkbox" 
+                        checked={newSwitch} 
+                        onChange={() => setNewSwitch(!newSwitch)} 
+                    />
+                    <span className="slider round"></span>
+                </label>
+            </div>
+
+
+            {newSwitch && (
+                <div id="displayDeClientes">
+                    {clientes.map((cliente) => (
+                        <div key={cliente.id} className="Cliente">
+                            <div className="clienteWrapper">
+
+                                {cliente.imagem ? (
+                                    <img src={cliente.url} alt={`Foto de ${cliente.nome}`} className="cliente-image" />
+                                ) : (
+                                    <img src={notLogin} className="cliente-image" />
+                                )}
+                                <div className="informacoesCliente">
+                                <p> 
+                                    <strong>Nome:</strong> {cliente.nome || "Erro: nome não encontrado"}
+                                </p>
+                                <p>
+                                    <strong>CPF:</strong> {maskCpf(cliente.cpf) || "Erro: CPF não encontrado"}
+                                </p>
+                                <p>
+                                    <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
+                                </p> 
+                            </div>
+                        </div>
+        
+                        <button id= "VerMais" onClick={() => ToggleshowMore(cliente.id)}>
                             Ver Mais
                         </button>
+                        {showMoreCliente === cliente.id && 
+                            <div className="overlay">
+                                <ShowCliente
+                                    onClose={() => setShowMoreCliente(false)}
+                                    clienteId={cliente.id}
+                                />
+                            </div>
+                        }
+                    </div>
+                    ))}
+                </div>
+            )}
+
+
+            {!newSwitch && ( 
+                <div className="displayDeClientes">
+                    {clientes.map((cliente) => (
+                        <div key={cliente.id} className="ClienteCard">
+                            <p className="clienteNome">
+                                <strong>Nome:</strong> {cliente.nome || "Nome não encontrado"}
+                            </p>
+                            <p className="cpfNome">
+                                <strong>CPF:</strong> {maskCpf(cliente.cpf) || "CPF não encontrado"} 
+                            </p> 
+                            <p className="dataDeCadastro">
+                                <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
+                            </p> 
+                            <button 
+                                className="showMoreButton"
+                                onClick={() => ToggleshowMore(cliente.id)}
+                            > 
+                                Ver Mais
+                            </button>
                             {showMoreCliente === cliente.id && 
                                 <div className="overlay">
                                     <ShowCliente
-                                        onClose={() => setShowMoreCliente(null)}
+                                        onClose={() => setShowMoreCliente(false)}
                                         clienteId={cliente.id}
                                     />
                                 </div>
                             }
-                    </div> 
-                ))}
-            </div>
+                        </div> 
+                    ))}
+                </div>
+            )}
+
             {isLoading && <LoadingSpin />}
             {error && <div className="error">{error}</div>}
         </div>

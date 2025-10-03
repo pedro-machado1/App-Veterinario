@@ -19,7 +19,6 @@ import { flushSync } from "react-dom";
     const [newSwitch, setNewSwitch] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
     const [showMore, setShowMore] = useState(null);
-    const [showMoreSecond, setShowMoreSecond] = useState(null);
 
     const [error, setError] = useState(null);
 
@@ -28,14 +27,6 @@ import { flushSync } from "react-dom";
         setShowMore(null);
       } else {
         setShowMore(veterinarioId);
-      }
-    };
-
-    const ToggleshowMoreSecond = (veterinarioId) => {
-      if (showMore === veterinarioId) {
-        setShowMoreSecond(null);
-      } else {
-        setShowMoreSecond(veterinarioId);
       }
     };
 
@@ -159,7 +150,7 @@ import { flushSync } from "react-dom";
                   </div>
                 </div>
   
-                <button className="Edit" onClick={() => showMoreToggle(vet.id)}>
+                <button id="VerMais" onClick={() => showMoreToggle(vet.id)}>
                   Ver Mais
                 </button>
                 {showMore === vet.id && <ShowVeterinario
@@ -187,14 +178,14 @@ import { flushSync } from "react-dom";
                     </p> 
                     <button 
                         className="showMoreButtonVeterinario"
-                        onClick={() => setShowMoreSecond(veterinario.id)}
+                        onClick={() => showMoreToggle(veterinario.id)}
                     > 
                         Ver Mais
                     </button>
-                        {showMoreSecond === veterinario.id && 
+                        {showMore === veterinario.id && 
                             <div className="overlay">
                                 <ShowVeterinario
-                                    onClose={() => setShowMoreSecond(null)}
+                                    onClose={() => setShowMore(null)}
                                     veterinarioId={veterinario.id}
                                 />
                             </div>

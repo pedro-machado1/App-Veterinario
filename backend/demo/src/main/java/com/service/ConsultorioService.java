@@ -249,7 +249,7 @@ public class ConsultorioService {
     }
     @Transactional
     public Page<ClienteSimpleDto> findAllCliente(long idConsultorio, Pageable pages){
-        existsById(idConsultorio);  
+        existsById(idConsultorio);
 
         Page<Cliente> clientes = consultorioRepository.findAllClienteByConsultorioId(idConsultorio, pages);
 
