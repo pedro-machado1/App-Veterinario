@@ -32,6 +32,8 @@ import java.util.Optional;
 
 import static com.extras.Converters.convertToDto;
 
+
+// separar api de add cliente
 @Validated
 @RestController
 @RequestMapping("api/consultorio")
@@ -152,9 +154,9 @@ public class ConsultorioController {
         ConsultorioDto veterinarioDto = consultorioService.addCliente(id, idCliente);
         return ResponseEntity.ok(veterinarioDto);
     }
-    @DeleteMapping("/{id}/removecliente/{idCliente}")
-    public ResponseEntity<String> removeCliente(@PathVariable Long id, @PathVariable Long idCliente) {
-        consultorioService.removeCliente(id, idCliente);
+    @DeleteMapping("/removecliente/{idCliente}")
+    public ResponseEntity<String> removeCliente(@PathVariable Long idCliente) {
+        consultorioService.removeCliente(idCliente);
         return ResponseEntity.ok().body("o cliente foi removido");
     }
 

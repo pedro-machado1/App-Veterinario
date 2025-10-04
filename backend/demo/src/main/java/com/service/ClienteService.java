@@ -87,7 +87,7 @@ public class ClienteService {
 
 
     @Transactional
-    public Page<ClienteDto> findAll(Pageable pages, String cpf){
+    public Page<ClienteSimpleDto> findAll(Pageable pages, String cpf){
         Page<Cliente> clientes;
         if (cpf != null){
             clientes = clienteRepository.findAllByCpf(cpf, pages);
@@ -95,7 +95,7 @@ public class ClienteService {
         else {
             clientes = clienteRepository.findAll(pages);
         }
-        return clientes.map(cliente -> convertToDto(cliente, ClienteDto.class));
+        return clientes.map(cliente -> convertToDto(cliente, ClienteSimpleDto.class));
     }
 
     @Transactional

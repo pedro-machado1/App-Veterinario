@@ -46,7 +46,7 @@
   grid-column: span 2;
 }
 
-.fechar {
+.fecharCerto {
   position: absolute;
   bottom: 3rem;
   right: 3rem;

@@ -14,7 +14,6 @@ const ShowCliente = ({
     const [newCliente, setNewCliente] = useState(null)
     const [newImagem, setImagem] = useState(null)
     const [Error, setError] = useState(null);
-    const [Success, setSuccess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -75,7 +74,7 @@ const ShowCliente = ({
     }, [clienteId])
 
     return (
-        <div className="animal-container">
+        <div className="animalContainer">
             <div className="presentAnimalContainer">
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newCliente?.nome}`} className="cliente-image" />

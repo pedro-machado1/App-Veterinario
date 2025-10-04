@@ -51,7 +51,7 @@ const ShowNewConsultorio = ({
 
     return (
         <div className="animal-container">
-            <div className="presentAnimalContainer">
+            <div className="consultorioCard">
                 {newImagem ? (
                     <img src={newImagem} alt={`Foto de ${newConsultorio?.nome}`} className="consultorio-image" />
                 ) : (
@@ -76,20 +76,22 @@ const ShowNewConsultorio = ({
                     Estado: {newConsultorio?.estado || "Estado não encontrado"}
                 </p>
 
+                <div className="botoesContainer">
+                    <button
+                        type="button"
+                        className="verMais"
+                        onClick={() => navigate(`/veterinario?consultorioId=${consultorioId}`,
+                        )}>
+                        Ver Veterinários
+                    </button>
+                    <button
+                        type="button"
+                        className="fechar"
+                        onClick={onClose}>
+                        Fechar
+                    </button>
+                </div>
             </div>
-            <button
-                type="buttom"
-                className="fechar"
-                onClick={onClose}>
-                Fechar
-            </button>
-            <button
-                type="buttom"
-                className=""
-                onClick={() => navigate(`/veterinario?consultorioId=${consultorioId}`,
-                )}>
-                Ver Veterinários
-            </button>
             {isLoading && <LoadingSpin />}
         </div>
     );

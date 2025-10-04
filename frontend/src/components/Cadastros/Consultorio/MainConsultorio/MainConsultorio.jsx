@@ -15,12 +15,13 @@ const MainConsultorio = () => {
     const [newConsultorio, setNewConsultorio] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
     const [newImage, setNewImage] = useState("")
+    const [newSwitch, setNewSwitch] = useState(false)
     const [show, setShow] = useState(false)
     const [showMore, setShowMore] = useState(null)
     const [searchEstado , setSearchEstado] = useState("")
     const [Error, setError] = useState(null)
 
-    const showMoreToggle = (consultorioid) => {
+    const ToggleshowMore = (consultorioid) => {
         if (showMore == consultorioid) {
             setShowMore(null)
         }
@@ -30,56 +31,60 @@ const MainConsultorio = () => {
     }
 
 
-    const asyncFunction = async () => {
+    const asyncFunction = async (estado, switchValue) => {
         let response
         setIsLoading(true)
         setError(null)
         let url = `${apiUrl}/api/consultorio`
-        if (searchEstado != "") {
-            url += `?estado=${searchEstado}`
-            response = await axios.get(url)
-        }
-        else {
-            response = await axios.get(url)
-        }
-        if (response.data.content.length == 0) {
-            setError("Nenhum Consultório cadastrado")
-            setNewConsultorio([]);
-            console.log("Nenhum Consultório cadastrado")
-        }
-        else {
-            console.log(response.data.content)
-            const consultorio = response.data.content
-            const consultorioComImagens = await Promise.all(consultorio.map(async (consultorio) => {
-                try {
-                    const imageResponse = await axios.get(`${apiUrl}/api/consultorio/${consultorio.id}/imagem`,
-                        {responseType: 'blob'}
-                    );  
-                    const image = URL.createObjectURL(imageResponse.data)
-                    console.log(consultorio + " " + imageResponse.data)
-                    return { ...consultorio, url: image};
-                } catch (error) {
-                    return { ...consultorio, url: null };
-                }
-            }))
-            setNewConsultorio(consultorioComImagens)
-            console.log(consultorioComImagens)
+        try { 
+            if (estado != "") {
+                url += `?estado=${estado}`
+                response = await axios.get(url)
+            }
+            else {
+                response = await axios.get(url)
+            }
+            if (response.data.content.length == 0) {
+                setError("Nenhum Consultório cadastrado")
+                setNewConsultorio([]);
+                console.log("Nenhum Consultório cadastrado")
+            }
+            else if (!switchValue){
+                console.log(response.data.content)
+                const consultorio = response.data.content
+                const consultorioComImagens = await Promise.all(consultorio.map(async (consultorio) => {
+                    try {
+                        const imageResponse = await axios.get(`${apiUrl}/api/consultorio/${consultorio.id}/imagem`,
+                            {responseType: 'blob'}
+                        );  
+                        const image = URL.createObjectURL(imageResponse.data)
+                        console.log(consultorio + " " + imageResponse.data)
+                        return { ...consultorio, url: image};
+                    } catch (error) {
+                        return { ...consultorio, url: null };
+                    }
+                }))
+                setNewConsultorio(consultorioComImagens)
+                console.log(consultorioComImagens)
+            }
+            else {
+                setNewConsultorio(response.data.content)
+            }
+        }catch(err) {
+            setError("Erro ao carregar os consultórios");
         }
         setIsLoading(false)
     }
 
 
         useEffect(() => {
-            asyncFunction()
-        }, [show, searchEstado])
+            asyncFunction(searchEstado)
+        }, [show])
 
         const navigate = useNavigate();
 
         return (
-            <div>
-                <button className="botaoCadastrarConsultorio" onClick={() => { navigate("/registerConsultorio") }}>
-                    Cadastrar Consultório
-                </button>
+            <div className="consultorioContainer">
                 <h1>
                     Consultórios
                 </h1>
@@ -121,40 +126,106 @@ const MainConsultorio = () => {
                         <option value="SE">Sergipe</option>
                         <option value="TO">Tocantins</option>
                     </select>
-                    <button onClick={() => asyncFunction()}>
+                    <button 
+                    onClick={() => asyncFunction(searchEstado)}
+                    className="botaoEstado"
+                    >
                          Pesquisar
+                    </button>
+                    <button className= "botaoLimpar" onClick={() => {  
+                    asyncFunction("")
+                    setSearchEstado("")
+                    } } >
+                        LimparFiltro
                     </button>
                 </div>
 
-                <div className="displayDeConsultorios">
-                    {newConsultorio.map((consultorio) => (
-                        <div key={consultorio.id} className="Consultorio">
-                            {consultorio.imagem ? (
-                                <img src={consultorio.url} alt={`Foto de ${consultorio.nome}`} className="consultorio-image" />
-                            ) : (
-                                <img src={notLogin} className="consultorio-image" />
-                            )}
-                            <p>
-                                Nome: {consultorio.nome || "Erro nome não encontrado"}
-                            </p>
-                            <p>
-                                Especie: {consultorio.endereco || "Erro endereço não encontrada"}
-                            </p>
-                            <button
-                                className="Edit"
-                                onClick={() => showMoreToggle(consultorio.id)}
-                            >
-                                Ver Mais
-                            </button>
-                            {showMore == consultorio.id &&
-                                <ShowConsultorio
-                                    onClose={() => setShowMore(null)}
-                                    consultorioId={consultorio.id}
-                                />
-                            }`
-                        </div>
-                    ))}
+                <div className="toggleContainer">
+                    <span className="toggleLabel">Estilo:</span>
+                    
+                    <label className="switch">
+                        <input 
+                            type="checkbox" 
+                            checked={newSwitch} 
+                            onChange={() => setNewSwitch(!newSwitch)} 
+                        />
+                        <span className="slider round"></span>
+                    </label>
                 </div>
+
+                {!newSwitch && ( 
+                    <div className="displayDeConsultorios">
+                        {newConsultorio.map((consultorio) => (
+                            <div key={consultorio.id} className="Consultorio">
+                                {consultorio.imagem ? (
+                                    <img src={consultorio.url} alt={`Foto de ${consultorio.nome}`} className="consultorio-image" />
+                                ) : (
+                                    <img src={notLogin} className="consultorio-image" />
+                                )}
+                                <p>
+                                    Nome: {consultorio.nome || "Erro nome não encontrado"}
+                                </p>
+                                <p>
+                                    Endereço: {consultorio.endereco || "Erro endereço não encontrada"}
+                                </p>
+                                <button
+                                    className="Edit"
+                                    onClick={() => ToggleshowMore(consultorio.id)}
+                                >
+                                    Ver Mais
+                                </button>
+                                    {showMore == consultorio.id &&
+                                    <div className="overlay">
+                                        <ShowConsultorio
+                                            onClose={() => setShowMore(null)}
+                                            consultorioId={consultorio.id}
+                                        />
+                                    </div>
+                                    }`
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                { newSwitch && (
+                    <div className="displayDeConsultoriosLista">
+                        {newConsultorio.map((consultorio) => (
+                            <div key={consultorio.id} className="ConsultorioCard">
+                                <p className="consultorioNome">
+                                    <strong>Nome:</strong> {consultorio.nome || "Nome não encontrado"}
+                                </p>
+                                <p className="endereco">
+                                    Endereço: {consultorio.endereco || "Erro endereço não encontrada"}
+                                </p>
+                                <p className="estado">
+                                    Estado: {consultorio.estado || "Erro endereço não encontrada"}
+                                </p>
+                                <button 
+                                    className="showMoreButton"
+                                    onClick={() => ToggleshowMore(consultorio.id)}
+                                > 
+                                    Ver Mais
+                                </button>
+                                {showMore === consultorio.id && 
+                                    <div className="overlay">
+                                        <ShowConsultorio
+                                            onClose={() => setShowMore(false)}
+                                            consultorioId={consultorio.id}
+                                        />
+                                    </div>
+                                }
+                            </div> 
+                        ))}
+                    </div>
+                )}
+
+
+                <button 
+                className="botaoCadastrarConsultorio"
+                onClick={() => { navigate("/registerConsultorio") }}
+                 >
+                    Cadastrar Consultório
+                </button>
                 {IsLoading && <LoadingSpin />}
                 {Error && <div style={{ color: "red" }}>{Error}</div>}
 

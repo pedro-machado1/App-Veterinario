@@ -114,7 +114,7 @@ const ShowVeterinario = ({
       </div>
       <button
         type="button"
-        className="fechar"
+        className="fecharCerto"
         onClick={onClose}>
         Fechar
       </button>

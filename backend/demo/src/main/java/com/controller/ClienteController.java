@@ -90,8 +90,8 @@ public class ClienteController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<ClienteDto>> findAll(Pageable pages, @RequestParam(required = false) String cpf){
-         Page<ClienteDto> responsePages =clientService.findAll(pages, cpf);
+    public ResponseEntity<Page<ClienteSimpleDto>> findAll(Pageable pages, @RequestParam(required = false) String cpf){
+         Page<ClienteSimpleDto> responsePages =clientService.findAll(pages, cpf);
         return ResponseEntity.ok().body(responsePages);
     }
     @PutMapping()

@@ -2,7 +2,7 @@ import "./ConsultorioEditVeterinarios.css"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ShowVeterinario from "../../Veterinario/ShowVeterinario/ShowVeterinario/ShowVeterinario";
+import ShowVeterinario from "../../Veterinario/ShowVeterinario/ShowVeterinario";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 
 const ConsultorioEditVeterinario = ({ 
@@ -14,9 +14,19 @@ const ConsultorioEditVeterinario = ({
     const navigate = useNavigate();
 
   const [veterinarios, setVeterinarios] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(null)
+  const [isLoading, setIsLoading] = useState(true);
   const [showMore, setShowMore] = useState(null);
   const [error, setError] = useState(null);
+
+   const showConfirmationToggle = (animalId) => {
+        if (showMore == animalId) {
+            setShowConfirmation(null)
+        }
+        else {
+            setShowConfirmation(animalId)
+        }
+    }
 
   const showMoreToggle = (veterinarioId) => {
     if (showMore === veterinarioId) {
@@ -82,7 +92,7 @@ const ConsultorioEditVeterinario = ({
               Ver Mais
             </button>
             <button className="deletar" 
-            onClick={() => handleDelete(vet.id)}
+            onClick={() => showConfirmationToggle(vet.id)}
             >
                 Deletar
             </button>
@@ -106,6 +116,27 @@ const ConsultorioEditVeterinario = ({
       >
         Fechar Essa Janela
       </button>
+            { showConfirmation &&  
+            <div className="overlay">
+                <div className="confirmationContainer">
+                <h2>
+                    Você quer deletar esse animal? 
+                </h2>
+                <div className="botoesConfirmation">
+                    <button className = "confirmation" onClick={() => 
+                        {
+                            handleDelete(showConfirmation)
+                            setShowConfirmation(null)
+                        }}>
+                        Confirmar
+                    </button>
+                    <button className= "cancelar" onClick={() => setShowConfirmation(null)}>
+                        Cancelar
+                    </button>
+                </div>
+                </div>
+            </div>
+            }
       {isLoading && <LoadingSpin />}
       {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
