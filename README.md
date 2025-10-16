@@ -159,10 +159,9 @@ Adjust CORS and credentials if using different domains or ports
 
 ### Backend
 - Tests
-- Security Configuration
+- Security Configuration 
 
 ### Frontend
-- Interceptor for tokens
 - Mobile design
 - Improved UI and Css 
 - Adaptation of the UI for certain users
