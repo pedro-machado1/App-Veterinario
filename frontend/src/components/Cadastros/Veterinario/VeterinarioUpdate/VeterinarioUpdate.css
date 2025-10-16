@@ -1,0 +1,134 @@
+/* melhorar  */
+
+.veterinario-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+    background-color: rgba(0, 0, 0, 0.7);
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    z-index: 10000;
+    
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.veterinario-container form {
+    background-color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 0.75rem;
+    
+    max-width: 45rem;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.veterinario-container .line1,
+.veterinario-container .line2 {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.veterinario-container .line1 > div,
+.veterinario-container .line2 > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.veterinario-container .inputImagem {
+    align-self: flex-start;
+}
+
+.veterinario-container .veterinario-image {
+    width: 8rem;
+    height: 8rem;
+    object-fit: cover;
+    border-radius: 50%;
+    align-self: center;
+    margin-bottom: 0.5rem;
+    border: 3px solid #3498db;
+}
+
+.veterinario-container .removeImagem {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    align-self: center;
+    max-width: 15rem;
+    margin-bottom: 1rem;
+}
+.veterinario-container .removeImagem:hover {
+    background-color: #e67e22;
+}
+
+.veterinario-container .inputEstado {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.veterinario-container .inputEstado label {
+    font-weight: 600;
+    color: #333;
+}
+.veterinario-container .inputEstado select {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #c7d0d9;
+    border-radius: 0.5rem;
+    background-color: white;
+    cursor: pointer;
+}
+
+.veterinario-container .errorsOrSuccess {
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+.veterinario-container .submit {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    background-color: #2ecc71;
+    color: white;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+.veterinario-container .submit:hover {
+    background-color: #27ae60;
+}
+
+.veterinario-container .fechar {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    background-color: #e74c3c;
+    color: white;
+    font-weight: 500;
+    width: 100%;
+    max-width: 10rem;
+}
+.veterinario-container .fechar:hover {
+    background-color: #c0392b;
+}
+

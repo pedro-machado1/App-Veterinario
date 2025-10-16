@@ -258,7 +258,7 @@ const MainAnimal = () => {
                 </div>
             )}
             {showEdit && ( 
-                <div>
+                <div className="overlay">
                     <EditAnimal
                         onClose={() => setShowEdit(null)}
                         animalId={showEdit}

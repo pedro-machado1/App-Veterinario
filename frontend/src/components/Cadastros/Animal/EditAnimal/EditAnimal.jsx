@@ -179,13 +179,13 @@ const EditAnimal = ({
   }
 
   return (
-    <div className="animal-container">
+    <div className="animalContainer">
       <h1 className="title">Edite este animal</h1>
       <form
         id="formseditAnimal"
         onSubmit={handleSubmit}>
 
-        <div className="image-preview-section">
+        <div className="imagePreview">
           {previewImg ? (
             <img
               src={previewImg}

@@ -10,18 +10,21 @@ const Navbar = () => {
 
     return ( 
         <div className='navbar'>
-            {
-                ArrayOptions().map((option) => (
-                    <div key={option.nome}
-                    className= "navbar-link"
-                    onClick={() => navigate(option.url)}
-                    >
-                        <label className='link-label' htmlFor="DescriptionLabel">{option.nome || "nome não encontrado"}</label>
-                    </div>
-                )
-            )}
-            <Header/>
-
+            <div className='navbarOptions'>
+                {
+                    ArrayOptions().map((option) => (
+                        <div key={option.nome}
+                        className= "navbar-link"
+                        onClick={() => navigate(option.url)}
+                        >
+                            <label className='link-label' htmlFor="DescriptionLabel">{option.nome || "nome não encontrado"}</label>
+                        </div>
+                    )
+                )}
+            </div>
+            <div id = "header">
+                <Header/>
+            </div>
         </div>
     )
 }
