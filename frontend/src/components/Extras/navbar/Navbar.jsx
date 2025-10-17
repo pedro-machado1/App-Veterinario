@@ -3,21 +3,20 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import ArrayOptions from "./arrayOptions/arrayOptions"; 
 import Header from "../Header/header";
 
-const Navbar = () => {
+const Navbar = (User) => {
 
     const navigate = useNavigate()
-    const location = useLocation()
-
+    
     return ( 
         <div className='navbar'>
             <div className='navbarOptions'>
-                {
-                    ArrayOptions().map((option) => (
+                { 
+                    ArrayOptions(User).map((option) => (
                         <div key={option.nome}
                         className= "navbar-link"
                         onClick={() => navigate(option.url)}
                         >
-                            <label className='link-label' htmlFor="DescriptionLabel">{option.nome || "nome não encontrado"}</label>
+                            <label className='link-label' >{option.nome || "nome não encontrado"}</label>
                         </div>
                     )
                 )}

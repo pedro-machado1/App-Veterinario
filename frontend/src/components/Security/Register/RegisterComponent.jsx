@@ -4,6 +4,7 @@ import InputField from '../../Extras/InputField/InputField.jsx';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import "./RegisterComponent.css"
 
 const RegisterComponent = () => {
 
@@ -79,7 +80,7 @@ const RegisterComponent = () => {
             password: newPassword
         }
         if (!document.getElementById("formsRegister").reportValidity()) {
-            setError("Preencha todos os campos!");
+            setError("Preencha todos os campos!");  
             return;
         }
         setIsLoading(true)
@@ -112,62 +113,61 @@ const RegisterComponent = () => {
     }        
 
     return (
-        <div>
-            <h1>Cadastrar Novo Usuário</h1>
-            <form
-            id='formsRegister' 
-            onSubmit={HandleSubmit} 
-            >
-                <InputField 
-                label="Email"
-                 type="email"
-                 value = {newEmail}
-                 onChange={(e) => { 
-                    setEmail(e.target.value);
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required 
-                 />
-                <InputField 
-                 label="Senha"
-                 type="password"
-                 value={newPassword}
-                 onChange={(e) => { 
-                    setPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required />
-                 <InputField
-                 label= "Confirmar senha"
-                 type = "password"
-                 value = {newConfirmPassword}
-                 onChange={(e) => { 
-                    setConfirmPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid= {(e) => isInvalid(e)}
-                 required
-                 />
-                <button 
-                type="submit"
+        <div className="loginContainer">
+            <div className="loginForms">
+                <h1>Cadastrar Novo Usuário</h1>
+                <form
+                id='formsRegister' 
+                onSubmit={HandleSubmit} 
                 >
-                    Cadastrar
-                </button>
+                    <InputField 
+                    label="Email"
+                    type="email"
+                    value = {newEmail}
+                    onChange={(e) => { 
+                        setEmail(e.target.value);
+                        isValid(e)
+                    }}
+                    onInvalid={(e) => isInvalid(e)}
+                    required 
+                    />
+                    <InputField 
+                    label="Senha"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => { 
+                        setPassword(e.target.value)
+                        isValid(e)
+                    }}
+                    onInvalid={(e) => isInvalid(e)}
+                    required />
+                    <InputField
+                    label= "Confirmar senha"
+                    type = "password"
+                    value = {newConfirmPassword}
+                    onChange={(e) => { 
+                        setConfirmPassword(e.target.value)
+                        isValid(e)
+                    }}
+                    onInvalid= {(e) => isInvalid(e)}
+                    required
+                    />
+                    <button 
+                    type="submit"
+                    >
+                        Cadastrar
+                    </button>
+                    <p>
+                        Retornar:  <Link to="/login">Clique-aqui</Link>
+                    </p>
                 
-                <div className="errorsOrSuccess">
-                    <p style={{ color: "red" }}>{Error && Error}</p>
-                    <p style={{ color: "green" }}>{Sucess && Sucess}</p>
-                </div>
-            </form>
-            <button 
-                id = "voltarParaLogin"
-                onClick={voltar}
-            >
-                Voltar para o Login
-            </button>
-            {isLoading && <LoadingSpin/>}
+                    <div className="errorsOrSuccess">
+                        <p style={{ color: "red" }}>{Error && Error}</p>
+                        <p style={{ color: "green" }}>{Sucess && Sucess}</p>
+                    </div>
+                </form>
+                {isLoading && <LoadingSpin/>}
+            </div>
         </div>
     );
 };

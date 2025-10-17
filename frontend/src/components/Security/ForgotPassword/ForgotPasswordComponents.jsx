@@ -5,6 +5,7 @@ import React from 'react';
 import axios from "axios";
 import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';
+import { Link } from 'react-router-dom';
 import { useState} from 'react';
 import { jwtDecode } from 'jwt-decode';
 
@@ -92,34 +93,38 @@ const ForgotPasswordComponents = () => {
     
 
     return (
-        <div>
-            <h1>Esqueci a minha senha</h1>
-            <form
-            id='formsForgotPassword' 
-            onSubmit={HandleSubmit} 
-            >
-                <InputField 
-                label="Email"
-                 type="email"
-                 value = {newEmail}
-                 onChange={(e) => { 
-                    setEmail(e.target.value);
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required 
-                 />
-                <button 
-                type="submit"
+        <div className="loginContainer">
+            <div className="loginForms">
+                <h1>Esqueci a minha senha</h1>
+                <form
+                id='formsForgotPassword' 
+                onSubmit={HandleSubmit} 
                 >
-                    Confirmar
-                </button>
-                
-                <div className="errorsOrSuccess">
-                    <p style={{ color: "red" }}>{Error && Error}</p>
-                    <p style={{ color: "green" }}>{Sucess && Sucess}</p>
-                </div>
-            </form>
+                    <InputField 
+                    label="Email"
+                    type="email"
+                    value = {newEmail}
+                    onChange={(e) => { 
+                        setEmail(e.target.value);
+                        isValid(e)
+                    }}
+                    onInvalid={(e) => isInvalid(e)}
+                    required 
+                    />
+                    <button 
+                    type="submit"
+                    >
+                        Confirmar
+                    </button>
+                    <p>
+                        Retornar:  <Link to="/login">Clique-aqui</Link>
+                    </p>
+                    <div className="errorsOrSuccess">
+                        <p style={{ color: "red" }}>{Error && Error}</p>
+                        <p style={{ color: "green" }}>{Sucess && Sucess}</p>
+                    </div>
+                </form>
+            </div>
             {isLoading && <LoadingSpin/>}
         </div>
     );

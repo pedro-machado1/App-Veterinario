@@ -29,7 +29,7 @@
 }
 
 .navbar-link {
-    padding: 0.5rem 1rem;
+    padding: 0rem 1rem;
     border-radius: 0.4rem;
     margin-right: 9rem;
     cursor: pointer;
@@ -37,12 +37,10 @@
     font-weight: 500;
 }
 
-
-
-.navbar-link:hover {
-    background-color: #334155;
-}
-
 .link-label {
     cursor: pointer;
+}
+
+.link-label:hover { 
+    text-decoration: underline;
 }

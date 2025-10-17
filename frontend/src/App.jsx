@@ -29,13 +29,15 @@ import MainCliente from './components/Cadastros/Cliente/MainCliente/MainClienteS
   
 function App() {
 
-  const {isAuthenticated} = useAuth();
+  const {isAuthenticated, newUser} = useAuth();
   
 
   return (
     <>
       <BrowserRouter> 
-        {isAuthenticated == true && <Navbar/>}  
+        {isAuthenticated == true && newUser != undefined &&  <Navbar
+          User = {newUser}
+        />}  
         <Routes>
           <Route path = "/forgot-password" element = {<ForgotPasswordComponents/>} />
           <Route path = "/reset-password" element= {<ResetPassword/>} />

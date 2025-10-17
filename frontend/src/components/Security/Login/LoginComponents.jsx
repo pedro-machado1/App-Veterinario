@@ -7,7 +7,6 @@ import { useAuth } from '../Context/AuthContext.jsx';
 
 const LoginComponents = () => {
 
-    const apiUrl = import.meta.env.VITE_API_URL;
     const { login} = useAuth()
 
     const navigate = useNavigate()
@@ -92,8 +91,9 @@ const LoginComponents = () => {
         } catch (err) {
             HandleReset();
             console.error(err);
+            setError();
             if (err.response && err.response.data) {
-                setError(`${err.response.data.message}`);
+                setError("Email ou senha inválidos");
             }
         }
         setIsLoading(false)
@@ -139,7 +139,7 @@ const LoginComponents = () => {
                         <p style={{ color: "green" }}>{Sucess && Sucess}</p>
                     </div>
                     <p>
-                        Esqueceu a senha? <Link to="/reset-password">Clique aqui</Link>
+                        Esqueceu a senha? <Link to="/forgot-password">Clique aqui</Link>
                     </p>
                     <p>
                         Não tem uma conta? <Link to="/register">Registre-se</Link>
