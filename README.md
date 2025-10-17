@@ -159,7 +159,8 @@ Adjust CORS and credentials if using different domains or ports
 
 ### Backend
 - Tests
-- Security Configuration 
+- Security Configuration
+- Some input validations 
 
 ### Frontend
 - Mobile design
