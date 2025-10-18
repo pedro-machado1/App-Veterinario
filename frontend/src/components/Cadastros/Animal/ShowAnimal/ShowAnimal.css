@@ -1,0 +1,98 @@
+.animalShowContainer {
+    width: 90vw;
+    max-width: 1000px;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 2rem;
+
+    position: relative;
+    z-index: 10000;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    margin: 2rem auto;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.animalShowContainer .title {
+    text-align: center;
+    color: #34495e;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 0.15rem solid #ecf0f1;
+    padding-bottom: 0.5rem;
+}
+
+.animalShowContainer .presentAnimalContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.animalShowContainer .animal-image {
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0.35rem solid #3498db;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.animalShowContainer .line1, .animalShowContainer .line2, .animalShowContainer .line3 {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.animalShowContainer .line1 p, .animalShowContainer .line2 p, .animalShowContainer .line3 p {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 0.1rem solid #ecf0f1;
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 200px;
+}
+
+.animalShowContainer #botaoContainer {
+    display: flex;
+    justify-content: center;  
+    gap: 1rem;               
+    margin-top: 1rem;
+}
+
+.animalShowContainer .fechar, .animalShowContainer .consultas {
+    background-color: #a1a1a1;
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0.5rem auto;
+    display: block;
+    width: fit-content;
+}
+
+.animalShowContainer .fechar {
+    background-color: #da1919;
+}
+
+.animalShowContainer .fechar:hover {
+    background-color: #a91717;
+}
+
+.animalShowContainer .consultas:hover {
+    background-color: #636363;
+}

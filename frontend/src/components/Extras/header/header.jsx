@@ -7,6 +7,12 @@ import { useAuth } from "../../Security/Context/AuthContext";
 function Header() {
 
   const [newShow, setShow] = useState(false)
+ 
+  const [showConfirmation, setShowConfirmation] = useState(null)
+
+  const showConfirmationToggle = () => {
+    setShowConfirmation( prev => !prev )  
+  }
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -56,11 +62,32 @@ function Header() {
           {newShow && ( 
             <div className= "dropdown-menu" ref={menuPointer}>
               <p className="menu-item" onClick={() => {navigate("/userProfile")}}> Perfil </p>
-              <p className="menu-item" onClick={handleLogout}> Sair</p>
+              <p className="menu-item" onClick={showConfirmationToggle}> Sair</p>
             </div>
           )}
         </div>
       </header>
+      { showConfirmation &&  
+        <div className="overlay">
+          <div className="confirmationContainer">
+          <h2>
+              Você quer sair da sua conta? 
+          </h2>
+          <div className="botoesConfirmation">
+              <button className = "confirmation" 
+              onClick={() => {
+                showConfirmationToggle()
+                handleLogout()
+                }}>
+                  Confirmar
+              </button>
+              <button className= "cancelar" onClick={() => showConfirmationToggle()}>
+                  Cancelar
+              </button>
+          </div>
+          </div>
+        </div>
+      }
     </>
   );
 }

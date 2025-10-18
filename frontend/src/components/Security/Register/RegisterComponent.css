@@ -1,8 +1,22 @@
-.h1 {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid var(--primary-dark);
-  font-size: 16px;
+
+#formsRegister {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#formsRegister button[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#formsRegister button[type="submit"]:hover {
+    background-color: #2980b9;
 }
 

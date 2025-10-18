@@ -7,7 +7,6 @@ import axios from "axios";
 import ConsultorioUpdate from "../../components/Cadastros/Consultorio/ConsultorioUpdate/ConsultorioUpdate";
 import VeterinarioUpdate from "../../components/Cadastros/Veterinario/VeterinarioUpdate/VeterinarioUpdate";
 import ConsultorioEditVeterinario from "../../components/Cadastros/Consultorio/ConsultorioEditVeterinarios/ConsultorioEditVeterinarios";
-import ConsultorioEditClientes from "../../components/Cadastros/Consultorio/ConsultorioEditClientes/ConsultorioEditClientes";
 import MainConsultaCliente from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaCliente/MainConsultaCliente";
 import notLogin from "../../assets/images/notLogin.png"
 import MainConsultaVeterinario from "../../components/Cadastros/Consulta/MainConsulta/MainConsultaVeterinario/MainConsultaVeterinario";

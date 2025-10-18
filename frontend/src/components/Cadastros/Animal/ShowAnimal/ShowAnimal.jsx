@@ -68,7 +68,7 @@ const ShowAnimal = ({
     }, [animalId])
 
     return (
-        <div className="animal-container">
+        <div className="animalShowContainer">
             <h2 className="title"> {newAnimal?.nome || "Nome não encontrado"} </h2>
             <div className="presentAnimalContainer">
                 {newImagem ? (
@@ -76,50 +76,57 @@ const ShowAnimal = ({
                 ) : (
                     <img src={notLogin} alt="Imagem não encontrada" className="animal-image"/>
                 )}
-
-                <p>
-                    Especie: {newAnimal?.especie || "Espécie não encontrada"}
-                </p>
-                <p>
-                    Idade: {newAnimal?.idade || "Idade não encontrada"}
-                </p>
-                <p>
-                    Gênero: {newAnimal?.genero || "Gênero não encontrado"}
-                </p>
-                <p>
-                    Altura: {newAnimal?.altura ? newAnimal.altura + " cm" : "Altura não encontrada"}
-                </p>
-                <p>
-                    Comprimento: {newAnimal?.comprimento ? newAnimal.comprimento + " cm" : "Comprimento não encontrado"}
-                </p>
-                <p>
-                    Peso: {newAnimal?.peso ? newAnimal.peso + " kg" : "Peso não encontrado"}
-                </p>
-                <p>
-                    Doença: {newAnimal?.doenca || "Doença não encontrada"}
-                </p>
-                <p>
-                    Alergia: {newAnimal?.alergia || "Alergia não encontrada"}
-                </p>
-                <p>
-                    Raça: {newAnimal?.raca || "Raça não encontrada"}
-                </p>
+                <div className="line1">
+                    <p>
+                        Especie: {newAnimal?.especie || "Espécie não encontrada"}
+                    </p>
+                    <p>
+                        Idade: {newAnimal?.idade || "Idade não encontrada"}
+                    </p>
+                </div>
+                <div className="line2">
+                    <p>
+                        Gênero: {newAnimal?.genero || "Gênero não encontrado"}
+                    </p>
+                    <p>
+                        Altura: {newAnimal?.altura ? newAnimal.altura + " cm" : "Altura não encontrada"}
+                    </p>
+                    <p>
+                        Comprimento: {newAnimal?.comprimento ? newAnimal.comprimento + " cm" : "Comprimento não encontrado"}
+                    </p>
+                </div>
+                <div className="line3">
+                    <p>
+                        Peso: {newAnimal?.peso ? newAnimal.peso + " kg" : "Peso não encontrado"}
+                    </p>
+                    <p>
+                        Doença: {newAnimal?.doenca || "Doença não encontrada"}
+                    </p>
+                    <p>
+                        Alergia: {newAnimal?.alergia || "Alergia não encontrada"}
+                    </p>
+                    <p>
+                        Raça: {newAnimal?.raca || "Raça não encontrada"}
+                    </p>
+                </div>
 
             </div>
-            <button
-                type="buttom"
-                className="fechar"
-                onClick={onClose}>
-                Fechar
-            </button>
-            <button
-              type="buttom"
-              className="consultas"
-              onClick={toggleShowConsulta}
-            >
-                Ver Consultas
-            </button>
+            <div id="botaoContainer">
+                <button
+                type="button"
+                className="consultas"
+                onClick={toggleShowConsulta}
+                >
+                    Ver Consultas
+                </button>
 
+                <button
+                    type="button"
+                    className="fechar"
+                    onClick={onClose}>
+                    Fechar
+                </button>
+            </div>
             {newShowConsulta && (
                 <MainConsultaAnimal
                     onClose={() => setNewShowConsulta(false)}
