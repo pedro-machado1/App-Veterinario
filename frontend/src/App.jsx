@@ -16,7 +16,7 @@ import Navbar from './components/Extras/navbar/Navbar.jsx'
 import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
 import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import UserProfile from './pages/UserProfile/UserProfile.jsx'
 import MainAnimal from './components/Cadastros/Animal/MainAnimal/MainAnimal.jsx'
 import MainConsultorio from './components/Cadastros/Consultorio/MainConsultorio/MainConsultorio.jsx' 
@@ -31,13 +31,13 @@ function App() {
 
   const {isAuthenticated, newUser} = useAuth();
   
-
+  
   return (
     <>
       <BrowserRouter> 
-        {isAuthenticated == true && newUser != undefined &&  <Navbar
+        {isAuthenticated == true && newUser != undefined && <Navbar
           User = {newUser}
-        />}  
+          />}  
         <Routes>
           <Route path = "/forgot-password" element = {<ForgotPasswordComponents/>} />
           <Route path = "/reset-password" element= {<ResetPassword/>} />

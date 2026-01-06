@@ -2,11 +2,23 @@ import './Navbar.css'
 import {useNavigate, useLocation} from 'react-router-dom';
 import ArrayOptions from "./arrayOptions/arrayOptions"; 
 import Header from "../Header/header";
+import { useEffect } from 'react';
 
 const Navbar = (User) => {
 
     const navigate = useNavigate()
+
+    const location = useLocation()
     
+    // useEffect (() => { 
+    //     if (location.pathname == "/login" || location.pathname == "/reset-password" || location.pathname == "/forgot-password" || location.pathname == "/regiter" ) {
+    //         clean()
+    //     }
+    // }, [location.pathname])
+    
+    // const clean = () => {
+    //     return (<></>)
+    // }
     return ( 
         <div className='navbar'>
             <div className='navbarOptions'>
