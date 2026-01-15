@@ -30,12 +30,11 @@ import MainCliente from './components/Cadastros/Cliente/MainCliente/MainClienteS
 function App() {
 
   const {isAuthenticated, newUser} = useAuth();
-  
-  
+  const location = useLocation();
+
   return (
     <>
-      <BrowserRouter> 
-        {isAuthenticated == true && newUser != undefined && <Navbar
+        {isAuthenticated == true && newUser && location.pathname != "/login" && location.pathname != "forgot-password" && location.pathname != "/register" && <Navbar
           User = {newUser}
           />}  
         <Routes>
@@ -63,7 +62,6 @@ function App() {
           <Route path="/cliente" element={<ProtectedRoute><MainCliente /></ProtectedRoute>} />
           <Route path= "/home" element= {<ProtectedRoute><MainPage /></ProtectedRoute>}/>
         </Routes>
-      </BrowserRouter>
     </>
   )
 }
