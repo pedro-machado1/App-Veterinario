@@ -100,8 +100,14 @@ public class ClienteVeterinarioService {
     }
 
     @Transactional
-    public boolean existeVinculoAPI(Long veterinarioId) {
+    public boolean existeVinculoAPIVeterinario(Long veterinarioId) {
         Long clienteId = usersService.findUsers().getCliente().getId();
+        return  existeVinculo(clienteId, veterinarioId);
+    }
+
+    @Transactional
+    public boolean existeVinculoAPICliente(Long clienteId) {
+        Long veterinarioId = usersService.findUsers().getVeterinario().getId();
         return  existeVinculo(clienteId, veterinarioId);
     }
 

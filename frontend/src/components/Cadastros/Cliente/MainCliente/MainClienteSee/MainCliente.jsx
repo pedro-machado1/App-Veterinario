@@ -13,6 +13,7 @@ const MainCliente = () => {
     const [clientes, setClientes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showMoreCliente, setShowMoreCliente] = useState(null);
+    const [Veterinario, setVeterinario] = useState(false)
     const [newSwitch, setNewSwitch] = useState(false)
     const [searchCpf, setSearchCpf] = useState("");
     const [filterPermission, setFilterPermission] = useState(false)
@@ -44,6 +45,12 @@ const MainCliente = () => {
         try {
             let response;
 
+            const verVeterinario = await axios.get(`${apiUrl}/api/auth/authentication`
+            )
+
+            if (verVeterinario.data?.veterinario) {
+                setVeterinario(true)
+            }
             if (permission) {
                 response = await axios.get(`${apiUrl}/api/clienteVeterinario/veterinario`);
             }
@@ -141,21 +148,23 @@ const MainCliente = () => {
                     </label>
                 </div>
 
-                <div className="toggleContainer">
-                    <span className="toggleLabel">Somente meus clientes:</span>
-                    <label className="switch">
-                        <input
-                            type="checkbox"
-                            checked={filterPermission}
-                            onChange={() => {
-                                const value = !filterPermission;
-                                setFilterPermission(value);
-                                fetchClientes(searchCpf, value);
-                            }}
-                        />
-                        <span className="slider round"></span>
-                    </label>
-                </div>
+                {Veterinario == true && (
+                    <div className="toggleContainer">
+                        <span className="toggleLabel">Somente meus clientes:</span>
+                        <label className="switch">
+                            <input
+                                type="checkbox"
+                                checked={filterPermission}
+                                onChange={() => {
+                                    const value = !filterPermission;
+                                    setFilterPermission(value);
+                                    fetchClientes(searchCpf, value);
+                                }}
+                            />
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+                )}
 
             </div>
 

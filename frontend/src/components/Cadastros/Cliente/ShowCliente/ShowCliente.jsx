@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import MainConsultaCliente from "../../Consulta/MainConsulta/MainConsultaCliente/MainConsultaCliente.jsx";
+import CreateConsultaModal from "../../Consulta/CreateConsultaModal/CreateConsultaModal.jsx";
 import notLogin from "../../../../assets/images/notLogin.png"
 
 const ShowCliente = ({
@@ -13,6 +14,9 @@ const ShowCliente = ({
 
     const [newCliente, setNewCliente] = useState(null)
     const [newImagem, setImagem] = useState(null)
+    const [newPermission, setPermission] = useState(false)
+    const [Veterinario, setVeterinario] = useState(false)
+    const [showCreateConsulta, setShowCreateConsulta] = useState(false)
     const [Error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -53,8 +57,19 @@ const ShowCliente = ({
 
             try {
                 const response = await axios.get(`${apiUrl}/api/cliente/${clienteId}`)
-                console.log(response.data)
                 setNewCliente(response.data)
+
+                const verVeterinario= await axios.get(`${apiUrl}/api/auth/authentication`
+                )
+
+                if (verVeterinario.data?.veterinario) {
+                    setVeterinario(true)
+                    const permisssion = await axios.get(
+                        `${apiUrl}/api/clienteVeterinario/existeCliente?clienteId=${clienteId}`
+                    )
+                    setPermission(permisssion.data)
+                } 
+
                 const imagem = await axios.get(
                     `${apiUrl}/api/cliente/${clienteId}/imagem`, {
                     responseType: 'blob'
@@ -98,6 +113,22 @@ const ShowCliente = ({
                     Data de Cadastro: {newCliente?.dataDeCriacao || "Data de cadastro não encontrada"}
                 </p>
             </div>
+            { Veterinario == true && newPermission == false && (
+                <h2>
+                    Você não tem permissação para criar consultas
+                </h2>
+            )
+            }
+            { Veterinario && newPermission == true && (
+                <button
+                    className="criarConsultaBtn"
+                    onClick={() => setShowCreateConsulta(true)}
+                >
+                    Criar Consulta
+                </button>
+            )
+
+            }
             {userProfile == true &&
                 <div>
                     <MainConsultaCliente
@@ -105,6 +136,15 @@ const ShowCliente = ({
                     />
                 </div>
             }
+            {showCreateConsulta && (
+                <div className="overlay">
+                    <CreateConsultaModal
+                        onClose={() => setShowCreateConsulta(false)}
+                        clienteId={clienteId}
+                        clienteNome={newCliente?.nome}
+                    />
+                </div>
+            ) }
             <button
                 type="buttom"
                 className="fechar"

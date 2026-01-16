@@ -39,14 +39,22 @@ public class ClienteVeterinarioController {
         return ResponseEntity.ok(clienteVeterinarioService.listarVeterinariosDoCliente());
     }
 
-        @GetMapping("/veterinario")
-        public ResponseEntity<List<ClienteSimpleDto>> listarClientesDoVeterinario() {
-            return ResponseEntity.ok(clienteVeterinarioService.listarClientesDoVeterinario());
-        }
+    @GetMapping("/veterinario")
+    public ResponseEntity<List<ClienteSimpleDto>> listarClientesDoVeterinario() {
+        return ResponseEntity.ok(clienteVeterinarioService.listarClientesDoVeterinario());
+    }
 
-    @GetMapping("/existe")
-    public ResponseEntity<Boolean> existe(@RequestParam Long veterinarioId) {
-        if (clienteVeterinarioService.existeVinculoAPI(veterinarioId)) {
+    @GetMapping("/existeVeterinario")
+    public ResponseEntity<Boolean> existeVeterinario(@RequestParam Long veterinarioId) {
+        if (clienteVeterinarioService.existeVinculoAPIVeterinario(veterinarioId)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
+    }
+
+    @GetMapping("/existeCliente")
+    public ResponseEntity<Boolean> existeCliente(@RequestParam Long clienteId) {
+        if (clienteVeterinarioService.existeVinculoAPICliente(clienteId)) {
             return ResponseEntity.ok(true);
         }
         return ResponseEntity.ok(false);
