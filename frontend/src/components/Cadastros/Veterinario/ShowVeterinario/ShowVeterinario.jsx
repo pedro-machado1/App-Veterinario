@@ -5,47 +5,48 @@ import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import VeterinarioUpdate from "../VeterinarioUpdate/VeterinarioUpdate.jsx";
 import notLogin from "../../../../assets/images/notLogin.png"
 
-const ShowVeterinario = ({ 
+const ShowVeterinario = ({
   onClose,
-  veterinarioId 
+  veterinarioId
 }) => {
   const [veterinario, setVeterinario] = useState(null);
   const [newImagem, setImagem] = useState(null)
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [newPermission, setPermission] = useState(null)
+
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
   function maskCpf(value) {
-        try { 
-        return value
-            .replace(/\D/g, '')
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        }catch(err) {
-            return value
-        }
-
+    try {
+      return value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    } catch (err) {
+      return value
     }
 
-    function maskPhone(value) {
-        try { 
-        return value
-            .replace(/\D/g, '')
-            .replace(/(\d{2})(\d)/, '($1) $2')
-            .replace(/(\d{5})(\d)/, '$1-$2')
-            .slice(0, 15);
-        }catch(err) {
-            return value
-        }
+  }
+
+  function maskPhone(value) {
+    try {
+      return value
+        .replace(/\D/g, '')
+        .replace(/(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{5})(\d)/, '$1-$2')
+        .slice(0, 15);
+    } catch (err) {
+      return value
     }
+  }
 
   useEffect(() => {
     const fetchVeterinario = async () => {
       if (!veterinarioId) {
-        console.log("Erro na inicialização");
         setError("Erro na inicialização");
         setIsLoading(false);
         return;
@@ -54,25 +55,55 @@ const ShowVeterinario = ({
         const response = await axios.get(
           `${apiUrl}/api/veterinario/${veterinarioId}`
         );
-        console.log(response.data);
         setVeterinario(response.data);
+        
+        const permission = await axios.get(`${apiUrl}/api/clienteVeterinario/existe?veterinarioId=${veterinarioId}`)
+        setPermission(permission.data)
+        console.log (permission)
 
         const imagem = await axios.get(
           `${apiUrl}/api/veterinario/${veterinarioId}/imagem`, {
-          responseType: 'blob'
-        }
+            responseType: 'blob'
+          }
         )
         const imageUrl = URL.createObjectURL(imagem.data);
         setImagem(imageUrl);
         setSuccess("Dados do veterinário e imagem carregados com sucesso!");
+        
 
       } catch (err) {
         console.log(err);
+      }finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     fetchVeterinario();
   }, [veterinarioId]);
+
+
+  const handlePermission = async (veterinarioId) => {
+    setIsLoading(true)
+    try {
+      const response = await axios.post(`${apiUrl}/api/clienteVeterinario?veterinarioId=${veterinarioId}`)
+      setPermission(true)
+    } catch {
+      setIsLoading(false);
+      setError("Permisão não pode ser concedida")
+    }
+    setIsLoading(false)
+  }
+
+  const handleRemovePermission = async (veterinarioId) => {
+    setIsLoading(true);
+    try {
+      await axios.delete(`${apiUrl}/api/clienteVeterinario/cliente?veterinarioId=${veterinarioId}`);
+      setPermission(false);
+      setSuccess("Vínculo removido com sucesso!");
+    } catch (err) {
+      setError("Não foi possível remover o vínculo");
+    }
+    setIsLoading(false);
+  };
 
   return (
     <div className="veterinario-container">
@@ -110,6 +141,33 @@ const ShowVeterinario = ({
               {veterinario?.endereco || "Endereço não encontrado"}
             </p>
           </div>
+          <div className="item full permission-box">
+            {newPermission ? (
+              <button
+                id="vincularRemover"
+                className="permissionbutton" 
+                type="button"
+                onClick={() => 
+                  handleRemovePermission(veterinario?.id)
+                }
+              >
+                Remover Permissão
+              </button>
+            ) : (
+              
+              <button
+                id="vincular"
+                className="permissionbutton" 
+                type="button"
+                onClick={() => 
+                  handlePermission(veterinario?.id)
+                }
+              >
+                Conceder Permissão
+              </button>
+            )}
+          </div>
+
         </div>
       </div>
       <button

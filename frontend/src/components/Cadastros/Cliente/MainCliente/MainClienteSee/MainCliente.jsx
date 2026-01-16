@@ -9,22 +9,24 @@ import "./MainCliente.css";
 
 const MainCliente = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    
+
     const [clientes, setClientes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showMoreCliente, setShowMoreCliente] = useState(null);
     const [newSwitch, setNewSwitch] = useState(false)
     const [searchCpf, setSearchCpf] = useState("");
+    const [filterPermission, setFilterPermission] = useState(false)
+
     const [error, setError] = useState(null);
 
 
     function maskCpf(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-      }
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    }
 
 
     const ToggleshowMore = (clienteId) => {
@@ -35,94 +37,127 @@ const MainCliente = () => {
         }
     };
 
-    const fetchClientes = async (cpf, switchValue) => {
+    const fetchClientes = async (cpf = "", permission = false) => {
         setIsLoading(true);
         setError(null);
-        
-        let url = `${apiUrl}/api/cliente`;
-        if (cpf !== "") {
-            url += `?cpf=${cpf}`;
-        }
-        
+
         try {
-            const response = await axios.get(url);
-            if (response.data.content.length === 0) {
-                setError("Nenhum cliente encontrado.");
+            let response;
+
+            if (permission) {
+                response = await axios.get(`${apiUrl}/api/clienteVeterinario/veterinario`);
+            }
+            // CPF
+            else {
+                let url = `${apiUrl}/api/cliente`;
+                if (cpf !== "") {
+                    url += `?cpf=${cpf}`;
+                }
+                response = await axios.get(url);
+            }
+
+            const data = permission ? response.data : response.data.content;
+
+            if (!data || data.length === 0) {
                 setClientes([]);
-            } 
-            else if (!switchValue) {
-                console.log(response.data.content)
-                const cliente = response.data.content
-                const clienteComImagens = await Promise.all(cliente.map(async (cliente) => {
-                    try {
-                    const imageResponse = await axios.get(`${apiUrl}/api/cliente/${cliente.id}/imagem`,
-                        { responseType: 'blob' }
-                    );
-                    const image = URL.createObjectURL(imageResponse.data)
-                    return { ...cliente, url: image };
-                    } catch (error) {
-                    return { ...cliente, url: null };
-                    }
-                }))
-                setClientes(clienteComImagens)
-                console.log(cliente)
-                }
-                else {
-                setClientes(response.data.content)
-                }
+                setError("Nenhum cliente encontrado.");
+                return;
+            }
+
+            // modo visual com imagem
+            if (newSwitch) {
+                setClientes(data);
+            } else {
+                const clientesComImagem = await Promise.all(
+                    data.map(async (cliente) => {
+                        try {
+                            const imageResponse = await axios.get(
+                                `${apiUrl}/api/cliente/${cliente.id}/imagem`,
+                                { responseType: "blob" }
+                            );
+                            const imageUrl = URL.createObjectURL(imageResponse.data);
+                            return { ...cliente, url: imageUrl };
+                        } catch {
+                            return { ...cliente, url: null };
+                        }
+                    })
+                );
+                setClientes(clientesComImagem);
+            }
+
         } catch (err) {
-            console.error("Erro ao carregar os clientes:", err);
-            setError("Ocorreu um erro ao carregar os clientes.");
+            console.error(err);
+            setError("Erro ao carregar clientes.");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
+
     useEffect(() => {
-        fetchClientes(searchCpf);
-    }, []); 
+        fetchClientes(searchCpf, filterPermission);
+    }, []);
 
     const navigate = useNavigate();
 
     return (
-        <div className= "clienteContainer">
-            
+        <div className="clienteContainer">
+
             <h1>Clientes</h1>
             <div className="searchContainer">
                 <form onSubmit={(e) => {
                     e.preventDefault()
                     fetchClientes(searchCpf)
                 }}>
-                <InputField
-                    placeholder="Pesquisar por CPF"
-                    value={maskCpf(searchCpf)}
-                    onChange={(e) => setSearchCpf(e.target.value)}
+                    <InputField
+                        placeholder="Pesquisar por CPF"
+                        value={maskCpf(searchCpf)}
+                        onChange={(e) => setSearchCpf(e.target.value)}
                     />
                 </form>
-                <button 
-                onClick={fetchClientes}
-                className="botaoPesquisar"
+                <button
+                    onClick={fetchClientes}
+                    className="botaoPesquisar"
                 >Pesquisar</button>
-                <button className= "botaoLimpar" onClick={() => {  
+                <button className="botaoLimpar" onClick={() => {
                     fetchClientes("")
                     setSearchCpf("")
-                    } } >
-                        LimparFiltro
-                    </button>
-            </div>
-            
-            <div className="toggleContainer">
-                <span className="toggleLabel">Estilo:</span>
-                
-                <label className="switch">
-                    <input 
-                        type="checkbox" 
-                        checked={newSwitch} 
-                        onChange={() => setNewSwitch(!newSwitch)} 
-                    />
-                    <span className="slider round"></span>
-                </label>
+                }} >
+                    LimparFiltro
+                </button>
             </div>
 
+            <div className="togglesRow">
+
+                <div className="toggleContainer">
+                    <span className="toggleLabel">Estilo:</span>
+                    <label className="switch">
+                        <input
+                            type="checkbox"
+                            checked={newSwitch}
+                            onChange={() => setNewSwitch(!newSwitch)}
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+
+                <div className="toggleContainer">
+                    <span className="toggleLabel">Somente meus clientes:</span>
+                    <label className="switch">
+                        <input
+                            type="checkbox"
+                            checked={filterPermission}
+                            onChange={() => {
+                                const value = !filterPermission;
+                                setFilterPermission(value);
+                                fetchClientes(searchCpf, value);
+                            }}
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+
+            </div>
 
             {newSwitch && (
                 <div id="displayDeClientes">
@@ -136,55 +171,22 @@ const MainCliente = () => {
                                     <img src={notLogin} className="cliente-image" />
                                 )}
                                 <div className="informacoesCliente">
-                                <p> 
-                                    <strong>Nome:</strong> {cliente.nome || "Erro: nome não encontrado"}
-                                </p>
-                                <p>
-                                    <strong>CPF:</strong> {maskCpf(cliente.cpf) || "Erro: CPF não encontrado"}
-                                </p>
-                                <p>
-                                    <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
-                                </p> 
+                                    <p>
+                                        <strong>Nome:</strong> {cliente.nome || "Erro: nome não encontrado"}
+                                    </p>
+                                    <p>
+                                        <strong>CPF:</strong> {maskCpf(cliente.cpf) || "Erro: CPF não encontrado"}
+                                    </p>
+                                    <p>
+                                        <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-        
-                        <button id= "VerMais" onClick={() => ToggleshowMore(cliente.id)}>
-                            Ver Mais
-                        </button>
-                        {showMoreCliente === cliente.id && 
-                            <div className="overlay">
-                                <ShowCliente
-                                    onClose={() => setShowMoreCliente(false)}
-                                    clienteId={cliente.id}
-                                />
-                            </div>
-                        }
-                    </div>
-                    ))}
-                </div>
-            )}
 
-
-            {!newSwitch && ( 
-                <div className="displayDeClientes">
-                    {clientes.map((cliente) => (
-                        <div key={cliente.id} className="ClienteCard">
-                            <p className="clienteNome">
-                                <strong>Nome:</strong> {cliente.nome || "Nome não encontrado"}
-                            </p>
-                            <p className="cpfNome">
-                                <strong>CPF:</strong> {maskCpf(cliente.cpf) || "CPF não encontrado"} 
-                            </p> 
-                            <p className="dataDeCadastro">
-                                <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"} 
-                            </p> 
-                            <button 
-                                className="showMoreButton"
-                                onClick={() => ToggleshowMore(cliente.id)}
-                            > 
+                            <button id="VerMais" onClick={() => ToggleshowMore(cliente.id)}>
                                 Ver Mais
                             </button>
-                            {showMoreCliente === cliente.id && 
+                            {showMoreCliente === cliente.id &&
                                 <div className="overlay">
                                     <ShowCliente
                                         onClose={() => setShowMoreCliente(false)}
@@ -192,7 +194,40 @@ const MainCliente = () => {
                                     />
                                 </div>
                             }
-                        </div> 
+                        </div>
+                    ))}
+                </div>
+            )}
+
+
+            {!newSwitch && (
+                <div className="displayDeClientes">
+                    {clientes.map((cliente) => (
+                        <div key={cliente.id} className="ClienteCard">
+                            <p className="clienteNome">
+                                <strong>Nome:</strong> {cliente.nome || "Nome não encontrado"}
+                            </p>
+                            <p className="cpfNome">
+                                <strong>CPF:</strong> {maskCpf(cliente.cpf) || "CPF não encontrado"}
+                            </p>
+                            <p className="dataDeCadastro">
+                                <strong>Data de cadastro:</strong> {cliente.dataDeCriacao || "Não encontrado"}
+                            </p>
+                            <button
+                                className="showMoreButton"
+                                onClick={() => ToggleshowMore(cliente.id)}
+                            >
+                                Ver Mais
+                            </button>
+                            {showMoreCliente === cliente.id &&
+                                <div className="overlay">
+                                    <ShowCliente
+                                        onClose={() => setShowMoreCliente(false)}
+                                        clienteId={cliente.id}
+                                    />
+                                </div>
+                            }
+                        </div>
                     ))}
                 </div>
             )}

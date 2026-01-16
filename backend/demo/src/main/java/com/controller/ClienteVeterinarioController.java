@@ -17,24 +17,38 @@ public class ClienteVeterinarioController {
     private ClienteVeterinarioService clienteVeterinarioService;
 
     @PostMapping
-    public ResponseEntity<Void> vincular(@RequestParam Long clienteId, @RequestParam Long veterinarioId) {
-        clienteVeterinarioService.vincular(clienteId, veterinarioId);
+    public ResponseEntity<Void> vincular(@RequestParam Long veterinarioId) {
+        clienteVeterinarioService.vincular(veterinarioId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> desvincular(@RequestParam Long clienteId, @RequestParam Long veterinarioId) {
-        clienteVeterinarioService.desvincular(clienteId, veterinarioId);
+    @DeleteMapping("/cliente")
+    public ResponseEntity<Void> desvincularCliente(@RequestParam Long veterinarioId) {
+        clienteVeterinarioService.clienteDesvincularVeterinario(veterinarioId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/cliente/{clienteId}")
-    public ResponseEntity<List<VeterinarioSimpleDto>> listarVeterinariosDoCliente(@PathVariable Long clienteId) {
-        return ResponseEntity.ok(clienteVeterinarioService.listarVeterinariosDoCliente(clienteId));
+    @DeleteMapping("/veterinario")
+    public ResponseEntity<Void> desvincularVeterinario(@RequestParam Long clienteId) {
+        clienteVeterinarioService.veterinarioDesvincularCliente(clienteId);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/veterinario/{veterinarioId}")
-    public ResponseEntity<List<ClienteSimpleDto>> listarClientesDoVeterinario(@PathVariable Long veterinarioId) {
-        return ResponseEntity.ok(clienteVeterinarioService.listarClientesDoVeterinario(veterinarioId));
+    @GetMapping("/cliente")
+    public ResponseEntity<List<VeterinarioSimpleDto>> listarVeterinariosDoCliente() {
+        return ResponseEntity.ok(clienteVeterinarioService.listarVeterinariosDoCliente());
+    }
+
+        @GetMapping("/veterinario")
+        public ResponseEntity<List<ClienteSimpleDto>> listarClientesDoVeterinario() {
+            return ResponseEntity.ok(clienteVeterinarioService.listarClientesDoVeterinario());
+        }
+
+    @GetMapping("/existe")
+    public ResponseEntity<Boolean> existe(@RequestParam Long veterinarioId) {
+        if (clienteVeterinarioService.existeVinculoAPI(veterinarioId)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 }

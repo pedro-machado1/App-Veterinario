@@ -62,11 +62,10 @@ public class ConsultaService {
         Optional<Cliente> clienteOptional = clienteService.findById(consultaDTO.getCliente().getId());
         if (clienteOptional.isEmpty()) return null;
         Cliente cliente = clienteOptional.get();
-        Veterinario veterinario = usersService.findUsers().getVeterinario();
+            Veterinario veterinario = usersService.findUsers().getVeterinario();
         consulta.setDataCriacao(LocalDate.now());
         consulta.setCliente(cliente);
         consulta.setVeterinario(veterinario);
-//        consulta.setAnimal();
         consulta = consultaRepository.save(consulta);
         return convertToDto(consulta, ConsultaDto.class);
     }
