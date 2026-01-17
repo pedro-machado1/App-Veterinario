@@ -6,12 +6,23 @@ import Header from "../Header/header";
 const Navbar = (User) => {
 
     const navigate = useNavigate()
+
+    const options = ArrayOptions(User) || []
     
+    // useEffect (() => { 
+    //     if (location.pathname == "/login" || location.pathname == "/reset-password" || location.pathname == "/forgot-password" || location.pathname == "/regiter" ) {
+    //         clean()
+    //     }
+    // }, [location.pathname])
+    
+    // const clean = () => {
+    //     return (<></>)
+    // }
     return ( 
         <div className='navbar'>
             <div className='navbarOptions'>
                 { 
-                    ArrayOptions(User).map((option) => (
+                    options.map((option) => (
                         <div key={option.nome}
                         className= "navbar-link"
                         onClick={() => navigate(option.url)}

@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    var syncVariable;
     const authenticateUser = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/auth/authentication`,
@@ -37,7 +36,10 @@ export const AuthProvider = ({ children }) => {
         `${apiUrl}/api/auth/login`,
         loginData,
       );
-      setNewUser(response.data.user);
+      const authResponse = await axios.get(`
+        ${apiUrl}/api/auth/authentication`
+      );
+      setNewUser(authResponse.data);
       setIsAuthenticated(true);
       return response;
     } catch (error) {
@@ -53,11 +55,11 @@ export const AuthProvider = ({ children }) => {
         `${apiUrl}/api/auth/logout`, 
           {withCredentials : true}
       )
+      setNewUser(null);
       setIsAuthenticated(false);
     }catch(err){
       throw err;
-    };
-    
+    }
   };
 
   return (

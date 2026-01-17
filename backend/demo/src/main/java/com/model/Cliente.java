@@ -50,5 +50,9 @@ public class Cliente {
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     private Users users;
 
+    @OneToMany ( mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<ClienteVeterinario> veterinariosPermitidos;
+
+
 
 }

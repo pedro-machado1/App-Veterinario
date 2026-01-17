@@ -30,7 +30,7 @@ public class ConsultaController {
     private ConsultaService consultaService;
 
     @PostMapping()
-    public ResponseEntity<ConsultaDto> insert(@Validated @RequestBody ConsultaDto consultaDto) {
+    public ResponseEntity<ConsultaDto> insert(@Validated @RequestBody ConsultaDto consultaDto) throws Exception {
         ConsultaDto consulta = consultaService.insert(consultaDto);
         URI uri = ServletUriComponentsBuilder
                   .fromCurrentRequest()
@@ -62,7 +62,7 @@ public class ConsultaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
         consultaService.delete(id);
-        return ResponseEntity.ok().body("o consulta " + id + " foi removido");
+        return ResponseEntity.ok().body("a consulta " + id + " foi removida");
     }
 
     @PutMapping("/{id}/addanimal/{idAnimal}")

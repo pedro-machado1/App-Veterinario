@@ -12,12 +12,11 @@ import com.model.Animal;
 import com.model.Cliente;
 import com.model.Consulta;
 import com.model.Veterinario;
-import com.repository.AnimalRepository;
-import com.repository.ClienteRepository;
-import com.repository.ConsultaRepository;
-import com.repository.VeterinarioRepository;
+import com.repository.*;
 import com.service.exceptions.DataBaseException;
+import com.service.exceptions.PermissionException;
 import com.service.exceptions.ResourceNotFoundException;
+import jdk.jfr.Experimental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -36,6 +35,8 @@ import static com.extras.Converters.*;
 @Service
 public class ConsultaService {
 
+    @Autowired
+    private ClienteVeterinarioService clienteVeterinarioService;
 
     @Autowired
     private ConsultaRepository consultaRepository;
@@ -53,16 +54,18 @@ public class ConsultaService {
     private UsersService usersService;
 
     @Transactional
-    public ConsultaDto insert(ConsultaDto consultaDTO) {
+    public ConsultaDto insert(ConsultaDto consultaDTO) throws Exception {
+        if (!clienteVeterinarioService.existeVinculo(consultaDTO.getCliente().getId(), consultaDTO.getVeterinario().getId())) {
+            throw new PermissionException("O veterinario não tem permissão para fazer essa ação");
+        }
         Consulta consulta = convertToEntity(consultaDTO, Consulta.class);
         Optional<Cliente> clienteOptional = clienteService.findById(consultaDTO.getCliente().getId());
         if (clienteOptional.isEmpty()) return null;
         Cliente cliente = clienteOptional.get();
-        Veterinario veterinario = usersService.findUsers().getVeterinario();
+            Veterinario veterinario = usersService.findUsers().getVeterinario();
         consulta.setDataCriacao(LocalDate.now());
         consulta.setCliente(cliente);
         consulta.setVeterinario(veterinario);
-//        consulta.setAnimal();
         consulta = consultaRepository.save(consulta);
         return convertToDto(consulta, ConsultaDto.class);
     }
@@ -82,39 +85,47 @@ public class ConsultaService {
     @Transactional
     public ConsultaDto update(Long id, ConsultaUpdateDto consultaDto){
         existsById(id);
+        Consulta consultaSalva = consultaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada: " + id));
+
+        Veterinario veterinarioAutenticado = usersService.findUsers().getVeterinario();
+
+        if (consultaSalva.getVeterinario().getId() != veterinarioAutenticado.getId()) {
+            throw new DataIntegrityViolationException("Somente o veterinário que criou a consulta pode modificá-la");
+        }
 
         ClienteSimpleDto clienteDto = convertToDto(clienteService.findById(consultaDto.getCliente().getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o cliente da consulta" + consultaDto.getCliente().getId() + " não foi encontrado."))
                 , ClienteSimpleDto.class);
-
         VeterinarioSimpleDto veterinarioDto = convertToDto(veterinarioService.findById(consultaDto.getVeterinario().getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Id não encotrado para o veterinário da consulta" + consultaDto.getVeterinario().getId() + " não foi encontrado."))
                 , VeterinarioSimpleDto.class);
 
-        Veterinario veterinario = usersService.findUsers().getVeterinario();
-        if (!Objects.equals(veterinarioDto.getId(), veterinario.getId())) {
-            throw new DataIntegrityViolationException("Somente o veterinário que criou a consulta pode modifica-la");
-        }
         consultaDto.setVeterinario(veterinarioDto);
         consultaDto.setCliente(clienteDto);
         consultaDto.setDataAlteracao(LocalDate.now());
-        Consulta consultaaux = convertToEntity(consultaRepository.getReferenceById(id), Consulta.class);
-        Consulta consulta =convertToEntity(consultaaux, Consulta.class);
 
-        convertToEntityVoid(consultaDto, consulta);
-        consulta = consultaRepository.save(consulta);
+        convertToEntityVoid(consultaDto, consultaSalva);
+        Consulta consulta = consultaRepository.save(consultaSalva);
         return convertToDto(consulta, ConsultaDto.class);
     }
 
     @Transactional
     public void delete(Long id) {
         existsById(id);
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada: " + id));
+
+        Veterinario veterinarioAutenticado = usersService.findUsers().getVeterinario();
+
+        if (consulta.getVeterinario().getId() != veterinarioAutenticado.getId()) {
+            throw new DataIntegrityViolationException("Somente o veterinário que criou a consulta pode excluí-la");
+        }
+
         try {
             consultaRepository.deleteById(id);
-        }catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Não foi possível excluir este consulta devido a ele tem uma relação em outra tabela.");
-        }catch (Exception e){
-            throw new DataBaseException("Erro inesperado ao deletar o consulta");
+        } catch (Exception e) {
+            throw new DataBaseException("A consulta não pode ser deletada ");
         }
     }
 

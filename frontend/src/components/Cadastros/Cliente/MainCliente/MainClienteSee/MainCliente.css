@@ -207,3 +207,16 @@
     left: 0;
     right: 0;
 }
+
+.togglesRow {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

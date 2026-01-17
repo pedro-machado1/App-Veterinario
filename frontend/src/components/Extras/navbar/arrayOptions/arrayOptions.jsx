@@ -1,5 +1,9 @@
 const ArrayOptions = (User) => {
-    let options
+    let options = []
+    
+    if (!User || !User.User) {
+        return options
+    }
     
     if (User.User.cliente) { 
         options = [

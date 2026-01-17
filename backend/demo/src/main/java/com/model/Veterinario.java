@@ -50,4 +50,7 @@ public class Veterinario {
 
     @OneToOne(mappedBy = "veterinario", cascade = CascadeType.ALL)
     private Users users;
+
+    @OneToMany(mappedBy = "veterinario", cascade = CascadeType.ALL)
+    private List<ClienteVeterinario> cliente;
 }

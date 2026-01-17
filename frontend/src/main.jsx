@@ -4,11 +4,14 @@ import { AuthProvider } from './components/Security/Context/AuthContext.jsx'
 import './index.css'
 import App from './App.jsx'
 import axios from 'axios'
+import { BrowserRouter } from 'react-router-dom'
 
 axios.defaults.withCredentials = true 
 
 createRoot(document.getElementById('root')).render(
   <AuthProvider>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </AuthProvider>,
 )
