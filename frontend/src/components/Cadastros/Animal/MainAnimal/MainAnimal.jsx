@@ -18,9 +18,7 @@ const MainAnimal = () => {
     const [IsLoading, setIsLoading] = useState(true)
     const [show, setShow] = useState(false)
     const [newSwitch, setNewSwitch] = useState(false)
-    const [showConfirmation, setShowConfirmation] = useState(null)
     const [showMore, setShowMore] = useState(null)
-    const [showEdit, setShowEdit] = useState(false)
     const [searchName, setSearchNome] = useState("")
     const [Error, setError] = useState(null)
 
@@ -30,23 +28,6 @@ const MainAnimal = () => {
         }
         else {
             setShowMore(animalId)
-        }
-    }
-
-    const showConfirmationToggle = (animalId) => {
-        if (showMore == animalId) {
-            setShowConfirmation(null)
-        }
-        else {
-            setShowConfirmation(animalId)
-        }
-    }
-    const showEditToggle = (animalId) => {
-        if (showEdit == animalId) {
-            setShowEdit(null)
-        }
-        else {
-            setShowEdit(animalId)
         }
     }
 
@@ -93,15 +74,10 @@ const MainAnimal = () => {
 
     useEffect(() => {
         asyncFunction(searchName)
-    }, [show, showEdit])
+    }, [show])
 
-    const onDelete = async (animalId) => {
-        try {
-            const response = await axios.delete(`${apiUrl}/api/cliente/removeanimal/${animalId}`)
-            setAnimal((prev) => prev.filter((a) => a.id !== animalId))
-        } catch (err) {
-            console.log(err)
-        }
+    const onAnimalDeleted = () => {
+        asyncFunction(searchName)
     }
 
     return (
@@ -128,20 +104,32 @@ const MainAnimal = () => {
                         LimparFiltro
                 </button>
             </div>
+            
+            <div className="alignItems">
+                <div className="toggleContainer">
+                    <span className="toggleLabel">Estilo:</span>
+                    
+                    <label className="switch">
+                        <input 
+                            type="checkbox" 
+                            checked={newSwitch} 
+                            onChange={() => setNewSwitch(!newSwitch)} 
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                </div>
 
-            <div className="toggleContainer">
-                <span className="toggleLabel">Estilo:</span>
-                
-                <label className="switch">
-                    <input 
-                        type="checkbox" 
-                        checked={newSwitch} 
-                        onChange={() => setNewSwitch(!newSwitch)} 
-                    />
-                    <span className="slider round"></span>
-                </label>
+                <button
+                    className="novoAnimalButtom"
+                    type="buttom"
+                    onClick={() => {
+                        if (show == true) { setShow(false) }
+                        else { setShow(true) }
+                    }}
+                >
+                    Novo Animal
+                </button>
             </div>
-
 
             {!newSwitch && (
                 <div className="displayDeAnimais">
@@ -163,20 +151,6 @@ const MainAnimal = () => {
                                 </div>
                             </div>
                             <div className="botoesAnimais"> 
-                                
-                                <button
-                                    className="Edit"
-                                    onClick={() => showEditToggle(animal.id)}
-                                >
-                                    Editar
-                                </button>
-
-                                <button
-                                    className="deletar"
-                                    onClick={() => { showConfirmationToggle(animal.id) }}
-                                >
-                                    Deletar
-                                </button>
                                 <a
                                     href="#" 
                                     className="verMaisLink"
@@ -204,24 +178,11 @@ const MainAnimal = () => {
                             <p className="especieLista">
                                 Espécie: {animal.especie || "Erro espécie não encontrada"}
                             </p>
-                             <button
-                                    className="botaoEditLista"
-                                    onClick={() => showEditToggle(animal.id)}
-                                >
-                                    Editar
-                                </button>
-
-                                <button
-                                    className="botaoEditLista"
-                                    onClick={() => { showConfirmationToggle(animal.id) }}
-                                >
-                                    Deletar
-                                </button>
-                                <button
-                                    className="botaoEditLista"
-                                    onClick={(e) => {
-                                        e.preventDefault(); 
-                                        showMoreToggle(animal.id);
+                            <button
+                                className="botaoEditLista"
+                                onClick={(e) => {
+                                    e.preventDefault(); 
+                                    showMoreToggle(animal.id);
                                     }}
                                 >
                                     Ver Mais
@@ -231,16 +192,6 @@ const MainAnimal = () => {
                 </div>
             )}
 
-            <button
-                className="novoAnimalButtom"
-                type="buttom"
-                onClick={() => {
-                    if (show == true) { setShow(false) }
-                    else { setShow(true) }
-                }}
-            >
-                Novo Animal
-            </button>
             {show &&
                 <div className="overlay"> 
                     <NewAnimal
@@ -254,40 +205,10 @@ const MainAnimal = () => {
                         onClose={() => setShowMore(null)}
                         animalId={showMore}
                         show={showMore}
+                        onAnimalDeleted={onAnimalDeleted}
                     />
                 </div>
             )}
-            {showEdit && ( 
-                <div className="overlay">
-                    <EditAnimal
-                        onClose={() => setShowEdit(null)}
-                        animalId={showEdit}
-                        show={showEdit}
-                    />
-                </div>
-            )}
-            
-            { showConfirmation &&  
-            <div className="overlay">
-                <div className="confirmationContainer">
-                <h2>
-                    Você quer deletar esse animal? 
-                </h2>
-                <div className="botoesConfirmation">
-                    <button className = "confirmation" onClick={() => 
-                        {
-                            onDelete(showConfirmation)
-                            setShowConfirmation(null)
-                        }}>
-                        Confirmar
-                    </button>
-                    <button className= "cancelar" onClick={() => setShowConfirmation(null)}>
-                        Cancelar
-                    </button>
-                </div>
-                </div>
-            </div>
-            }
             {IsLoading && <LoadingSpin />}
         </div>
     )

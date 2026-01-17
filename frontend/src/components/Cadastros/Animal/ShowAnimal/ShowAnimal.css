@@ -69,10 +69,13 @@
     justify-content: center;  
     gap: 1rem;               
     margin-top: 1rem;
+    flex-wrap: wrap;
 }
 
-.animalShowContainer .fechar, .animalShowContainer .consultas {
-    background-color: #a1a1a1;
+.animalShowContainer .fechar, 
+.animalShowContainer .consultas,
+.animalShowContainer .editar,
+.animalShowContainer .deletar {
     color: white;
     border: none;
     padding: 1rem 1.5rem;
@@ -80,9 +83,31 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin: 0.5rem auto;
-    display: block;
-    width: fit-content;
+    transition: background-color 0.3s;
+}
+
+.animalShowContainer .consultas {
+    background-color: #a1a1a1;
+}
+
+.animalShowContainer .consultas:hover {
+    background-color: #636363;
+}
+
+.animalShowContainer .editar {
+    background-color: #999595;
+}
+
+.animalShowContainer .editar:hover {
+    background-color: #8f9091;
+}
+
+.animalShowContainer .deletar {
+    background-color: #e74c3c;
+}
+
+.animalShowContainer .deletar:hover {
+    background-color: #c0392b;
 }
 
 .animalShowContainer .fechar {
@@ -93,6 +118,67 @@
     background-color: #a91717;
 }
 
-.animalShowContainer .consultas:hover {
-    background-color: #636363;
+/* Modal de confirmação */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+}
+
+.confirmationContainer {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10002;
+}
+
+.confirmationContainer h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.botoesConfirmation {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.botoesConfirmation .confirmation {
+    background-color: #27ae60;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.botoesConfirmation .confirmation:hover {
+    background-color: #229954;
+}
+
+.botoesConfirmation .cancelar {
+    background-color: #95a5a6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.botoesConfirmation .cancelar:hover {
+    background-color: #7f8c8d;
 }

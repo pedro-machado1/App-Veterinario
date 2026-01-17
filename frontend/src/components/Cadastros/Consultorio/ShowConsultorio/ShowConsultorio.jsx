@@ -2,97 +2,184 @@ import "./ShowConsultorio.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
-import { useNavigate } from "react-router-dom";
-import notLogin from "../../../../assets/images/notLogin.png"
+import ShowVeterinario from "../../Veterinario/ShowVeterinario/ShowVeterinario.jsx";
+import notLogin from "../../../../assets/images/notLogin.png";
 
+const ITEMS_PER_PAGE = 3;
 
-const ShowNewConsultorio = ({
-    onClose,
-    consultorioId,
-}) => {
-
-    const [newConsultorio, setNewConsultorio] = useState(null)
-    const [newImagem, setImagem] = useState(null)
-    const [Error, setError] = useState(null);
-    const [Success, setSuccess] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+const ShowNewConsultorio = ({ onClose, consultorioId }) => {
+    const [consultorio, setConsultorio] = useState(null);
+    const [imagem, setImagem] = useState(null);
+    const [veterinarios, setVeterinarios] = useState([]);
+    const [page, setPage] = useState(0);
+    const [showLista, setShowLista] = useState(false);
+    const [showMoreVet, setShowMoreVet] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const navigate = useNavigate("/veterinarios")
 
     useEffect(() => {
-        const asyncFunction = async () => {
-            if (!consultorioId) console.log("Erro na inicialização");
-
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}`)
-                console.log(response.data)
-                setNewConsultorio(response.data)
+                const c = await axios.get(`${apiUrl}/api/consultorio/${consultorioId}`);
+                setConsultorio(c.data);
 
-                const imagem = await axios.get(
-                    `${apiUrl}/api/consultorio/${consultorioId}/imagem`, {
-                    responseType: 'blob'
-                }
-                )
-                const imageUrl = URL.createObjectURL(imagem.data);
-                setImagem(imageUrl);
-                setSuccess("Dados do veterinário e imagem carregados com sucesso!");
+                const vets = await axios.get(
+                    `${apiUrl}/api/consultorio/${consultorioId}/veterinario`
+                );
 
+                const vetsWithImg = await Promise.all(
+                    vets.data.content.map(async (vet) => {
+                        try {
+                            const img = await axios.get(
+                                `${apiUrl}/api/veterinario/${vet.id}/imagem`,
+                                { responseType: "blob" }
+                            );
+                            return { ...vet, url: URL.createObjectURL(img.data) };
+                        } catch {
+                            return { ...vet, url: null };
+                        }
+                    })
+                );
 
-            } catch (err) {
-                console.log(err)
-                setError("Erro no get do animal")
+                setVeterinarios(vetsWithImg);
+
+                const img = await axios.get(
+                    `${apiUrl}/api/consultorio/${consultorioId}/imagem`,
+                    { responseType: "blob" }
+                );
+                setImagem(URL.createObjectURL(img.data));
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setLoading(false);
             }
-            setIsLoading(false)
-        }
+        };
 
-        asyncFunction()
-    }, [consultorioId])
+        fetchData();
+    }, [consultorioId]);
+
+    if (loading) return <LoadingSpin />;
+
+    const totalPages = Math.ceil(veterinarios.length / ITEMS_PER_PAGE);
+    const vetsPage = veterinarios.slice(
+        page * ITEMS_PER_PAGE,
+        page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+    );
 
     return (
         <div className="animal-container">
             <div className="consultorioCard">
-                {newImagem ? (
-                    <img src={newImagem} alt={`Foto de ${newConsultorio?.nome}`} className="consultorio-image" />
-                ) : (
-                    <img src={notLogin} className="consultorio-image" />
-                )}
-                <p>
-                    Endereço: {newConsultorio?.endereco || "Endereço não encontrada"}
-                </p>
-                <p>
-                    Telefone: {newConsultorio?.telefone || "Telefone não encontrado"}
-                </p>
-                <p>
-                    Dta de Fundação: {newConsultorio?.dataDeFundacao || "Data de fundação não encontrada"}
-                </p>
-                <p>
-                    Data de Cadastro: {newConsultorio?.dataDeCadastro || "Data de cadastro não encontrada"}
-                </p>
-                <p>
-                    Descrição: {newConsultorio?.descricao || "Descrição não encontrado"}
-                </p>
-                <p>
-                    Estado: {newConsultorio?.estado || "Estado não encontrado"}
-                </p>
+                
+                <div className="consultorioHeader">
+                    <img
+                        src={imagem || notLogin}
+                        className="consultorio-image"
+                        alt="Consultório"
+                    />
 
-                <div className="botoesContainer">
-                    <button
-                        type="button"
-                        className="verMais"
-                        onClick={() => navigate(`/veterinario?consultorioId=${consultorioId}`,
-                        )}>
-                        Ver Veterinários
-                    </button>
-                    <button
-                        type="button"
-                        className="fechar"
-                        onClick={onClose}>
-                        Fechar
-                    </button>
+                    <div className="consultorioInfo">
+                        <p><strong>Endereço:</strong> {consultorio?.endereco}</p>
+                        <p><strong>Telefone:</strong> {consultorio?.telefone}</p>
+                        <p><strong>Fundação:</strong> {consultorio?.dataDeFundacao}</p>
+                        <p><strong>Cadastro:</strong> {consultorio?.dataDeCadastro}</p>
+                        <p><strong>Estado:</strong> {consultorio?.estado}</p>
+                        <p><strong>Descrição:</strong> {consultorio?.descricao}</p>
+                    </div>
                 </div>
+
+
+                {/* CARROSSEL */}
+                {!showLista && veterinarios.length > 0 && (
+                    <>
+                        <div className="toggleVetsContainer">
+                            <span>Carrossel</span>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={showLista}
+                                    onChange={() => setShowLista(!showLista)}
+                                />
+                                <span className="slider"></span>
+                            </label>
+                            <span>Lista</span>
+                        </div>
+                        <div className="carrosselContainer">
+                            <button
+                                disabled={page === 0}
+                                onClick={() => setPage(page - 1)}
+                            >
+                                ❮
+                            </button>
+
+                            <div className="carrosselGrid">
+                                {vetsPage.map((vet) => (
+                                    <div key={vet.id} className="vetCard">
+                                        <img src={vet.url || notLogin} />
+                                        <p><strong>{vet.nome}</strong></p>
+                                        <p>{vet.crvm}</p>
+                                        <button
+                                            onClick={() => setShowMoreVet(vet.id)}
+                                        >
+                                            Ver Mais
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                disabled={page === totalPages - 1}
+                                onClick={() => setPage(page + 1)}
+                            >
+                                ❯
+                            </button>
+                        </div>
+                    </>
+                )}
+
+                {/* lista */}
+                {showLista && (
+                    <>
+                        <div className="toggleVetsContainer">
+                            <span>Carrossel</span>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={showLista}
+                                    onChange={() => setShowLista(!showLista)}
+                                />
+                                <span className="slider"></span>
+                            </label>
+                            <span>Lista</span>
+                        </div>
+
+                        <div className="listaVetsContainer">
+                            {veterinarios.map((vet) => (
+                                <div key={vet.id} className="vetListItem">
+                                    <p><strong>{vet.nome}</strong></p>
+                                    <p>{vet.crvm}</p>
+                                    <button onClick={() => setShowMoreVet(vet.id)}>
+                                        Ver Mais
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                <button className="fechar" onClick={onClose}>
+                    Fechar
+                </button>
             </div>
-            {isLoading && <LoadingSpin />}
+
+            {showMoreVet && (
+                <div className="overlay">
+                    <ShowVeterinario
+                        veterinarioId={showMoreVet}
+                        onClose={() => setShowMoreVet(null)}
+                    />
+                </div>
+            )}
         </div>
     );
 };

@@ -10,11 +10,12 @@ const ShowVeterinario = ({
   veterinarioId
 }) => {
   const [veterinario, setVeterinario] = useState(null);
+  const [newCliente, setCliente] = useState(false);
   const [newImagem, setImagem] = useState(null)
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [newPermission, setPermission] = useState(null)
+  const [newPermission, setPermission] = useState(false)
 
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -56,24 +57,30 @@ const ShowVeterinario = ({
           `${apiUrl}/api/veterinario/${veterinarioId}`
         );
         setVeterinario(response.data);
-        
-        const permission = await axios.get(`${apiUrl}/api/clienteVeterinario/existe?veterinarioId=${veterinarioId}`)
-        setPermission(permission.data)
-        console.log (permission)
+
+        const verCliente = await axios.get(`
+          ${apiUrl}/api/auth/authentication`
+        )
+
+        if (verCliente.data?.cliente) {
+          setCliente(true)
+          const permission = await axios.get(`${apiUrl}/api/clienteVeterinario/existe?veterinarioId=${veterinarioId}`)
+          setPermission(permission.data)
+        }
 
         const imagem = await axios.get(
           `${apiUrl}/api/veterinario/${veterinarioId}/imagem`, {
-            responseType: 'blob'
-          }
+          responseType: 'blob'
+        }
         )
         const imageUrl = URL.createObjectURL(imagem.data);
         setImagem(imageUrl);
         setSuccess("Dados do veterinário e imagem carregados com sucesso!");
-        
+
 
       } catch (err) {
         console.log(err);
-      }finally {
+      } finally {
         setIsLoading(false);
       }
     };
@@ -141,32 +148,37 @@ const ShowVeterinario = ({
               {veterinario?.endereco || "Endereço não encontrado"}
             </p>
           </div>
-          <div className="item full permission-box">
-            {newPermission ? (
+          {newCliente == true && newPermission == true && (
+            <div className="item full permission-box">
+
               <button
                 id="vincularRemover"
-                className="permissionbutton" 
+                className="permissionbutton"
                 type="button"
-                onClick={() => 
+                onClick={() =>
                   handleRemovePermission(veterinario?.id)
                 }
               >
                 Remover Permissão
               </button>
-            ) : (
-              
+            </div>
+          )}
+
+          {newCliente == true && newPermission == false && (
+            <div className="item full permission-box">
+
               <button
                 id="vincular"
-                className="permissionbutton" 
+                className="permissionbutton"
                 type="button"
-                onClick={() => 
+                onClick={() =>
                   handlePermission(veterinario?.id)
                 }
               >
                 Conceder Permissão
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
         </div>
       </div>

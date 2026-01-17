@@ -4,14 +4,6 @@
     margin: 0 auto;
 }
 
-.searchContainer input {
-    padding: 0.7rem 0.5rem; 
-    
-    font-size: 1.15rem; 
-    
-    box-sizing: border-box; 
-    width: 30%; 
-}
 
 .containerVeterinario h1 {
    text-align: center;
@@ -19,18 +11,6 @@
     margin-bottom: 2rem; 
     font-size: 4rem;
     font-weight: 600;
-}
-.searchContainer button {
-
-    padding: 0.3rem 0.9rem; 
-    
-    font-size: 1rem; 
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    margin-left: 10px;
 }
 
 .displayDeVeterinarios {

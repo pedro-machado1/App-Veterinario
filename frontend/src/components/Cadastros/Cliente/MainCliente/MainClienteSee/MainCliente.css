@@ -78,9 +78,10 @@
     background-color: #218838;
 }
 
-/* barra de pesquisa */
+
 .searchContainer {
     display: flex;
+    gap: 1rem;
     justify-content:center;
     margin-left: 1vw; 
     margin-bottom: 2.5rem; 
@@ -92,6 +93,8 @@
 .searchContainer input {
     display: flex;
     align-items: left;
+    margin-right: 0.5;
+    padding: 1rem 1.75rem;
     border-radius: 0.5rem;
     flex-grow: 0; 
     min-width: 50vw; 

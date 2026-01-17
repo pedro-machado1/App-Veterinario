@@ -42,7 +42,7 @@ const MainClienteAdmin = ( {
             setShowMoreCliente(clienteId);
         }
     };
-    const fetchClientes = async (cpf) => {
+    const fetchClientes = async (cpf, filterPermission) => {
         setIsLoading(true);
         setError(null);
         
@@ -68,7 +68,7 @@ const MainClienteAdmin = ( {
     };
 
     useEffect(() => {
-        fetchClientes(searchCpf);
+        fetchClientes(searchCpf, filterPermission);
     }, []); 
 
     const handleDelete = async (clienteId) => {

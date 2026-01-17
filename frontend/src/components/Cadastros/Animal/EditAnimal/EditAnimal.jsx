@@ -149,7 +149,7 @@ const EditAnimal = ({
         formData,
       );
       console.log("Animal updated:", response.data);
-      setSuccess("Animal atualizado com sucesso!");
+      setSuccess("Animal atualizado");
       setIsLoading(false);
       onClose();
     } catch (err) {

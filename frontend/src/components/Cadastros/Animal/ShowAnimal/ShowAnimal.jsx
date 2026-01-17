@@ -2,6 +2,7 @@ import "./ShowAnimal.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import EditAnimal from "../EditAnimal/EditAnimal.jsx";
 import MainConsultaAnimal from "../../Consulta/MainConsulta/MainConsultaAnimal/MainConsultaAnimal.jsx";
 import notLogin from "../../../../assets/images/notLogin.png"
 
@@ -9,9 +10,12 @@ const ShowAnimal = ({
     onClose,
     animalId,
     clienteId,
+    onAnimalDeleted
 }) => {
 
     const [newShowConsulta, setNewShowConsulta] = useState(null)
+    const [showEdit, setShowEdit] = useState(false)
+    const [showConfirmation, setShowConfirmation] = useState(false)
     const [newAnimal, setAnimal] = useState(null)
     const [newImagem, setImagem] = useState(null)
     const [Error, setError] = useState(null);
@@ -67,6 +71,31 @@ const ShowAnimal = ({
         asyncFunction()
     }, [animalId])
 
+    const onDelete = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.delete(`${apiUrl}/api/cliente/removeanimal/${animalId}`)
+            console.log(response.data);
+            setSuccess("Animal deletado com sucesso!");
+            
+            // Chamar callback para atualizar a lista
+            if (onAnimalDeleted) {
+                setTimeout(() => {
+                    onAnimalDeleted();
+                    onClose();
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    onClose();
+                }, 1000);
+            }
+        } catch (err) {
+            console.log(err)
+            setError("Erro ao deletar animal");
+            setIsLoading(false);
+        }
+    }
+
     return (
         <div className="animalShowContainer">
             <h2 className="title"> {newAnimal?.nome || "Nome não encontrado"} </h2>
@@ -121,6 +150,22 @@ const ShowAnimal = ({
                 </button>
 
                 <button
+                type="button"
+                className="editar"
+                onClick={() => setShowEdit(true)}
+                >
+                    Editar
+                </button>
+
+                <button
+                type="button"
+                className="deletar"
+                onClick={() => setShowConfirmation(true)}
+                >
+                    Deletar
+                </button>
+
+                <button
                     type="button"
                     className="fechar"
                     onClick={onClose}>
@@ -132,9 +177,44 @@ const ShowAnimal = ({
                     onClose={() => setNewShowConsulta(false)}
                     animalId={animalId}
                 />
-            )
+            )}
 
-            }
+            {showEdit && (
+                <div className="overlay">
+                    <EditAnimal
+                        onClose={() => {
+                            setShowEdit(false);
+                        }}
+                        animalId={animalId}
+                        show={showEdit}
+                    />
+                </div>
+            )}
+
+            {showConfirmation && (
+                <div className="overlay">
+                    <div className="confirmationContainer">
+                        <h2>Você quer deletar esse animal?</h2>
+                        <div className="botoesConfirmation">
+                            <button 
+                                className="confirmation" 
+                                onClick={() => {
+                                    onDelete();
+                                    setShowConfirmation(false);
+                                }}
+                            >
+                                Confirmar
+                            </button>
+                            <button 
+                                className="cancelar" 
+                                onClick={() => setShowConfirmation(false)}
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {isLoading && <LoadingSpin />}
         </div>
     );
