@@ -56,40 +56,61 @@ const MainConsultaAnimal = ({
   return (
     <div className="main-consulta-container">
 
-      <h1>Consultas</h1>
+      {consultas.length > 0 ? (
+        <div className="displayDeConsultas">
+          {consultas.map((c) => (
+            <div key={c.id} className="ConsultaCard">
+              <div className="conteudoInfo">
+                <p>{c.titulo || "Consulta sem título"}</p>
+                
+                <p>
+                  <strong>Data:</strong>
+                  <span className="dataInfo">
+                    {new Date(c.dataCriacao).toLocaleDateString("pt-BR")}
+                  </span>
+                </p>
 
-      <div className="displayDeConsultas">
-        {consultas.map((c) => (
-          <div key={c.id} className="ConsultaCard">
-            <p>
-              <strong>Título:</strong> {c.titulo || "Título não informado"}
-            </p>
-            <p>
-              <strong>Data:</strong> {c.dataCriacao || "Data não encontrada"}
-            </p>
+                <p>
+                  <strong>Veterinário:</strong> {c.veterinario || "Não informado"}
+                </p>
 
-            <button className="Edit" onClick={() => showMoreToggle(c.id)}>
-              Ver Mais
-            </button>
+                <p>
+                  <strong>Descrição:</strong> {c.descricao ? c.descricao.substring(0, 50) + "..." : "Sem descrição"}
+                </p>
 
-            {showMore === c.id && (
-              <ShowConsulta
-                onClose={() => setShowMore(null)}
-                consultaId={c.id}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-      <button
-        className="Fechar"
-        onClick={onClose}
-      >
-        Fechar
-      </button>
+                {c.status && (
+                  <span className={`statusBadge status-${c.status.toLowerCase()}`}>
+                    {c.status}
+                  </span>
+                )}
+              </div>
+
+              <div className="botoesCarta">
+                <button 
+                  className="Edit" 
+                  onClick={() => showMoreToggle(c.id)}
+                >
+                  Ver Detalhes
+                </button>
+                <button className="Deletar">
+                  Deletar
+                </button>
+              </div>
+
+              {showMore === c.id && (
+                <ShowConsulta
+                  onClose={() => setShowMore(null)}
+                  consultaId={c.id}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        !isLoading && <div className="semConsultas">Nenhuma consulta registrada para este animal</div>
+      )}
 
       {isLoading && <LoadingSpin />}
-      {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
   );
 };

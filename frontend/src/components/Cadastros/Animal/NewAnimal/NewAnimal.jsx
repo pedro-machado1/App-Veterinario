@@ -1,8 +1,9 @@
 import "./NewAnimal.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import InputField from "../../../Extras/InputField/InputField.jsx";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
+import notLogin from "../../../../assets/images/notLogin.png";
 
 const NewAnimal = ({ onClose }) => {
   const [nome, setNome] = useState("");
@@ -23,8 +24,47 @@ const NewAnimal = ({ onClose }) => {
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
+  const fileInputRef = useRef(null);
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        setImagem(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImg(reader.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setError("Por favor, selecione um arquivo de imagem válido.");
+      }
+    }
+  };
+
+  const handleImageAreaClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -125,7 +165,7 @@ const NewAnimal = ({ onClose }) => {
   };
 
   return (
-    <div className="animal-container">
+    <div className="newAnimalContainer">
       <h1 className="title">Registre um animal</h1>
       <form
         id="formsNewAnimal"
@@ -242,7 +282,6 @@ const NewAnimal = ({ onClose }) => {
           />
         </div>
         <div className="line4">
-
           <InputField
             label="Doença"
             placeholder="Informe a doença"
@@ -283,47 +322,66 @@ const NewAnimal = ({ onClose }) => {
             onInvalid={(e) => isInvalid(e)}
             required
           />
-          <InputField
-            label="URL da Imagem"
-            placeholder={"Coloque a Imagem de perfil do cliente"}
-            idInput="newImagem"
-            classNameDiv="inputImagem"
-            type="file"
-            onChange={handleImageChange}
-          />
-          {previewImg && (
+        </div>
+
+        <div
+          className={`imagePreview ${isDragging ? 'dragging' : ''}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={handleImageAreaClick}
+        >
+          {previewImg ? (
             <img
               src={previewImg}
-              alt="Preview"
-              style={{ width: "150px", height: "auto", marginTop: "10px" }}
+              alt="Preview do Animal"
+              className="animal-image"
+            />
+          ) : (
+            <img
+              src={notLogin}
+              alt="Nenhuma imagem disponível"
+              className="animal-image"
             />
           )}
-
+          <div>
+            <p className="dragDropText">Clique ou arraste a imagem aqui</p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="newImagem"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
+          </div>
         </div>
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>
           <p style={{ color: "green" }}>{Success && Success}</p>
         </div>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="submit">
-          Enviar
-        </button>
-        <button
-          type="reset"
-          className="cancelar"
-          onClick={() => handleReset()}
-        >
-          Cancelar
-        </button>
+        <div className="botoesPrincipais">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="submit">
+            Criar
+          </button>
+          <button
+            type="reset"
+            className="cancelar"
+            onClick={() => handleReset()}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="newFechar"
+            onClick={onClose}>
+            Fechar
+          </button>
+        </div>
       </form>
-      <button
-        type="buttom"
-        className="fechar"
-        onClick={onClose}>
-        Fechar
-      </button>
 
       {isLoading && <LoadingSpin />}
     </div>

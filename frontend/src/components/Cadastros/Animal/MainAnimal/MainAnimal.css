@@ -23,7 +23,7 @@
     min-width: 12rem;
     margin: 0; 
     padding: 0.75rem 1.5rem;
-    background-color: #2ecc71;
+    background-color: #4da44d;
     color: white;
     border-radius: 0.5rem;
     font-size: 1.2rem; 
@@ -32,15 +32,16 @@
 }
 
 .novoAnimalButtom:hover {
-    background-color: #27ae60 ;
+    background-color: #66716b ;
 }
 
 /* animais */
 
 .displayDeAnimais {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 2rem; 
+    flex-wrap: wrap;
+    margin-left: 7rem;
+    gap: 7rem; 
     padding-bottom: 1.5rem;
     justify-content: flex-start; 
 }
@@ -48,7 +49,8 @@
 
 .Animal {
     position: relative;
-    width: calc(33.33% - 2rem); 
+    width: calc(45% - 2rem); 
+    height: 20vh;
     min-width: 15rem; 
     background: #f7f9fb;
     border-radius: 0.75rem;
@@ -71,14 +73,16 @@
 }
 
 .animal-image {
-    width: 7rem; 
-    height: 7rem;
+    width: 8rem; 
+    height: 8rem;
     object-fit: cover;
     border-radius: 50%;
     border: 0.2rem solid #ddd; 
 }
 
 .informacoesAnimais {
+    margin-top: 0.2rem;
+    margin-left: 0.5;
     flex-grow: 1; 
     display: flex;
     flex-direction: column;
@@ -86,9 +90,9 @@
 }
 
 .Animal p {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin: 0.3rem 0;
-    padding-bottom: 0.3rem;
+    padding-bottom: 0.5rem;
 }
 
 /* botoes */

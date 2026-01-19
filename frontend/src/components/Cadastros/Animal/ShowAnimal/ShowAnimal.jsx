@@ -13,7 +13,7 @@ const ShowAnimal = ({
     onAnimalDeleted
 }) => {
 
-    const [newShowConsulta, setNewShowConsulta] = useState(null)
+    const [activeTab, setActiveTab] = useState("informacoes");
     const [showEdit, setShowEdit] = useState(false)
     const [showConfirmation, setShowConfirmation] = useState(false)
     const [newAnimal, setAnimal] = useState(null)
@@ -24,9 +24,9 @@ const ShowAnimal = ({
 
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    const toggleShowConsulta = () => {
-        setNewShowConsulta((prev) => !prev)
-    }
+    const toggleTab = (tab) => {
+        setActiveTab(tab);
+    };
 
 
     useEffect(() => {
@@ -39,9 +39,10 @@ const ShowAnimal = ({
                     console.log(response.data)
                     setSuccess("A API obteve sucesso")
                     setAnimal(response.data)
-                    
-                    const imagem = await axios.get(`${apiUrl}/api/animal/${animalId}/imagem`, { 
-                        responseType: 'blob'}
+
+                    const imagem = await axios.get(`${apiUrl}/api/animal/${animalId}/imagem`, {
+                        responseType: 'blob'
+                    }
                     )
                     console.log(imagem)
                     const imageUrl = URL.createObjectURL(imagem.data);
@@ -69,7 +70,7 @@ const ShowAnimal = ({
         }
 
         asyncFunction()
-    }, [animalId])
+    }, [animalId, showEdit])
 
     const onDelete = async () => {
         try {
@@ -77,7 +78,6 @@ const ShowAnimal = ({
             const response = await axios.delete(`${apiUrl}/api/cliente/removeanimal/${animalId}`)
             console.log(response.data);
             setSuccess("Animal deletado com sucesso!");
-            
             // Chamar callback para atualizar a lista
             if (onAnimalDeleted) {
                 setTimeout(() => {
@@ -99,86 +99,106 @@ const ShowAnimal = ({
     return (
         <div className="animalShowContainer">
             <h2 className="title"> {newAnimal?.nome || "Nome não encontrado"} </h2>
-            <div className="presentAnimalContainer">
-                {newImagem ? (
-                    <img src={newImagem} alt={`Foto de ${newAnimal?.nome}`} className="animal-image" />
-                ) : (
-                    <img src={notLogin} alt="Imagem não encontrada" className="animal-image"/>
-                )}
-                <div className="line1">
-                    <p>
-                        Especie: {newAnimal?.especie || "Espécie não encontrada"}
-                    </p>
-                    <p>
-                        Idade: {newAnimal?.idade || "Idade não encontrada"}
-                    </p>
+            
+            <div className="tabsContainer">
+                <div className="tabs">
+                    <button 
+                        className={`tabButton ${activeTab === "informacoes" ? "active" : ""}`}
+                        onClick={() => toggleTab("informacoes")}
+                    >
+                        Informações
+                    </button>
+                    <button 
+                        className={`tabButton ${activeTab === "consultas" ? "active" : ""}`}
+                        onClick={() => toggleTab("consultas")}
+                    >
+                        Consultas
+                    </button>
+                    <div className={`tabIndicator ${activeTab}`}></div>
                 </div>
-                <div className="line2">
-                    <p>
-                        Gênero: {newAnimal?.genero || "Gênero não encontrado"}
-                    </p>
-                    <p>
-                        Altura: {newAnimal?.altura ? newAnimal.altura + " cm" : "Altura não encontrada"}
-                    </p>
-                    <p>
-                        Comprimento: {newAnimal?.comprimento ? newAnimal.comprimento + " cm" : "Comprimento não encontrado"}
-                    </p>
+            </div>
+
+            <div className={`tabContent informacoes ${activeTab === "informacoes" ? "active" : ""}`}>
+                <div className="WrapperImagem">
+                    {newImagem ? (
+                        <img src={newImagem} alt={`Foto de ${newAnimal?.nome}`} className="animal-image" />
+                    ) : (
+                        <img src={notLogin} alt="Imagem não encontrada" className="animal-image" />
+                    )}
+                    <div className="linhasLaterais">
+                        <div className="line1">
+                            <p className="especie">
+                                Especie: {newAnimal?.especie || "Espécie não encontrada"}
+                            </p>
+                            <p className="idade">
+                                Idade: {newAnimal?.idade || "Idade não encontrada"}
+                            </p>
+                        </div>
+                        <div className="line2">
+                            <p className="genero">
+                                Gênero: {newAnimal?.genero || "Gênero não encontrado"}
+                            </p>
+                            <p className="altura">
+                                Altura: {newAnimal?.altura ? newAnimal.altura + " cm" : "Altura não encontrada"}
+                            </p>
+                        </div>
+                        <div className="line3">
+                            <p className="comprimento">
+                                Comprimento: {newAnimal?.comprimento ? newAnimal.comprimento + " cm" : "Comprimento não encontrado"}
+                            </p>
+                            <p className="peso">
+                                Peso: {newAnimal?.peso ? newAnimal.peso + " kg" : "Peso não encontrado"}
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div className="line3">
-                    <p>
-                        Peso: {newAnimal?.peso ? newAnimal.peso + " kg" : "Peso não encontrado"}
+                <div className="line4">
+                    <p className="doenca">
+                        Doeça diagnosticadas: {newAnimal?.doenca || "Não possui doença"}
                     </p>
-                    <p>
-                        Doença: {newAnimal?.doenca || "Doença não encontrada"}
-                    </p>
-                    <p>
+                    <p className="alergia">
                         Alergia: {newAnimal?.alergia || "Alergia não encontrada"}
                     </p>
-                    <p>
+                    <p className="raca">
                         Raça: {newAnimal?.raca || "Raça não encontrada"}
                     </p>
                 </div>
-
             </div>
-            <div id="botaoContainer">
-                <button
-                type="button"
-                className="consultas"
-                onClick={toggleShowConsulta}
-                >
-                    Ver Consultas
-                </button>
 
-                <button
-                type="button"
-                className="editar"
-                onClick={() => setShowEdit(true)}
-                >
-                    Editar
-                </button>
+            <div className={`tabContent consultas ${activeTab === "consultas" ? "active" : ""}`}>
+                <MainConsultaAnimal
+                    animalId={animalId}
+                    onClose={() => {}}
+                />
+            </div>
 
-                <button
-                type="button"
-                className="deletar"
-                onClick={() => setShowConfirmation(true)}
-                >
-                    Deletar
-                </button>
+            <div className="botaoContainer">
+                <div className="botoesPrincipais">
+
+                    <button
+                        type="button"
+                        className="editar"
+                        onClick={() => setShowEdit(true)}
+                    >
+                        Editar
+                    </button>
+
+                    <button
+                        type="button"
+                        className="deletar"
+                        onClick={() => setShowConfirmation(true)}
+                    >
+                        Deletar
+                    </button>
+                </div>
 
                 <button
                     type="button"
-                    className="fechar"
+                    className="fecharBotao"
                     onClick={onClose}>
                     Fechar
                 </button>
             </div>
-            {newShowConsulta && (
-                <MainConsultaAnimal
-                    onClose={() => setNewShowConsulta(false)}
-                    animalId={animalId}
-                />
-            )}
-
             {showEdit && (
                 <div className="overlay">
                     <EditAnimal
@@ -196,8 +216,8 @@ const ShowAnimal = ({
                     <div className="confirmationContainer">
                         <h2>Você quer deletar esse animal?</h2>
                         <div className="botoesConfirmation">
-                            <button 
-                                className="confirmation" 
+                            <button
+                                className="confirmation"
                                 onClick={() => {
                                     onDelete();
                                     setShowConfirmation(false);
@@ -205,8 +225,8 @@ const ShowAnimal = ({
                             >
                                 Confirmar
                             </button>
-                            <button 
-                                className="cancelar" 
+                            <button
+                                className="cancelar"
                                 onClick={() => setShowConfirmation(false)}
                             >
                                 Cancelar
