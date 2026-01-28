@@ -1,6 +1,5 @@
 package com.dto.users;
 
-import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioSimpleDto;

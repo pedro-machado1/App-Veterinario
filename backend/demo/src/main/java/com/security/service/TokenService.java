@@ -27,6 +27,9 @@ public class TokenService {
     @Value("${api.security.token.veterinario}")
     private String secretLoginVeterinario;
 
+    @Value("${api.security.token.verification:}")
+    private String emailVerificationTokenSecret;
+
     public String generateRefreshToken(long id){
         long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 30; // 30 dias
         try{
@@ -121,5 +124,30 @@ public class TokenService {
 
     public String getSubjectFromToken(String token) {
         return JWT.decode(token).getSubject();
+    }
+
+    public String generateEmailVerificationToken(long id) {
+        long EMAIL_VERIFICATION_EXPIRATION = 1000 * 60 * 30; // 30 minutos
+        String secret = emailVerificationTokenSecret.isEmpty() ? resetTokenSecret : emailVerificationTokenSecret;
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.create()
+                    .withSubject(String.valueOf(id))
+                    .withIssuer("API Veterinario")
+                    .withIssuedAt(new Date(System.currentTimeMillis()))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + EMAIL_VERIFICATION_EXPIRATION))
+                    .sign(algorithm);
+        } catch (JWTCreationException e) {
+            throw new RuntimeException("Erro ao gerar token de verificação de email", e);
+        }
+    }
+
+    public DecodedJWT validateEmailVerificationToken(String token) throws JWTVerificationException {
+        String secret = emailVerificationTokenSecret.isEmpty() ? resetTokenSecret : emailVerificationTokenSecret;
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return JWT.require(algorithm)
+                .withIssuer("API Veterinario")
+                .build()
+                .verify(token);
     }
 }

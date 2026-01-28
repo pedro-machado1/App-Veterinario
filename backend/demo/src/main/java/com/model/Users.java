@@ -30,6 +30,8 @@ public class Users implements UserDetails {
 
     private Role role;
 
+    private boolean emailVerified = false;
+
     @OneToOne
     private Veterinario veterinario;
 

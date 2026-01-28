@@ -82,14 +82,13 @@ h1 {
     display: flex;
     flex-wrap: wrap; 
     gap: 1.8rem; 
-    padding-bottom: 3rem;
     justify-content: flex-start;
 }
 
 .Consultorio {
     
     width: calc(33.33% - 1.25rem); 
-    
+
     background: white;
     border-radius: 0.75rem;
     
@@ -102,7 +101,8 @@ h1 {
 
 .consultorio-image {
     width: 100%;
-    height: 12.5rem;
+    height: 15rem;
+    align-items: center;
     object-fit: cover;
     border-radius: 0.5rem;
     margin-bottom: 1rem;

@@ -52,7 +52,39 @@ public class AuthenticationService implements UserDetailsManager {
     public void requestNewPassword(String email){
         Users user = usersRepository.findByEmail(email);
         String token = tokenService.generateResetPasswordToken(user.getId());
+        emailService.sendPasswordResetEmail(email, token);
+    }
+
+    public void sendEmailVerification(String email) {
+        Users user = usersRepository.findByEmail(email);
+        if (user == null) {
+
+
+
+
+
+            throw new UsernameNotFoundException("Usuário não encontrado");
+        }
+        String token = tokenService.generateEmailVerificationToken(user.getId());
         emailService.sendEmail(email, token);
+    }
+
+    public void sendEmailVerification(String email, String userType) {
+        Users user = usersRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuário não encontrado");
+        }
+        String token = tokenService.generateEmailVerificationToken(user.getId());
+        emailService.sendEmail(email, token, userType);
+    }
+
+    public void verifyEmail(String token) {
+        tokenService.validateEmailVerificationToken(token);
+        long id = Long.parseLong(tokenService.getSubjectFromToken(token));
+        Users user = usersRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        user.setEmailVerified(true);
+        usersRepository.save(user);
     }
 
     public void resetPassword(String token, String newPassword){

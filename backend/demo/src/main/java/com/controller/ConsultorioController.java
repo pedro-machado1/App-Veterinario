@@ -4,14 +4,11 @@ import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
-import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.enums.Estado;
 import com.model.Consultorio;
 import com.model.Users;
-import com.model.Veterinario;
 import com.service.ConsultorioService;
-import com.service.FileStorageService;
 import com.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -23,9 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -49,13 +43,7 @@ public class ConsultorioController {
             @Validated @RequestPart("consultorio") ConsultorioDto consultorioDto,
             @RequestPart(value = "imagem", required = false) MultipartFile imagem
     ) {
-        ConsultorioDto consultorio =consultorioService.insert(consultorioDto, imagem);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(consultorio.getId())
-                .toUri();
-        return ResponseEntity.ok().body(consultorio);
+        return ResponseEntity.ok().body(consultorioService.insert(consultorioDto, imagem));
     }
     @GetMapping("{id}")
     public ResponseEntity<Optional<ConsultorioSimpleDto>> findById(@PathVariable Long id){

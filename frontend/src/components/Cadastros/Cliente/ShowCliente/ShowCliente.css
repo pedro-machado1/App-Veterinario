@@ -1,4 +1,4 @@
-.clienteContainer {
+.showClienteContainer {
     position: fixed;
     top: 0;
     left: 0;
@@ -15,7 +15,7 @@
     padding: 1.25rem 0;
 }
 
-.clienteContainer > .presentclienteContainer {
+.showClienteContainer > .presentshowClienteContainer {
     background-color: #ffffff;
     
     padding: 3.5rem 4rem; 
@@ -37,7 +37,7 @@
 }
 
 
-.clienteContainer .fechar {
+.showClienteContainer .fechar {
   align-self: flex-end; 
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -50,7 +50,7 @@
   margin-top: 1rem;
 }
 
-.clienteContainer .fechar:hover {
+.showClienteContainer .fechar:hover {
   background-color: #c0392b;
 }
 

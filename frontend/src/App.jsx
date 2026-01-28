@@ -15,6 +15,7 @@ import LoginComponents from './components/Security/Login/LoginComponents.jsx'
 import Navbar from './components/Extras/navbar/Navbar.jsx'
 import ForgotPasswordComponents from './components/Security/ForgotPassword/ForgotPasswordComponents.jsx'
 import ResetPassword from './components/Security/ResetPassword/ResetPassword.jsx'
+import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.jsx'
 import ProtectedRoute from './components/Security/Context/ProtectRoute.jsx'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import UserProfile from './pages/UserProfile/UserProfile.jsx'
@@ -40,6 +41,7 @@ function App() {
         <Routes>
           <Route path = "/forgot-password" element = {<ForgotPasswordComponents/>} />
           <Route path = "/reset-password" element= {<ResetPassword/>} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/login" element={<LoginComponents />} />
           <Route path="/register" element={<RegisterComponent />} />
           <Route path="/registerConsultorio" element={<RegisterConsultorio />} />

@@ -37,39 +37,44 @@ const MainAnimal = () => {
         setIsLoading(true)
         setError(null)
 
-        let url = `${apiUrl}/api/cliente/animal`
-        if (searchname !== "") {
-            url += `?nome=${searchname}`
-        }
+        try {
+            let url = `${apiUrl}/api/cliente/animal`
+            if (searchname !== "") {
+                url += `?nome=${searchname}`
+            }
+            const response = await axios.get(url)
+            
+            if (response.data.content.length == 0) {
+                setError("Você não possui nenhum animal cadastrado")
+                setAnimal([])
+                console.log("Você não possui nenhum animal cadastrado ")
+            }
+            else {
+                console.log(response.data.content)
+                const animal = response.data.content
+                const animalComImagens = await Promise.all(animal.map(async (animal) => {
+                    try {
+                        const imageResponse = await axios.get(`${apiUrl}/api/animal/${animal.id}/imagem`,
+                            { responseType: 'blob' }
+                        );
+                        const image = URL.createObjectURL(imageResponse.data)
+                        console.log(animal + " " + imageResponse.data)
+                        return { ...animal, url: image };
+                    } catch (error) {
+                        return { ...animal, url: null };
+                    }
+                }))
 
-        const response = await axios.get(url 
-        )
-        if (response.data.content.length == 0) {
-            setError("Você não possui nenhum animal cadastrado")
+                console.log(animal)
+                setAnimal(animalComImagens)
+            }
+        } catch (error) {
+            console.error("Erro ao buscar animais:", error)
+            setError("Erro ao carregar animais. Tente novamente.")
             setAnimal([])
-
-            console.error("Você não possui nenhum animal cadastrado ")
+        } finally {
+            setIsLoading(false)
         }
-        else {
-            console.log(response.data.content)
-            const animal = response.data.content
-            const animalComImagens = await Promise.all(animal.map(async (animal) => {
-                try {
-                    const imageResponse = await axios.get(`${apiUrl}/api/animal/${animal.id}/imagem`,
-                        { responseType: 'blob' }
-                    );
-                    const image = URL.createObjectURL(imageResponse.data)
-                    console.log(animal + " " + imageResponse.data)
-                    return { ...animal, url: image };
-                } catch (error) {
-                    return { ...animal, url: null };
-                }
-            }))
-
-            console.log(animal)
-            setAnimal(animalComImagens)
-        }
-        setIsLoading(false)
     }
 
     useEffect(() => {
@@ -90,30 +95,30 @@ const MainAnimal = () => {
                     e.preventDefault()
                     asyncFunction(searchName)
                 }}>
-                <InputField
-                    placeholder="Pesquisar por nome"
-                    value={searchName}
-                    onChange={(e) => setSearchNome(e.target.value)}
-                />
+                    <InputField
+                        placeholder="Pesquisar por nome"
+                        value={searchName}
+                        onChange={(e) => setSearchNome(e.target.value)}
+                    />
                 </form>
-                <button className= "botaoPesquisar" onClick={() => asyncFunction(searchName)}>Pesquisar</button>
-                <button className= "botaoLimpar" onClick={() => {  
+                <button className="botaoPesquisar" onClick={() => asyncFunction(searchName)}>Pesquisar</button>
+                <button className="botaoLimpar" onClick={() => {
                     asyncFunction("")
                     setSearchNome("")
-                    } } >
-                        LimparFiltro
+                }} >
+                    LimparFiltro
                 </button>
             </div>
-            
+
             <div className="alignItems">
                 <div className="toggleContainer">
                     <span className="toggleLabel">Estilo:</span>
-                    
+
                     <label className="switch">
-                        <input 
-                            type="checkbox" 
-                            checked={newSwitch} 
-                            onChange={() => setNewSwitch(!newSwitch)} 
+                        <input
+                            type="checkbox"
+                            checked={newSwitch}
+                            onChange={() => setNewSwitch(!newSwitch)}
                         />
                         <span className="slider round"></span>
                     </label>
@@ -136,11 +141,11 @@ const MainAnimal = () => {
                     {newAnimal.map((animal) => (
                         <div key={animal.id} className="Animal">
                             <div className="ImagemInformacoes">
-                                {animal.url ? (
-                                    <img src={animal.url} alt={`Foto de ${animal.nome}`} className="animal-image" />
-                                ) : (
-                                    <img src={notLogin} alt="Imagem não encontrada" className="animal-image" />
-                                )}
+                                <img
+                                    src={animal.url || notLogin}
+                                    alt={animal.nome}
+                                    className="animal-image"
+                                />
                                 <div className="informacoesAnimais">
                                     <p>
                                         Nome: {animal.nome || "Erro nome não encontrado"}
@@ -150,19 +155,19 @@ const MainAnimal = () => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="botoesAnimais"> 
+                            <div className="botoesAnimais">
                                 <a
-                                    href="#" 
+                                    href="#"
                                     className="verMaisLink"
                                     onClick={(e) => {
-                                        e.preventDefault(); 
+                                        e.preventDefault();
                                         showMoreToggle(animal.id);
                                     }}
                                 >
                                     Ver Mais
                                 </a>
                             </div>
-                            
+
                         </div>
                     ))}
                 </div>
@@ -181,25 +186,25 @@ const MainAnimal = () => {
                             <button
                                 className="botaoEditLista"
                                 onClick={(e) => {
-                                    e.preventDefault(); 
+                                    e.preventDefault();
                                     showMoreToggle(animal.id);
-                                    }}
-                                >
-                                    Ver Mais
-                                </button>
-                        </div> 
+                                }}
+                            >
+                                Ver Mais
+                            </button>
+                        </div>
                     ))}
                 </div>
             )}
 
             {show &&
-                <div className="overlay"> 
+                <div className="overlay">
                     <NewAnimal
                         onClose={() => setShow(false)}
                     />
                 </div>
             }
-            {showMore && ( 
+            {showMore && (
                 <div className="overlay">
                     <ShowAnimal
                         onClose={() => setShowMore(null)}
@@ -210,6 +215,7 @@ const MainAnimal = () => {
                 </div>
             )}
             {IsLoading && <LoadingSpin />}
+            {Error && <div style={{ color: "red", padding: "10px", textAlign: "center" }}>{Error}</div>}
         </div>
     )
 }
