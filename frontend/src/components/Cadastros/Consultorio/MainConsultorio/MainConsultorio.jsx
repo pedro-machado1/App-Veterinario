@@ -157,11 +157,11 @@ const MainConsultorio = () => {
                     <div className="displayDeConsultorios">
                         {newConsultorio.map((consultorio) => (
                             <div key={consultorio.id} className="Consultorio">
-                                {consultorio.imagem ? (
-                                    <img src={consultorio.url} alt={`Foto de ${consultorio.nome}`} className="consultorio-image" />
-                                ) : (
-                                    <img src={notLogin} className="consultorio-image" />
-                                )}
+                                <img 
+                                    src={consultorio.url || notLogin} 
+                                    alt={consultorio.nome}
+                                    className="consultorio-image"
+                                />
                                 <p>
                                     Nome: {consultorio.nome || "Erro nome não encontrado"}
                                 </p>

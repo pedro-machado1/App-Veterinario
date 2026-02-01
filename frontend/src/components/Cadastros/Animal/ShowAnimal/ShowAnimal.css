@@ -1,98 +1,333 @@
 .animalShowContainer {
-    width: 90vw;
-    max-width: 1000px;
+    width: 80vw;
+    height: 85vh;
     background-color: #ffffff;
     border-radius: 1rem;
-    padding: 2rem;
-
-    position: relative;
-    z-index: 10000;
-
+    padding: 1rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.08);
+    margin: 2rem auto;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-
-    margin: 2rem auto;
-    max-height: 90vh;
-    overflow-y: auto;
-
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    gap: 2rem;
 }
 
 .animalShowContainer .title {
     text-align: center;
-    color: #34495e;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    border-bottom: 0.15rem solid #ecf0f1;
-    padding-bottom: 0.5rem;
+    font-size: 4.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+    border-bottom: 0.3rem solid #ecf0f1;
+}
+
+/* Tabs */
+.tabsContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.tabs {
+    display: flex;
+    position: relative;
+    gap: 0;
+    border-bottom: 0.2rem solid #ecf0f1;
+    width: 100%;
+}
+
+.tabButton {
+    background: none;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    position: relative;
+    flex: 1;
+    text-align: center;
+}
+
+.tabButton:hover {
+    color: #2c3e50;
+}
+
+.tabButton.active {
+    color: #2ecc71;
+}
+
+.tabIndicator {
+    position: absolute;
+    bottom: -0.2rem;
+    height: 0.3rem;
+    background-color: #2ecc71;
+    transition: all 0.3s ease;
+}
+
+.tabIndicator.informacoes {
+    width: 50%;
+    transform: translateX(0);
+}
+
+.tabIndicator.consultas {
+    width: 50%;
+    transform: translateX(100%);
+}
+
+.tabContent {
+    display: none;
+    opacity: 0;
+    width: 100%;
+}
+
+.tabContent.active {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+}
+
+.tabContent.informacoes.active {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.tabContent.consultas.active {
+    display: flex;
+    flex-direction: column;
 }
 
 .animalShowContainer .presentAnimalContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 1.5rem;
+    width: 100%;
 }
 
 .animalShowContainer .animal-image {
-    width: 12rem;
-    height: 12rem;
-    border-radius: 50%;
+    display: flex;
+    justify-content: space-between;
+    width: 18rem;
+    height: 18rem;
     object-fit: cover;
-    border: 0.35rem solid #3498db;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 0.2rem 0.4rem rgba(177, 133, 133, 0.15);
 }
 
-.animalShowContainer .line1, .animalShowContainer .line2, .animalShowContainer .line3 {
+.WrapperImagem {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    padding: 1rem;
+    border-radius: 2rem;
+}
+
+
+.linhasLaterais {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.animalShowContainer .line1, .animalShowContainer .line2, .animalShowContainer .line3, .animalShowContainer .line4 {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content:left;
+    gap: 0.2rem;
 }
 
-.animalShowContainer .line1 p, .animalShowContainer .line2 p, .animalShowContainer .line3 p {
-    flex: 1;
-    background-color: #f9f9f9;
-    padding: 0.75rem 1rem;
+.animalShowContainer .line1 p, .animalShowContainer .line2 p, .animalShowContainer .line3 p, .animalShowContainer .line4 p {
+    text-align: left;
+    gap: 0;
     border-radius: 0.5rem;
-    border: 0.1rem solid #ecf0f1;
-    color: #2c3e50;
-    font-size: 1rem;
-    font-weight: 500;
-    min-width: 200px;
+    font-size: 2rem;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 540;
 }
 
-.animalShowContainer #botaoContainer {
+.animalShowContainer .botaoContainer {
     display: flex;
-    justify-content: center;  
-    gap: 1rem;               
-    margin-top: 1rem;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.animalShowContainer .fechar, .animalShowContainer .consultas {
-    background-color: #a1a1a1;
-    color: white;
+.animalShowContainer .botoesPrincipais {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.animalShowContainer .botoesPrincipais button {
+    padding: 1.3rem 2.2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 0.7rem;
     border: none;
-    padding: 1rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 600;
     cursor: pointer;
-    margin: 0.5rem auto;
-    display: block;
-    width: fit-content;
 }
 
-.animalShowContainer .fechar {
-    background-color: #da1919;
-}
 
-.animalShowContainer .fechar:hover {
-    background-color: #a91717;
+
+.animalShowContainer .consultas {
+    background-color: #a1a1a1;
 }
 
 .animalShowContainer .consultas:hover {
     background-color: #636363;
 }
+
+.animalShowContainer .editar {
+    background-color: #999595;
+}
+
+.animalShowContainer .editar:hover {
+    background-color: #8f9091;
+}
+
+.animalShowContainer .deletar {
+    background-color: #e74c3c;
+}
+
+.animalShowContainer .deletar:hover {
+    background-color: #c0392b;
+}
+
+.presentAnimalContainer p {
+    width: 100%; 
+    font-size: 1rem;
+    font-family:'Times New Roman', Times, serif;
+    margin: 0;
+    padding: 0.3rem 0;
+    
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+}
+.presentAnimalContainer p:last-of-type {
+  border-bottom: none;
+}
+
+.presentAnimalContainer strong {
+  font-weight: 600;
+  color: #333;
+}
+
+
+.animalShowContainer .fecharBotao {
+    padding: 1.3rem 2.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-color: #da1919;
+}
+
+.animalShowContainer .fecharBotao:hover {
+    background-color: #a91717;
+}
+
+/* Modal de confirmação */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+}
+
+.confirmationContainer {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    z-index: 10002;
+}
+
+.confirmationContainer h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.botoesConfirmation {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.botoesConfirmation .confirmation {
+    background-color: #27ae60;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.botoesConfirmation .confirmation:hover {
+    background-color: #229954;
+}
+
+.botoesConfirmation .cancelar {
+    background-color: #95a5a6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.botoesConfirmation .cancelar:hover {
+    background-color: #7f8c8d;
+}
+
+
+.line1 .especie {
+    margin-left: 3vw;
+    width: 25vw; 
+}
+
+.line1 .idade {
+    width: 30vw; 
+}
+
+
+.line2 .genero {
+    margin-left: 3vw;
+    width: 25vw;
+}
+
+.line2 .altura {
+    width: 30vw; 
+}
+
+.line3 .comprimento { 
+    margin-left: 3vw;
+    width : 25vw
+}
+
+.line3 .peso {
+    width: 30vw; 
+}
+
+.line4 .doenca {
+    margin-left: 3vw;
+    width: 30vw; 
+}
+
+.line4 .alergia {
+    width: 20vw; 
+}
+
+.line4 .raca {
+    width: 20vw; 
+}
+
+

@@ -3,8 +3,6 @@ package com.fixtures;
 import com.model.Consultorio;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class ConsultorioFixture {
 
     public static Consultorio consultorioFixture() {

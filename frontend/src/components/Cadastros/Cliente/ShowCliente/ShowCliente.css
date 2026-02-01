@@ -1,4 +1,4 @@
-.animalContainer {
+.showClienteContainer {
     position: fixed;
     top: 0;
     left: 0;
@@ -15,7 +15,7 @@
     padding: 1.25rem 0;
 }
 
-.animalContainer > .presentAnimalContainer {
+.showClienteContainer > .presentshowClienteContainer {
     background-color: #ffffff;
     
     padding: 3.5rem 4rem; 
@@ -36,27 +36,8 @@
     overflow-x: hidden; 
 }
 
-.presentAnimalContainer p {
-    width: 100%; 
-    font-size: 1rem;
-    color: #555;
-    margin: 0;
-    padding: 0.3rem 0;
-    border-bottom: 0.05rem solid #e0e0e0;
-    
-    word-wrap: break-word; 
-    overflow-wrap: break-word; 
-}
-.presentAnimalContainer p:last-of-type {
-  border-bottom: none;
-}
 
-.presentAnimalContainer strong {
-  font-weight: 600;
-  color: #333;
-}
-
-.fechar {
+.showClienteContainer .fechar {
   align-self: flex-end; 
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -69,7 +50,7 @@
   margin-top: 1rem;
 }
 
-.fechar:hover {
+.showClienteContainer .fechar:hover {
   background-color: #c0392b;
 }
 

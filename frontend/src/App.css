@@ -23,11 +23,6 @@
 
 }
 
-body,html, body * {
-    margin: 0;
-    padding: 0;
-}
-
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -40,7 +35,6 @@ body,html, body * {
 
 .cliente-image,
 .veterinario-image,
-.consultorio-image,
 .animal-image {
   height: 10em;
   width: 10em;

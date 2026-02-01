@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,6 +21,8 @@ public class Consultorio {
 
     private String telefone;
 
+    @Lob
+    @Column(name = "descricao", columnDefinition = "TEXT")
     private String descricao;
 
     private LocalDate dataDeFundacao;

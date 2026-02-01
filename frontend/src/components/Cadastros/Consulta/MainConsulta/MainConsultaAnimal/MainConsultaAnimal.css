@@ -1,0 +1,183 @@
+.main-consulta-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #fff;
+    height: 54.5vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.main-consulta-container::-webkit-scrollbar {
+    width: 0.6rem;
+}
+
+.main-consulta-container::-webkit-scrollbar-track {
+    background: #ecf0f1;
+    border-radius: 0.5rem;
+}
+
+.main-consulta-container::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 0.5rem;
+}
+
+.main-consulta-container::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+.main-consulta-container h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.displayDeConsultas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    grid-auto-rows: max-content;
+}
+
+.ConsultaCard {
+    border: 0.15rem solid #ecf0f1;
+    border-radius: 0.8rem;
+    padding: 1.5rem;
+    box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    cursor: pointer;
+    min-height: 100%;
+}
+
+
+.ConsultaCard:hover {
+    border-color: #2ecc71;
+    box-shadow: 0 0.5rem 1.5rem rgba(46, 204, 113, 0.15);
+    transform: translateY(-4px);
+}
+
+.ConsultaCard p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ConsultaCard p strong {
+    font-weight: 700;
+    color: #34495e;
+    min-width: 70px;
+}
+
+.ConsultaCard p:first-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2ecc71;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.1rem solid #ecf0f1;
+}
+
+.ConsultaCard .dataInfo {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.ConsultaCard .dataInfo::before {
+    content: "📅";
+    margin-right: 0.5rem;
+    font-size: 1rem;
+}
+
+.ConsultaCard .statusBadge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.ConsultaCard .status-concluida {
+    background-color: #d5f4e6;
+    color: #27ae60;
+}
+
+.ConsultaCard .status-pendente {
+    background-color: #fef5e7;
+    color: #f39c12;
+}
+
+.ConsultaCard .status-cancelada {
+    background-color: #fadbd8;
+    color: #e74c3c;
+}
+
+.ConsultaCard .conteudoInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+}
+
+.ConsultaCard .botoesCarta {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 0.1rem solid #ecf0f1;
+}
+
+.ConsultaCard .Edit,
+.ConsultaCard .Deletar {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ConsultaCard .Edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.ConsultaCard .Edit:hover {
+    background-color: #2980b9;
+    box-shadow: 0 0.3rem 0.8rem rgba(52, 152, 219, 0.3);
+}
+
+.ConsultaCard .Deletar {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.ConsultaCard .Deletar:hover {
+    background-color: #c0392b;
+}
+
+.semConsultas {
+    text-align: center;
+    margin-top: 15vh;
+    padding: 3rem 1rem;
+    color: #7f8c8d;
+    font-size: 1.5rem;
+}
+
+.semConsultas::before {
+    content: "📋";
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}

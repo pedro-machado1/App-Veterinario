@@ -100,24 +100,39 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody @Valid AuthenticationDto registerDto, HttpServletResponse response){
         if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
-        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CLIENTE);
+        try {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
+            Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CLIENTE);
+            newUser.setEmailVerified(false);
 
-        usersRepository.save(newUser);
-        login(registerDto, response);
-        return ResponseEntity.ok().build();
+            usersRepository.save(newUser);
+            
+            authenticationService.sendEmailVerification(registerDto.getEmail(), "cliente");
+            
+            return ResponseEntity.ok("Registro realizado! Um email de confirmação foi enviado para " + registerDto.getEmail());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao enviar email de confirmação: " + e.getMessage());
+        }
     }
 
     @PostMapping("/registerConsultorio")
     public ResponseEntity<String> registerConsultorio(@RequestBody @Valid AuthenticationDto registerDto, HttpServletResponse response){
         if(usersRepository.findByEmail(registerDto.getEmail()) != null) return ResponseEntity.badRequest().body("Email já cadastrado");
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
-        Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CONSULTORIO);
+        try {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(registerDto.getPassword());
+            Users newUser = new Users(registerDto.getEmail(), encryptedPassword, Role.CONSULTORIO);
+            newUser.setEmailVerified(false);
 
-        usersRepository.save(newUser);
-        login(registerDto, response);
-        return ResponseEntity.ok().build();
+            usersRepository.save(newUser);
+            
+            // Enviar email de confirmação
+            authenticationService.sendEmailVerification(registerDto.getEmail(), "consultorio");
+            
+            return ResponseEntity.ok("Registro realizado! Um email de confirmação foi enviado para " + registerDto.getEmail());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao enviar email de confirmação: " + e.getMessage());
+        }
     }
 
     @PostMapping("/registerVeterinario")
@@ -171,5 +186,14 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
+        try {
+            authenticationService.verifyEmail(token);
+            return ResponseEntity.ok("Email verificado com sucesso! Agora você pode fazer login.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Token inválido ou expirado.");
+        }
+    }
 
 }

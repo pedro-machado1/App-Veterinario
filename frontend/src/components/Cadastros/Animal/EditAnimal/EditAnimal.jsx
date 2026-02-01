@@ -1,5 +1,5 @@
 import "./EditAnimal.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import InputField from "../../../Extras/InputField/InputField";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
@@ -24,16 +24,55 @@ const EditAnimal = ({
   const [imagem, setImagem] = useState(null);
   const [previewImg, setPreviewImg] = useState(null);
   const [newRemove , setRemove] = useState(true)
+  const [isDragging, setIsDragging] = useState(false);
 
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const fileInputRef = useRef(null);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const toggleRemove = () => {
     setRemove((prev) => !prev)
   }
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        setImagem(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImg(reader.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setError("Por favor, selecione um arquivo de imagem válido.");
+      }
+    }
+  };
+
+  const handleImageAreaClick = () => {
+    fileInputRef.current?.click();
+  };
 
   useEffect(() => {
     let currentImageUrl = null;
@@ -149,7 +188,7 @@ const EditAnimal = ({
         formData,
       );
       console.log("Animal updated:", response.data);
-      setSuccess("Animal atualizado com sucesso!");
+      setSuccess("Animal atualizado");
       setIsLoading(false);
       onClose();
     } catch (err) {
@@ -185,7 +224,13 @@ const EditAnimal = ({
         id="formseditAnimal"
         onSubmit={handleSubmit}>
 
-        <div className="imagePreview">
+        <div 
+          className={`imagePreview ${isDragging ? 'dragging' : ''}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={handleImageAreaClick}
+        >
           {previewImg ? (
             <img
               src={previewImg}
@@ -199,21 +244,27 @@ const EditAnimal = ({
               className="animal-image"
             />
           )}
-          <button
-          onClick={handleRemove}
-          type="button"
-          className="removeImagem"
-          >
-            Remover imagem
-          </button>
-                
-          <InputField
-            label="Foto do Animal"
-            idInput="newImagem"
-            classNameDiv="inputImagem"
-            type="file"
-            onChange={handleImageChange}
-          />
+          <div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemove();
+              }}
+              type="button"
+              className="removeImagem"
+            >
+              Remover imagem
+            </button>
+            <p className="dragDropText">Clique ou arraste a imagem aqui</p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="newImagem"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
+          </div>
         </div>
 
         <div className="line1">
@@ -371,22 +422,24 @@ const EditAnimal = ({
         </div>
 
         <div className="errorsOrSuccess">
-          <p style={{ color: "red" }}>{Error && Error}</p>
-          <p style={{ color: "green" }}>{Success && Success}</p>
+          {Error && <p style={{ color: "red" }}>{Error}</p>}
+          {Success && <p style={{ color: "green" }}>{Success}</p>}
         </div>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="submit">
-          Atualizar
-        </button>
+        <div className="botoesPrincipais">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="submit">
+            Atualizar
+          </button>
+          <button
+            type="button"
+            className="fecharEdit"
+            onClick={onClose}>
+            Fechar
+          </button>
+        </div>
       </form>
-      <button
-        type="button"
-        className="fechar"
-        onClick={onClose}>
-        Fechar
-      </button>
 
       {isLoading && <LoadingSpin />}
     </div>

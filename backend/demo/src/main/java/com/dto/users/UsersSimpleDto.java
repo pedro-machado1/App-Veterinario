@@ -1,6 +1,5 @@
 package com.dto.users;
 
-import com.dto.cliente.ClienteDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.security.Role;
 import lombok.AllArgsConstructor;

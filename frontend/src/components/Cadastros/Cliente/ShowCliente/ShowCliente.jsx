@@ -56,11 +56,14 @@ const ShowCliente = ({
             if (!clienteId) console.log("Erro na inicialização");
 
             try {
-                const response = await axios.get(`${apiUrl}/api/cliente/${clienteId}`)
+                const response = await axios.get(`
+                    ${apiUrl}/api/cliente/${clienteId}`
+                )
                 setNewCliente(response.data)
 
                 const verVeterinario= await axios.get(`${apiUrl}/api/auth/authentication`
                 )
+
 
                 if (verVeterinario.data?.veterinario) {
                     setVeterinario(true)
@@ -119,7 +122,7 @@ const ShowCliente = ({
                 </h2>
             )
             }
-            { Veterinario && newPermission == true && (
+            { Veterinario == true && newPermission == true && (
                 <button
                     className="criarConsultaBtn"
                     onClick={() => setShowCreateConsulta(true)}

@@ -1,7 +1,5 @@
 package com.dto.animal;
 
-import com.dto.cliente.ClienteSimpleDto;
-import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.observacao.ObservacaoSimpleDto;
 import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.enums.Genero;

@@ -3,8 +3,6 @@ package com.fixtures;
 import com.model.Consulta;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class ConsultaFixture {
 
     public static Consulta consultaFixture() {

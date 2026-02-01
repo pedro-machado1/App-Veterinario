@@ -24,7 +24,6 @@ const UserProfile = () => {
   const [showConsultasVeterinario, setshowConsultasVeterinarios] = useState(false)
   const [showCliente, setShowCliente] = useState(false)
   const [showConsultorio, setShowConsultorio] = useState(false)
-  const [showNovoConsultorio, setshowNovoConsultorio] = useState(false)
   const [showConsultasCliente, setShowConsultasCliente] = useState(false)
   const [showEditVeterinario, setShowEditVeterinario] = useState(false)
   const [showEditCliente, setShowEditCliente] = useState(false)
@@ -50,10 +49,6 @@ const UserProfile = () => {
 
   const toggleConsultasCliente = () => {
     setShowConsultasCliente((prev) => !prev)
-  }
-
-  const toggleNovoConsultorio = () => {
-    setshowNovoConsultorio((prev) => !prev)
   }
 
   const toggleConsultorio = () => {
@@ -317,14 +312,6 @@ const UserProfile = () => {
             onClick={toggleVeterinario}
           >
             Editar Informações
-          </button>
-
-          {/* nao feito */}
-          <button
-            className="novoConsultorio"
-            onClick={toggleNovoConsultorio}
-          >
-            Novo Consultorio
           </button>
           
           <button

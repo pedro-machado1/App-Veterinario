@@ -3,8 +3,6 @@ package com.fixtures;
 import com.model.Observacao;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class ObservacaoFixture {
 
     public static Observacao observacaoFixture() {

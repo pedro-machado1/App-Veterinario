@@ -174,11 +174,11 @@ const MainCliente = () => {
                         <div key={cliente.id} className="Cliente">
                             <div className="clienteWrapper">
 
-                                {cliente.imagem ? (
-                                    <img src={cliente.url} alt={`Foto de ${cliente.nome}`} className="cliente-image" />
-                                ) : (
-                                    <img src={notLogin} className="cliente-image" />
-                                )}
+                                <img
+                                    src={cliente.url || notLogin}
+                                    alt={cliente.nome}
+                                    className="cliente-image"
+                                />
                                 <div className="informacoesCliente">
                                     <p>
                                         <strong>Nome:</strong> {cliente.nome || "Erro: nome não encontrado"}

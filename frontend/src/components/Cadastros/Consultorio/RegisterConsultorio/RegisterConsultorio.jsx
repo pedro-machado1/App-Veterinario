@@ -109,55 +109,67 @@ const RegisterConsultorio = () => {
        
 
     return (
-        <div>
-            <h1>Cadastrar Novo Usuário</h1>
-            <form
-            id='formsRegister' 
-            onSubmit={HandleSubmit} 
-            >
-                <InputField 
-                label="Email"
-                 type="email"
-                 value = {newEmail}
-                 onChange={(e) => { 
-                    setEmail(e.target.value);
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required 
-                 />
-                <InputField 
-                 label="Senha"
-                 type="password"
-                 value={newPassword}
-                 onChange={(e) => { 
-                    setPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid={(e) => isInvalid(e)}
-                 required />
-                 <InputField
-                 label= "Confirmar senha"
-                 type = "password"
-                 value = {newConfirmPassword}
-                 onChange={(e) => { 
-                    setConfirmPassword(e.target.value)
-                    isValid(e)
-                 }}
-                 onInvalid= {(e) => isInvalid(e)}
-                 required
-                 />
-                <button 
-                type="submit"
+        <div className="registerContainer">
+            <div className="registerForms">
+                <h1>Cadastrar Novo Consultório</h1>
+                <form
+                id='formsRegister' 
+                onSubmit={HandleSubmit} 
                 >
-                    Cadastrar
-                </button>
-                
-                <div className="errorsOrSuccess">
-                    <p style={{ color: "red" }}>{Error && Error}</p>
-                    <p style={{ color: "green" }}>{Sucess && Sucess}</p>
-                </div>
-            </form>
+                    <InputField 
+                    label="Email"
+                     type="email"
+                     value = {newEmail}
+                     onChange={(e) => { 
+                        setEmail(e.target.value);
+                        isValid(e)
+                     }}
+                     onInvalid={(e) => isInvalid(e)}
+                     required 
+                     />
+                    <InputField 
+                     label="Senha"
+                     type="password"
+                     value={newPassword}
+                     onChange={(e) => { 
+                        setPassword(e.target.value)
+                        isValid(e)
+                     }}
+                     onInvalid={(e) => isInvalid(e)}
+                     required />
+                     <InputField
+                     label= "Confirmar senha"
+                     type = "password"
+                     value = {newConfirmPassword}
+                     onChange={(e) => { 
+                        setConfirmPassword(e.target.value)
+                        isValid(e)
+                     }}
+                     onInvalid= {(e) => isInvalid(e)}
+                     required
+                     />
+                    
+                    <div className="errorsOrSuccess">
+                        <p style={{ color: "red" }}>{Error && Error}</p>
+                        <p style={{ color: "green" }}>{Sucess && Sucess}</p>
+                    </div>
+
+                    <div className="buttonsContainer">
+                        <button 
+                        type="submit"
+                        >
+                            Cadastrar
+                        </button>
+                        <button 
+                        type="button"
+                        className="closeButton"
+                        onClick={() => navigate(-1)}
+                        >
+                            Voltar
+                        </button>
+                    </div>
+                </form>
+            </div>
             {isLoading && <LoadingSpin/>}
         </div>
     );

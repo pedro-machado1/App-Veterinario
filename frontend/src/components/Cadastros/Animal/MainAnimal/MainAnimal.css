@@ -13,86 +13,44 @@
     margin-bottom: 2rem; 
     font-size: 4rem;
     font-weight: 600;
-}
-
-.searchContainer {
-    display: flex;
-    justify-content:center;
-    margin-left: 1vw; 
-    margin-bottom: 2.5rem; 
-    padding: 2rem; 
-    border-radius: 0.5rem;
-    background-color: #f7f9fb;
-}
-
-.searchContainer input {
-    display: flex;
-    align-items: left;
-    border-radius: 0.5rem;
-    flex-grow: 0; 
-    min-width: 50vw; 
-}
-
-.searchContainer .botaoPesquisar{
-    padding: 1rem 1.75rem; 
-    font-size: 1rem; 
-    border-radius: 0.5rem;
-    cursor: pointer;
-    background-color: #2154c1;
-    color: white;
-    border: none;
-}
-
-.searchContainer .botaoLimpar {
-    padding: 1rem 1.75rem; 
-    font-size: 1rem; 
-    border-radius: 0.5rem;
-    cursor: pointer;
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-
-}
-
-
-.searchContainer .botaoLimpar:hover {
-    background-color: #ab2819;
-}
- 
+} 
 
 .novoAnimalButtom {
-    display: block; 
-    width: 100%;
-    max-width: 18rem; 
-    margin-left: 3rem ;
-    margin-top: 1.5rem; 
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    width: auto; 
+    min-width: 12rem;
+    margin: 0; 
     padding: 0.75rem 1.5rem;
-    background-color: #2ecc71;
+    background-color: #4da44d;
     color: white;
     border-radius: 0.5rem;
-    font-size: 1.5rem;
+    font-size: 1.2rem; 
     font-weight: 600;
     cursor: pointer;
-    border: none;
 }
 
 .novoAnimalButtom:hover {
-    background-color: #27ae60 ;
+    background-color: #66716b ;
 }
 
 /* animais */
 
 .displayDeAnimais {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 2rem; 
+    flex-wrap: wrap;
+    margin-left: 7rem;
+    gap: 7rem; 
     padding-bottom: 1.5rem;
     justify-content: flex-start; 
 }
 
+
 .Animal {
     position: relative;
-    width: calc(33.33% - 2rem); 
+    width: calc(45% - 2rem); 
+    height: 20vh;
     min-width: 15rem; 
     background: #f7f9fb;
     border-radius: 0.75rem;
@@ -115,14 +73,16 @@
 }
 
 .animal-image {
-    width: 7rem; 
-    height: 7rem;
+    width: 8rem; 
+    height: 8rem;
     object-fit: cover;
     border-radius: 50%;
     border: 0.2rem solid #ddd; 
 }
 
 .informacoesAnimais {
+    margin-top: 0.2rem;
+    margin-left: 0.5;
     flex-grow: 1; 
     display: flex;
     flex-direction: column;
@@ -130,9 +90,9 @@
 }
 
 .Animal p {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin: 0.3rem 0;
-    padding-bottom: 0.3rem;
+    padding-bottom: 0.5rem;
 }
 
 /* botoes */
@@ -243,4 +203,17 @@
 
 .botaoDeleteLista {
     background-color: #2154c1;
+}
+
+.toggleContainer {
+    padding-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.alignItems {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 2rem;
 }

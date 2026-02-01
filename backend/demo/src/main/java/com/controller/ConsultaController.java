@@ -4,7 +4,6 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.consulta.ConsultaDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.consulta.ConsultaUpdateDto;
-import com.dto.consultorio.ConsultorioDto;
 import com.model.Consulta;
 import com.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;

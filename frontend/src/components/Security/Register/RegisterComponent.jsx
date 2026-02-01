@@ -91,11 +91,11 @@ const RegisterComponent = () => {
             );
             console.log("Dados", response.data);
             HandleReset();
-            setSucess("Registro realizado com Sucesso")
+            setSucess("Registro realizado! Verifique seu email para confirmar sua conta.")
             setIsLoading(false)
             setTimeout(() => {
+                navigate('/login') 
             }, 4000)
-            navigate('/newCliente') 
 
         } catch (err) {
             setIsLoading(false)
@@ -103,7 +103,7 @@ const RegisterComponent = () => {
             console.error(err);
             if (err.response && err.response.data) {
                 setIsLoading(false);
-                setError(`${err.response.data.message}`);
+                setError(`${err.response.data}`);
             }
         }
     }
