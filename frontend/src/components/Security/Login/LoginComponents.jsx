@@ -6,10 +6,8 @@ import { useState } from 'react';
 import { useAuth } from '../Context/AuthContext.jsx'; 
 
 const LoginComponents = () => {
-
-    const { login} = useAuth()
-
-    const navigate = useNavigate()
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const [newemail, setEmail] = useState('');
     const [newpassword, setPassword] = useState('');
@@ -22,122 +20,123 @@ const LoginComponents = () => {
     };
 
     const isValid = (e) => {
-        if (e.target.value && e.target.className.indexOf("isInvalid") != -1) {
-            console.log(e.target.className)
+        if (e.target.value && e.target.className.indexOf("isInvalid") !== -1) {
             e.target.classList.remove("isInvalid");
         }
     };
 
-    const CheckEmail = (email)=> {
+    const CheckEmail = (email) => {
         const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
         if (emailRegex.test(email)) {
-        setError(null);
-        return true;
+            setError(null);
+            return true;
         } else {
-        HandleReset()
-        setError('Formato de Email Inválido!');
-        return false;
+            HandleReset();
+            setError('Formato de Email Inválido!');
+            return false;
         }
-    }
+    };
 
-    const HandleReset = (e) => {
+    const HandleReset = () => {
         let form = document.getElementById("formsLogin");
-        let elements = form.getElementsByClassName("isInvalid");
-    
-
-        while (elements.length > 0) {
-        elements[0].classList.remove("isInvalid");
+        if (form) {
+            let elements = form.getElementsByClassName("isInvalid");
+            while (elements.length > 0) {
+                elements[0].classList.remove("isInvalid");
+            }
         }
-
-        setEmail("")
-        setPassword("")
-        setIsLoading(false)
-        setError(null)
-        setSucess(null)
-    }
+        setEmail("");
+        setPassword("");
+        setIsLoading(false);
+        setError(null);
+        setSucess(null);
+    };
 
     const HandleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!CheckEmail(newemail)){
-            return;
-        }
+        if (!CheckEmail(newemail)) return;
+
         const loginData = { 
             email: newemail,
             password: newpassword
-        }
-        if (!document.getElementById("formsLogin").reportValidity()) {
+        };
+
+        if (!e.target.reportValidity()) {
             setError("Preencha todos os campos!");
             return;
         }
-        setIsLoading(true)
+
+        setIsLoading(true);
         try { 
-            const response = await login(loginData)
+            const response = await login(loginData);
+            setSucess("Login realizado com Sucesso");
+            
+            await new Promise(resolve => setTimeout(resolve, 1000));
             HandleReset();
-            console.log(response)
-            setSucess("Login realizado com Sucesso")
 
-            new Promise(resolve => setTimeout(resolve, 1000));
-
-            if (response.data == "CLIENTE") {
-                navigate("/animal")
-            }
-            if (response.data == "CONSULTORIO") {
-                navigate("/userProfile")
-            }
-            if (response.data == "VETERINARIO") {
-                navigate("/cliente")
-            }
+            if (response.data === "CLIENTE") navigate("/animal");
+            else if (response.data === "CONSULTORIO") navigate("/userProfile");
+            else if (response.data === "VETERINARIO") navigate("/cliente");
+            
         } catch (err) {
             HandleReset();
             console.error(err);
-            setError();
             if (err.response && err.response.data) {
                 setError("Email ou senha inválidos");
+            } else {
+                setError("Erro ao conectar com o servidor");
             }
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false)
-    }
+    };
     
     return (
         <div className='loginContainer'>
             <div className='loginForms'>
                 <h1>Login</h1>
-                <form
-                id='formsLogin' 
-                onSubmit={HandleSubmit} 
-                >
-                <InputField 
-                label="Email"
-                type="email"
-                value = {newemail}
-                onChange={(e) => { 
-                    setEmail(e.target.value);
-                    isValid(e)
-                }}
-                onInvalid={(e) => isInvalid(e)}
-                required 
-                />
-                    <InputField 
-                    label="Senha"
-                    type="password"
-                    value={newpassword}
-                    onChange={(e) => { 
-                        setPassword(e.target.value)
-                        isValid(e)
-                    }}
-                    onInvalid={(e) => isInvalid(e)}
-                    required />
-                    <button 
-                    id="submitbotao"
-                    type="submit"
-                    >
+                <form id='formsLogin' onSubmit={HandleSubmit}>
+                    
+                    <div className="input-full-width">
+                        <InputField 
+                            label="Email"
+                            type="email"
+                            classNameDiv="emailLogin"
+                            value={newemail}
+                            onChange={(e) => { 
+                                setEmail(e.target.value);
+                                isValid(e);
+                            }}
+                            onInvalid={(e) => isInvalid(e)}
+                            required 
+                        />
+                    </div>
+
+                    <div className="input-full-width">
+                        <InputField 
+                            label="Senha"
+                            type="password"
+                            classNameDiv="senhaLogin"
+                            value={newpassword}
+                            onChange={(e) => { 
+                                setPassword(e.target.value);
+                                isValid(e);
+                            }}
+                            onInvalid={(e) => isInvalid(e)}
+                            required 
+                        />
+                    </div>
+
+                    <button id="submitbotao" type="submit">
                         Entrar
                     </button>
+
                     <div className="errorsOrSuccess">
-                        <p style={{ color: "red" }}>{Error && Error}</p>
-                        <p style={{ color: "green" }}>{Sucess && Sucess}</p>
+                        {Error && <p style={{ color: "red" }}>{Error}</p>}
+                        {Sucess && <p style={{ color: "green" }}>{Sucess}</p>}
                     </div>
+                    
                     <p>
                         Esqueceu a senha? <Link to="/forgot-password">Clique aqui</Link>
                     </p>
@@ -151,4 +150,4 @@ const LoginComponents = () => {
     );
 };
 
-export default LoginComponents;
+export default LoginComponents

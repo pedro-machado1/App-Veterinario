@@ -32,6 +32,9 @@ public class VacinaItemService {
     @Autowired
     private VacinaService vacinaService;
 
+    @Autowired
+    private AnimalService animalService;
+
     @Transactional
     public VacinaItemDto insert(VacinaItemDto vacinaItemDto){
 
@@ -84,6 +87,12 @@ public class VacinaItemService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<VacinaItemDto> findAllByAnimalId(Long animalId, Pageable pageable) {
+        animalService.existsById(animalId);
+        Page<VacinaItem> page = vacinaItemRepository.findAllByAnimalId(animalId, pageable);
+        return page.map(vi -> convertToDto(vi, VacinaItemDto.class));
+    }
 
     @Transactional
     public void existsById(Long id){

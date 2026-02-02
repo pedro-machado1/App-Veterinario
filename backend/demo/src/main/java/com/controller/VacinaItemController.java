@@ -60,4 +60,12 @@ public class VacinaItemController {
         vacinaItemService.delete(id);
         return ResponseEntity.ok().body("o vacinaItem " + id + " foi removido");
     }
+
+    @GetMapping("/animal/{animalId}")
+    public ResponseEntity<Page<VacinaItemDto>> findAllByAnimal(
+            @PathVariable Long animalId,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(vacinaItemService.findAllByAnimalId(animalId, pageable));
+    }
 }

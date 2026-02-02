@@ -5,6 +5,8 @@ import com.dto.animal.AnimalSimpleDto;
 import com.dto.animal.AnimalUpdateDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
+import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.model.Animal;
 import com.service.AnimalService;
 import com.service.exceptions.ResourceNotFoundException;
@@ -137,5 +139,58 @@ public class AnimalController {
         animalService.delete(id);
         return ResponseEntity.ok().body("o animal " + id + " foi removido");
     }
+
+    @PutMapping("/{id}/addmedicamentoItem/{idMedicamentoItem}")
+    public ResponseEntity<String> addMedicamentoItem(
+            @PathVariable Long id,
+            @PathVariable Long idMedicamentoItem
+    ) {
+        animalService.addMedicamentoItem(id, idMedicamentoItem);
+        return ResponseEntity.ok("medicamentoItem vinculado ao animal");
+    }
+
+    @DeleteMapping("/{id}/removemedicamentoItem/{idMedicamentoItem}")
+    public ResponseEntity<String> removeMedicamentoItem(
+            @PathVariable Long id,
+            @PathVariable Long idMedicamentoItem
+    ) {
+        animalService.removeMedicamentoItem(id, idMedicamentoItem);
+        return ResponseEntity.ok("medicamentoItem removido do animal");
+    }
+
+    @GetMapping("/{id}/medicamentoItem")
+    public ResponseEntity<Page<MedicamentoItemSimpleDto>> findAllMedicamentoItemByAnimal(
+            @PathVariable Long id,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(animalService.findAllMedicamentoItemByAnimal(pageable, id));
+    }
+
+    @PutMapping("/{id}/addvacinaItem/{idVacinaItem}")
+    public ResponseEntity<String> addVacinaItem(
+            @PathVariable Long id,
+            @PathVariable Long idVacinaItem
+    ) {
+        animalService.addVacinaItem(id, idVacinaItem);
+        return ResponseEntity.ok("vacinaItem vinculado ao animal");
+    }
+
+    @DeleteMapping("/{id}/removevacinaItem/{idVacinaItem}")
+    public ResponseEntity<String> removeVacinaItem(
+            @PathVariable Long id,
+            @PathVariable Long idVacinaItem
+    ) {
+        animalService.removeVacinaItem(id, idVacinaItem);
+        return ResponseEntity.ok("vacinaItem removido do animal");
+    }
+
+    @GetMapping("/{id}/vacinaItem")
+    public ResponseEntity<Page<VacinaItemSimpleDto>> findAllVacinaItemByAnimal(
+            @PathVariable Long id,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(animalService.findAllVacinaItemByAnimal(pageable, id));
+    }
+
 }
 

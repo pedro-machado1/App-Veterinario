@@ -45,12 +45,9 @@ public class MedicamentoItemService {
         MedicamentoSimpleDto medicamentoEntity = convertToDto(medicamentoService.findById(medicamentoItemDto.getMedicamento().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Medicamento Not Found")), MedicamentoSimpleDto.class );
 
-        AnimalSimpleDto animal = convertToDto(animalService.findById(medicamentoItemDto.getAnimal().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Animal Not Found")), AnimalSimpleDto.class);
 
         medicamentoItemDto.setConsulta(consultaEntity);
         medicamentoItemDto.setMedicamento(medicamentoEntity);
-        medicamentoItemDto.setAnimal(animal);
         MedicamentoItem medicamentoItem =convertToEntity(medicamentoItemDto, MedicamentoItem.class);
 
         medicamentoItem =medicamentoItemRepository.save(medicamentoItem);
@@ -100,6 +97,14 @@ public class MedicamentoItemService {
             throw new DataBaseException("Erro inesperado ao deletar o medicamento");
         }
     }
+
+    @Transactional(readOnly = true)
+    public Page<MedicamentoItemDto> findAllByAnimalId(Long animalId, Pageable pageable) {
+        animalService.existsById(animalId);
+        Page<MedicamentoItem> page = medicamentoItemRepository.findAllByAnimalId(animalId, pageable);
+        return page.map(mi -> convertToDto(mi, MedicamentoItemDto.class));
+    }
+
     @Transactional
     public void existsById(Long id){
         if(!medicamentoItemRepository.existsById(id)){

@@ -4,9 +4,13 @@ import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalUpdateDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.medicamentoItem.MedicamentoItemSimpleDto;
 import com.dto.users.Usersdto;
+import com.dto.vacinaItem.VacinaItemSimpleDto;
 import com.model.*;
 import com.repository.AnimalRepository;
+import com.repository.MedicamentoItemRepository;
+import com.repository.VacinaItemRepository;
 import com.security.service.AuthenticationService;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -41,6 +45,12 @@ public class AnimalService {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private MedicamentoItemRepository medicamentoItemRepository;
+
+    @Autowired
+    private VacinaItemRepository vacinaItemRepository;
 
     @Transactional
     public AnimalDto insert(AnimalDto animalDto, MultipartFile imagem){
@@ -120,17 +130,6 @@ public class AnimalService {
             return null;
         }
     }
-    @Transactional
-    public void delete(long id){
-        existsById(id);
-        try {
-            animalRepository.deleteById(id);
-        }catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Não foi possível excluir este cliente devido a ele tem uma relação em outra tabela.");
-        }catch (Exception e){
-            throw new DataBaseException("Erro inesperado ao deletar o cliente");
-        }
-    }
 
     @Transactional
     public Page<ConsultaSimpleDto> findAllConsultaByAnimal(Pageable pages, long id){
@@ -157,6 +156,88 @@ public class AnimalService {
     @Transactional
     public void deleteImagem(String filename){
         fileStorageService.deleteFile(filename);
+    }
+
+    @Transactional
+    public void addMedicamentoItem(Long animalId, Long medicamentoItemId) {
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado: " + animalId));
+
+        MedicamentoItem item = medicamentoItemRepository.findById(medicamentoItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("MedicamentoItem não encontrado: " + medicamentoItemId));
+
+        item.setAnimal(animal);
+        medicamentoItemRepository.save(item);
+    }
+
+    @Transactional
+    public void removeMedicamentoItem(Long animalId, Long medicamentoItemId) {
+        MedicamentoItem item = medicamentoItemRepository.findById(medicamentoItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("MedicamentoItem não encontrado: " + medicamentoItemId));
+
+        if (item.getAnimal() == null || item.getAnimal().getId() != animalId) {
+            throw new DataIntegrityViolationException("Este medicamentoItem não está vinculado a este animal");
+        }
+
+        item.setAnimal(null);
+        medicamentoItemRepository.save(item);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MedicamentoItemSimpleDto> findAllMedicamentoItemByAnimal(Pageable pageable, Long animalId) {
+        if (!animalRepository.existsById(animalId)) {
+            throw new ResourceNotFoundException("Animal não encontrado: " + animalId);
+        }
+        return medicamentoItemRepository
+                .findAllByAnimalId(animalId, pageable)
+                .map(mi -> convertToDto(mi, MedicamentoItemSimpleDto.class));
+    }
+
+    @Transactional
+    public void addVacinaItem(Long animalId, Long vacinaItemId) {
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado: " + animalId));
+
+        VacinaItem item = vacinaItemRepository.findById(vacinaItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("VacinaItem não encontrado: " + vacinaItemId));
+
+        item.setAnimal(animal);
+        vacinaItemRepository.save(item);
+    }
+
+    @Transactional
+    public void removeVacinaItem(Long animalId, Long vacinaItemId) {
+        VacinaItem item = vacinaItemRepository.findById(vacinaItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("VacinaItem não encontrado: " + vacinaItemId));
+
+        if (item.getAnimal() == null || item.getAnimal().getId() != animalId) {
+            throw new DataIntegrityViolationException("Este vacinaItem não está vinculado a este animal");
+        }
+
+        item.setAnimal(null);
+        vacinaItemRepository.save(item);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<VacinaItemSimpleDto> findAllVacinaItemByAnimal(Pageable pageable, Long animalId) {
+        if (!animalRepository.existsById(animalId)) {
+            throw new ResourceNotFoundException("Animal não encontrado: " + animalId);
+        }
+        return vacinaItemRepository
+                .findAllByAnimalId(animalId, pageable)
+                .map(vi -> convertToDto(vi, VacinaItemSimpleDto.class));
+    }
+
+    @Transactional
+    public void delete(long id) {
+        existsById(id);
+        try {
+            animalRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Não foi possível excluir este animal devido a ele ter relação em outra tabela.");
+        } catch (Exception e) {
+            throw new DataBaseException("Erro inesperado ao deletar o animal");
+        }
     }
 
 

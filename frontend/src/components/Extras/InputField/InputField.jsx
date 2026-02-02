@@ -11,10 +11,10 @@ function InputField({
   required = false,
   onInvalid,
   idInput,
-  Namediv,
+  classNameDiv,
 }) {
   return (
-    <div className={Namediv}>
+    <div className={classNameDiv}>
       <label htmlFor={idInput} className="inputLabel">
         <span
           className={`inputLabelText ${value ? "inputLabelTextActive" : ""}`}

@@ -50,6 +50,10 @@ public class ClienteService {
 
     @Transactional
     public ClienteDto insert(ClienteDto clienteDTO, MultipartFile imagem){
+        Users users = usersService.findUsers();
+        if (users.getVeterinario() != null || users.getCliente() != null || users.getConsultorio() != null) {
+            throw new DataBaseException("Veterinario, Consultor ou Cliente já esta com as informações inseridas");
+        }
         String imagemString = fileStorageService.saveFile(imagem);
         Cliente cliente= convertToEntity(clienteDTO, Cliente.class);
         cliente.setDataDeCriacao(LocalDate.now());

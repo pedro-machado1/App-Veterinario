@@ -1,9 +1,10 @@
 import "./NewCliente.css";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
+import notLogin from "../../../../assets/images/notLogin.png";
 
 const NewCliente = () => {
 
@@ -17,9 +18,48 @@ const NewCliente = () => {
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
+  const fileInputRef = useRef(null);
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        setImagem(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImg(reader.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setError("Por favor, selecione um arquivo de imagem válido.");
+      }
+    }
+  };
+
+  const handleImageAreaClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const isInvalid = (e) => {
     e.target.classList.add("isInvalid");
@@ -27,7 +67,6 @@ const NewCliente = () => {
 
   const isValid = (e) => {
     if (e.target.value && e.target.className.indexOf("isInvalid") != -1) {
-      console.log(e.target.className)
       e.target.classList.remove("isInvalid");
     }
   };
@@ -111,7 +150,7 @@ const NewCliente = () => {
 
     const clienteBlob = new Blob([JSON.stringify(newClient)], { type: 'application/json' });
     formData.append("cliente", clienteBlob);
-    
+
     if (imagem) {
       formData.append("imagem", imagem);
     }
@@ -125,7 +164,7 @@ const NewCliente = () => {
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
       setIsLoading(false);
-      navigate('/login')
+      navigate('/animal')
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -165,7 +204,7 @@ const NewCliente = () => {
   };
 
   return (
-    <div className="cliente-container ">
+    <div className="cliente-container-new ">
       <h1 className="title">
         Registre um cliente
       </h1>
@@ -237,57 +276,65 @@ const NewCliente = () => {
             required
           />
         </div>
-        <div className="line3"></div>
-        <InputField
-          label="Endereço"
-          placeholder={"Digite o endereço do cliente"}
-          idInput="newendereco"
-          classNameDiv="inputendereco"
-          value={newEndereco}
-          onChange={(e) => {
-            setEndereco(e.target.value);
-            isValid(e);
-          }}
-          onInvalid={(e) => isInvalid(e)}
-          required
-        />
-        <InputField
-            label="URL da Imagem"
-            placeholder={"Coloque a Imagem de perfil do cliente"}
-            idInput="newImagem"
-            classNameDiv="inputImagem"
-            type="file"
-            onChange={handleImageChange}
+        <div className="line3">
+          <InputField
+            label="Endereço"
+            placeholder={"Digite o endereço do cliente"}
+            idInput="newendereco"
+            classNameDiv="inputendereco"
+            value={newEndereco}
+            onChange={(e) => {
+              setEndereco(e.target.value);
+              isValid(e);
+            }}
+            onInvalid={(e) => isInvalid(e)}
+            required
           />
-          {previewImg && (
+        </div>
+        <div
+          className={`imagePreview ${isDragging ? 'dragging' : ''}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={handleImageAreaClick}
+        >
+          {previewImg ? (
             <img
               src={previewImg}
-              alt="Preview"
-              style={{ width: "150px", height: "auto", marginTop: "10px" }}
+              alt="Preview do Cliente"
+              className="cliente-image"
+            />
+          ) : (
+            <img
+              src={notLogin}
+              alt="Nenhuma imagem disponível"
+              className="cliente-image"
             />
           )}
-        <button className="NovoAnimal"
-          type="button"
-          onClick={() => navigate('/animal')}>
-          Adicionar Animal</button>
-
+          <div>
+            <p className="dragDropText">Clique ou arraste a imagem aqui</p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="newImagem"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
+          </div>
+        </div>
         <div className="errorsOrSuccess">
           <p style={{ color: "red" }}>{Error && Error}</p>
           <p style={{ color: "green" }}>{Success && Success}</p>
         </div>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="submit">
-          Enviar
-        </button>
-        <button
-          type="reset"
-          className="cancelar"
-          onClick={() => handleReset()}
-        >
-          Cancelar
-        </button>
+        <div className="botoesPrincipais">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="submit">
+            Enviar
+          </button>
+        </div>
       </form>
       {isLoading && <LoadingSpin />}
     </div>
