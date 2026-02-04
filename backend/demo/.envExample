@@ -1,0 +1,13 @@
+DB_URL=jdbc:mysql://mysql:3306/appveterinario
+DB_USER=root
+DB_PASSWORD=change_me
+
+JWT_ACCESS_SECRET=change_me
+JWT_REFRESH_SECRET=change_me
+JWT_RESET_SECRET=change_me
+JWT_VERIFICATION_SECRET=change_me
+JWT_VETERINARIO_SECRET=change_me
+
+MAIL_USER=example@gmail.com
+MAIL_PASS=change_me
+
