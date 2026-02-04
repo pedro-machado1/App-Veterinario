@@ -34,12 +34,11 @@ const VerifyEmailPage = () => {
                 setMessage(response.data);
                 setIsVerified(true);
                 
-                // Redireciona após 3 segundos
                 setTimeout(() => {
-                    navigate('/login');
+                    navigate('/newCliente');
                 }, 3000);
             } catch (err) {
-                setError(err.response?.data || 'Erro ao verificar email. O token pode ter expirado.');
+                setError(err.response?.data || 'O token pode ter expirado.');
             } finally {
                 setIsLoading(false);
             }
@@ -64,7 +63,7 @@ const VerifyEmailPage = () => {
                     <div className="successMessage">
                         <div className="checkmark">✓</div>
                         <p className="successText">{message}</p>
-                        <p className="redirectText">Redirecionando para login em 3 segundos...</p>
+                        <p className="redirectText">Cadastro feito com sucesso</p>
                     </div>
                 )}
 

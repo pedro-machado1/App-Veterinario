@@ -35,7 +35,7 @@ function App() {
 
   return (
     <>
-        {isAuthenticated == true && newUser && location.pathname != "/login" && location.pathname != "forgot-password" && location.pathname != "/register" && <Navbar
+        {isAuthenticated == true && newUser && location.pathname != "/login" && location.pathname != "forgot-password" && location.pathname != "/register" && location.pathname != "/newCliente" && <Navbar
           User = {newUser}
           />}  
         <Routes>

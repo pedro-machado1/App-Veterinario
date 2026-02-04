@@ -1,10 +1,25 @@
+.inputLabel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .inputLabelText {
-    color: #000000; 
-    
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
 }
 
 
-.inputLabelTextActive {
-    color: #000000; 
+.inputText {
+    width: 100% ;
+    box-sizing: border-box ;
+    padding: 0.8rem 1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #000;
 }
 

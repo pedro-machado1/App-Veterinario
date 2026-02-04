@@ -55,4 +55,12 @@ public class MedicamentoItemController {
         medicamentoItemService.delete(id);
         return ResponseEntity.ok().body("o medicamentoItem " + id + " foi removido");
     }
+
+    @GetMapping("/animal/{animalId}")
+    public ResponseEntity<Page<MedicamentoItemDto>> findAllByAnimal(
+            @PathVariable Long animalId,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(medicamentoItemService.findAllByAnimalId(animalId, pageable));
+    }
 }

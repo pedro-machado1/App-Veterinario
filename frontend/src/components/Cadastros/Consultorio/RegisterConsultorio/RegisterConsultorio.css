@@ -37,24 +37,6 @@
     gap: 1rem;
 }
 
-input[type="email"],
-input[type="password"] {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #bdc3c7;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    box-sizing: border-box;
-
-    background-color: #fff;
-    color:  #000;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #3498db;
-    outline: none;
-}
 
 input.isInvalid {
     border-color: #e74c3c !important;

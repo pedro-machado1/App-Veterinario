@@ -55,20 +55,6 @@ public class AuthenticationService implements UserDetailsManager {
         emailService.sendPasswordResetEmail(email, token);
     }
 
-    public void sendEmailVerification(String email) {
-        Users user = usersRepository.findByEmail(email);
-        if (user == null) {
-
-
-
-
-
-            throw new UsernameNotFoundException("Usuário não encontrado");
-        }
-        String token = tokenService.generateEmailVerificationToken(user.getId());
-        emailService.sendEmail(email, token);
-    }
-
     public void sendEmailVerification(String email, String userType) {
         Users user = usersRepository.findByEmail(email);
         if (user == null) {
