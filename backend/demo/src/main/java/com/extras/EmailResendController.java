@@ -2,6 +2,7 @@ package com.extras;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.security.service.EmailService;
 import com.security.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailResendController {
 
     @Autowired
-    private  EmailToVeterinario emailToVeterinario;
+    private EmailService emailService;
 
     @Autowired
     private TokenService tokenService;
@@ -30,7 +31,7 @@ public class EmailResendController {
         DecodedJWT jwt = JWT.decode(token);
         String consultorioId = jwt.getClaim("consultorioId").toString();
         String novoToken=tokenService.generateTokenForVeterinario(to, (long) Long.parseLong(consultorioId));
-        emailToVeterinario.sendEmail(to, novoToken);
+        emailService.sendEmailVeterinario(to, novoToken);
         return ResponseEntity.ok("Novo e-mail enviado para " + to);
     }
 }

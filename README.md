@@ -4,9 +4,33 @@
 
 A full-stack system for managing veterinary clinics, veterinarians, clients, animals, appointments, medications, and vaccines.
 
-- **Backend**: Spring Boot (Java), MySQL, JPA, Security (JWT)
-- **Frontend**: React + Vite, React Router, Axios, npm
-- **Infrastructure**: Docker & Docker Compose
+- **Backend**:
+  - Spring Boot 3
+  - Java 21
+  - Spring Web (REST APIs)
+  - Spring Data JPA (Persistence layer)
+  - Spring Security (Authentication & Authorization)
+  - JWT Authentication (Auth0 java-jwt)
+  - Spring Validation (Bean validation)
+  - Spring Mail (Email service)
+  - Spring Boot Actuator (Monitoring & health checks)
+  - ModelMapper (DTO mapping)
+  - Lombok (Boilerplate reduction)
+
+- **Database**:
+  - MySQL
+
+- **Configuration**:
+  - dotenv support for environment variables
+
+- **Build & Dependency Management**:
+  - Maven
+  - Maven Wrapper (mvnw)
+
+- **Testing**:
+  - JUnit
+  - Mockito
+  - Spring Security Test
 
 ---
 
@@ -26,12 +50,11 @@ App-Veterinario/
 │       │   ├── repository/          # JPA interfaces
 │       │   ├── security/            # Auth, filters, services, user repository
 │       │   ├── service/             # Business rules and exceptions
-│       │   └── VeterinarioBackendApplication.java    # Main class
+│       │   └── VeterinarioAplication/   # Main class
 │       ├── src/main/resources/
 │       │   ├── application.properties    # Application configuration
 │       │   └── data.sql                  # Optional seed data
 │       └── pom.xml                       # Maven dependencies and plugins
-│   ├── docker-compose.yml               # Docker services
 │   ├── Dockerfile                       # Backend container build
 │   ├── .env.example                     # Environment variables template
 │   └── imagens/                         # Image storage volume
@@ -43,9 +66,13 @@ App-Veterinario/
 │   │   ├── App.jsx           # Routes and layout
 │   │   └── main.jsx          # Application bootstrap
 │   ├── .env                  # API endpoint config
+│   ├── Dockerfile            # Backend container build
 │   ├── package.json          # Scripts and dependencies
 │   └── vite.config.js        # Vite configuration
+│   └── nginx.conf            # Nginx configuration
 ├── README.md                 # This file
+├── docker-compose.yml        # Docker services
+├── .env.example              # Enviromment Variables
 └── .gitignore
 ```
 
@@ -67,15 +94,16 @@ App-Veterinario/
 
 ---
 
-## Backend Setup
 
-### 🐳 Running with Docker (Recommended)
+## Running with Docker (Recommended)
 
-Docker runs the backend and database automatically and avoids environment conflicts.
+Docker runs the backend, database and frontend automatically and avoids environment conflicts.
+
+Make sure that these port are't occupied 3306, 8080, 5173
 
 #### 1. Environment Variables
 
-Inside the backend folder, create a `.env` file based on `.env.example`.
+Inside the APP-VETERINARIO folder, create a `.env` file based on `.env.example`.
 
 **Linux/Mac:**
 ```bash
@@ -89,7 +117,7 @@ copy .env.example .env
 
 #### 2. Configure .env
 
-Replace placeholder values inside `.env`:
+Replace placeholder values inside `.envExample`:
 
 ```properties
 DB_URL=jdbc:mysql://mysql:3306/appveterinario
@@ -105,38 +133,60 @@ JWT_VETERINARIO_SECRET=your_secret_here
 MAIL_USER=your_email@gmail.com
 MAIL_PASS=your_email_password
 
-FILE_PATH=/app/imagens
+APP_FRONTEND_URL= http://localhost
+APP_BACKEND_URL=http://localhost/api
 ```
 
 #### 3. Build and Run Containers
 
-From the backend directory:
+From the APP-VETERINARIO directory:
 
 ```bash
-docker compose up --build
+# Perform a clean build  
+docker-compose down -v 
+# start all services
+docker-compose up --build
 ```
 
 #### 4. Access Backend API
 
 ```
-http://localhost:8080
+http://localhost/backend
 ```
 
-### 💻 Running Backend Without Docker (Optional)
+#### 5. Acess Frontend
+
+```
+  http://localhost
+```
+
+---
+
+##  Running Backend Without Docker (Optional)
 
 #### 1. Database Configuration
 
-Create a schema in MySQL (`appveterinario`), and update the following in `backend/demo/src/main/resources/application.properties`:
+Create a schema in MySQL (`appveterinario`), and update the following in `backend/demo/.env.example`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/appveterinario
-spring.datasource.username=YOUR_USERNAME
-spring.datasource.password=YOUR_PASSWORD
+DB_URL=jdbc:mysql://localhost:3306/appveterinario
+DB_USER=root
+DB_PASSWORD=change_me
+
+JWT_ACCESS_SECRET=change_me
+JWT_REFRESH_SECRET=change_me
+JWT_RESET_SECRET=change_me
+JWT_VERIFICATION_SECRET=change_me
+JWT_VETERINARIO_SECRET=change_me
+
+MAIL_USER=example@gmail.com
+MAIL_PASS=change_me
+
+APP_FRONTEND_URL=http://localhost:5173
+APP_BACKEND_URL=http://localhost:8080/api
 ```
 
-Optional: Adjust image storage path (`file.path`) and SMTP email settings.
-
-#### 2. Build and Run
+### Backend Setup
 
 From the backend directory:
 
@@ -155,9 +205,7 @@ API available at:
 http://localhost:8080
 ```
 
----
-
-## Frontend Setup
+### Frontend Setup
 
 #### 1. Environment Variables
 
