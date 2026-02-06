@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import "./Header.css";
+import "./header.css";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useAuth } from "../../Security/Context/AuthContext";

@@ -21,8 +21,10 @@ public class Consultorio {
 
     private String telefone;
 
+        private String cep;
+
     @Lob
-    @Column(name = "descricao", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     private LocalDate dataDeFundacao;
@@ -33,6 +35,9 @@ public class Consultorio {
 
     private String imagem;
 
+    @ManyToOne
+    @JoinColumn(name = "cidade_id")
+    private Cidade cidade;
 
     @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
     private Users users;
@@ -52,6 +57,4 @@ public class Consultorio {
             inverseJoinColumns = @JoinColumn(name = "cliente_id")
     )
     private List<Cliente> cliente;
-
-
 }

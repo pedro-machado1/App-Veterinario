@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../../../../Extras/InputField/InputField.jsx";
 import "./MainClienteAdmin.css"; 
 import AddCliente from "../../../Consultorio/addCliente/addCliente.jsx";
+import { listarCidadesPorUf } from "../../../../../../src/services/locationService.js"
 
 const MainClienteAdmin = ( { 
     onClose,
@@ -19,7 +20,13 @@ const MainClienteAdmin = ( {
     const [showMoreCliente, setShowMoreCliente] = useState(null);
 
     const [searchCpf, setSearchCpf] = useState("");
+    const [searchUf, setSearchUf] = useState("");
+    const [searchCidade, setSearchCidade] = useState("");
+    const [cidades, setCidades] = useState([]);
+    const [loadingCidades, setLoadingCidades] = useState(false);
     const [error, setError] = useState(null);
+    
+    const ufs = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
 
 
     function maskCpf(value) {
@@ -28,7 +35,26 @@ const MainClienteAdmin = ( {
         .replace(/(\d{3})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-      }
+    }
+
+    const handleUfChange = async (e) => {
+        const uf = e.target.value;
+        setSearchUf(uf);
+        setSearchCidade("");
+        setCidades([]);
+
+        if (uf) {
+            setLoadingCidades(true);
+            try {
+                const cidadesList = await listarCidadesPorUf(uf);
+                setCidades(cidadesList || []);
+            } catch (err) {
+                console.error("Erro ao carregar cidades:", err);
+                setCidades([]);
+            }
+            setLoadingCidades(false);
+        }
+    };
 
 
     const ToggleshowAdd = () => {
@@ -42,13 +68,22 @@ const MainClienteAdmin = ( {
             setShowMoreCliente(clienteId);
         }
     };
-    const fetchClientes = async (cpf, filterPermission) => {
+    const fetchClientes = async (cpf = "", cidadeId = "") => {
         setIsLoading(true);
         setError(null);
         
         let url = `${apiUrl}/api/${consultorioId}/cliente`;
+        const params = [];
+        
         if (cpf !== "") {
-            url += `?cpf=${cpf}`;
+            params.push(`cpf=${cpf}`);
+        }
+        if (cidadeId !== "") {
+            params.push(`cidade_id=${cidadeId}`);
+        }
+        
+        if (params.length > 0) {
+            url += `?${params.join("&")}`;
         }
         
         try {
@@ -68,7 +103,7 @@ const MainClienteAdmin = ( {
     };
 
     useEffect(() => {
-        fetchClientes(searchCpf, filterPermission);
+        fetchClientes();
     }, []); 
 
     const handleDelete = async (clienteId) => {
@@ -90,9 +125,48 @@ const MainClienteAdmin = ( {
             
             <h1>Clientes</h1>
             <div className="searchContainer">
+                <div className="filterSection">
+                    <div className="filterGroup">
+                        <label htmlFor="ufSelect">Filtrar por UF:</label>
+                        <select 
+                            id="ufSelect"
+                            value={searchUf} 
+                            onChange={handleUfChange}
+                            className="filterSelect"
+                        >
+                            <option value="">Selecione um UF</option>
+                            {ufs.map(uf => (
+                                <option key={uf} value={uf}>{uf}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {searchUf && (
+                        <div className="filterGroup">
+                            <label htmlFor="cidadeSelect">Cidade:</label>
+                            {loadingCidades ? (
+                                <p className="loadingText">Carregando cidades...</p>
+                            ) : (
+                                <select 
+                                    id="cidadeSelect"
+                                    value={searchCidade} 
+                                    onChange={(e) => setSearchCidade(e.target.value)}
+                                    className="filterSelect"
+                                >
+                                    <option value="">Selecione uma cidade</option>
+                                    {cidades.map(cidade => (
+                                        <option key={cidade.id} value={cidade.id}>{cidade.nome}</option>
+                                    ))}
+                                </select>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* Filtro por CPF */}
                 <form onSubmit={(e) => {
                     e.preventDefault()
-                    fetchClientes(searchCpf)
+                    fetchClientes(searchCpf, searchCidade)
                 }}>
                 <InputField
                     placeholder="Pesquisar por CPF"
@@ -101,14 +175,17 @@ const MainClienteAdmin = ( {
                     />
                 </form>
                 <button 
-                onClick={fetchClientes}
+                onClick={() => fetchClientes(searchCpf, searchCidade)}
                 className="botaoPesquisar"
                 >Pesquisar</button>
                 <button className= "botaoLimpar" onClick={() => {  
-                    fetchClientes("")
+                    fetchClientes("", "")
                     setSearchCpf("")
+                    setSearchUf("")
+                    setSearchCidade("")
+                    setCidades([])
                     } } >
-                        LimparFiltro
+                        Limpar Filtro
                     </button>
             </div>
             <div className="displayDeClientes">

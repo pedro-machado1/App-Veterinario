@@ -1,6 +1,7 @@
 package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.cidade.CidadeSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.users.UsersSimpleDto;
 import com.dto.users.UsersWithoutPassword;
@@ -38,11 +39,12 @@ public class ClienteDto {
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;
 
-//    @NotNull(message = "Informe a sua data de nascimento")
+    private String cep;
+
+    private CidadeSimpleDto cidade;
+
     private LocalDate dataDeNascimento;
 
-//    @NotBlank
-//    private Image imagem;
 
     private LocalDate dataDeCriacao;
 

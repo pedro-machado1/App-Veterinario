@@ -1,4 +1,4 @@
-import "./inputField.css";
+import "./InputField.css";
 
 
 function InputField({

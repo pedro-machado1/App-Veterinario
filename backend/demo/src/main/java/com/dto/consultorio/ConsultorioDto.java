@@ -37,6 +37,8 @@ public class ConsultorioDto {
     @NotBlank(message = "Informe a descrição do consultorio")
     private String descricao;
 
+    private String cep;
+
     private Estado estado;
 
     private LocalDate dataDeFundacao;

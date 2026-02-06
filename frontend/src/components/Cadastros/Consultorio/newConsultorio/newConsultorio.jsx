@@ -11,6 +11,7 @@ const NewConsultorio = () => {
   const [nome, setNome] = useState("");
   const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [cep, setCep] = useState("");
   const [descricao, setDescricao] = useState("");
   const [dataDeFundacao, setDataDeFundacao] = useState("");
   const [estado, setEstado] = useState("")
@@ -65,6 +66,7 @@ const NewConsultorio = () => {
     setNome("");
     setEndereco("");
     setTelefone("");
+    setCep("");
     setDescricao("");
     setEstado("");
     setImagem("");
@@ -84,6 +86,7 @@ const NewConsultorio = () => {
       nome,
       endereco,
       telefone : telefone.replace(/\D/g, ""),
+      cep,
       descricao,
       dataDeFundacao,
       estado
@@ -163,6 +166,15 @@ const NewConsultorio = () => {
           onChange={(e)=> { setEndereco(e.target.value); isValid(e); }}
           onInvalid={(e)=> isInvalid(e)}
           required
+        />
+        <InputField
+          label="CEP"
+          placeholder="Informe o CEP"
+          name="cep"
+          idInput="newCep"
+          classNameDiv="inputCep"
+          value={cep}
+          onChange={(e)=> { setCep(e.target.value); isValid(e); }}
         />
         <div className="inputEstado">
           <label htmlFor="newEstado">Estado</label>

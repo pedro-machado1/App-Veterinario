@@ -24,6 +24,8 @@ public class ConsultorioUpdateDto {
 
     private String descricao;
 
+    private String cep;
+
     private LocalDate dataDeFundacao;
 
     private LocalDate dataDeCadastro;

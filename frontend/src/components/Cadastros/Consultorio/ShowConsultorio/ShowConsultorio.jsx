@@ -100,6 +100,11 @@ const ShowNewConsultorio = ({ onClose, consultorioId }) => {
                     </p>
 
                     <p>
+                        <strong>CEP</strong>
+                        <span>{consultorio.cep}</span>
+                    </p>
+
+                    <p>
                         <strong>Estado</strong>
                         <span>{consultorio.estado}</span>
                     </p>

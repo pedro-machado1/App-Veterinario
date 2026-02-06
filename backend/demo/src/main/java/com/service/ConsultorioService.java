@@ -101,6 +101,25 @@ public class ConsultorioService {
     }
 
     @Transactional
+    public Page<ConsultorioDto> findAllByFilters(String estado, Long cidadeId, Pageable pages){
+        Page<Consultorio> consultorios;
+        
+        if (estado != null && !estado.isEmpty() && cidadeId != null) {
+            Estado estadoEnum = Estado.valueOf(estado);
+            consultorios = consultorioRepository.findAllByEstadoAndCidadeId(estadoEnum, cidadeId, pages);
+        } else if (cidadeId != null) {
+            consultorios = consultorioRepository.findAllByCidadeId(cidadeId, pages);
+        } else if (estado != null && !estado.isEmpty()) {
+            Estado estadoEnum = Estado.valueOf(estado);
+            consultorios = consultorioRepository.findAllByEstado(estadoEnum, pages);
+        } else {
+            consultorios = consultorioRepository.findAll(pages);
+        }
+        
+        return consultorios.map(consultorio -> convertToDto(consultorio, ConsultorioDto.class));
+    }
+
+    @Transactional
     public ConsultorioDto update(ConsultorioUpdateDto consultorioDto, MultipartFile imagem){
         String imagemString = fileStorageService.saveFile(imagem);
         Users users = usersService.findUsers();
@@ -252,6 +271,25 @@ public class ConsultorioService {
         existsById(idConsultorio);
 
         Page<Cliente> clientes = consultorioRepository.findAllClienteByConsultorioId(idConsultorio, pages);
+
+        return clientes.map(cliente -> convertToDto(cliente, ClienteSimpleDto.class));
+    }
+
+    @Transactional
+    public Page<ClienteSimpleDto> findAllClienteByFilters(long idConsultorio, String cpf, Long cidadeId, Pageable pages){
+        existsById(idConsultorio);
+
+        Page<Cliente> clientes;
+        
+        if (cpf != null && !cpf.isEmpty() && cidadeId != null) {
+            clientes = consultorioRepository.findAllClienteByConsultorioIdAndCpfAndCidadeId(idConsultorio, cpf, cidadeId, pages);
+        } else if (cpf != null && !cpf.isEmpty()) {
+            clientes = consultorioRepository.findAllClienteByConsultorioIdAndCpf(idConsultorio, cpf, pages);
+        } else if (cidadeId != null) {
+            clientes = consultorioRepository.findAllClienteByConsultorioIdAndCidadeId(idConsultorio, cidadeId, pages);
+        } else {
+            clientes = consultorioRepository.findAllClienteByConsultorioId(idConsultorio, pages);
+        }
 
         return clientes.map(cliente -> convertToDto(cliente, ClienteSimpleDto.class));
     }

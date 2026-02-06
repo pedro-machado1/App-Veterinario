@@ -33,6 +33,8 @@ public class ConsultorioSimpleDto {
 
     private LocalDate dataDeFundacao;
 
+    private String cep;
+
     private LocalDate dataDeCadastro;
 
     private Estado estado;

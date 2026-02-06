@@ -25,7 +25,13 @@ public class Cliente {
 
     private String telefone;
 
+    private String cep;
+
     private LocalDate dataDeNascimento;
+
+    @ManyToOne()
+    @JoinColumn(name = "cidade_codigo_ibge", referencedColumnName = "codigo_ibge")
+    private Cidade cidade;
 
     private LocalDate dataDeCriacao;
 

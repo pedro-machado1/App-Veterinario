@@ -220,6 +220,9 @@ const UserProfile = () => {
             Endereço: {newUser?.consultorio?.endereco || "Endereço não encontrado"}
           </p>
           <p className="text-gray-600">
+            CEP: {newUser?.consultorio?.cep || "CEP não encontrado"}
+          </p>
+          <p className="text-gray-600">
             Endereço: {newUser?.consultorio?.estado || "Estado não encontrado"}
           </p>
           <p className="text-gray-600">
@@ -254,6 +257,7 @@ const UserProfile = () => {
                 phone={newUser.consultorio.telefone}
                 dataDeFundacao={newUser.consultorio.dataDeFundacao}
                 endereco={newUser.consultorio.endereco}
+                cep={newUser.consultorio.cep}
                 estado={newUser.consultorio.estado}
                 descricao={newUser.consultorio.descricao}
                 onClose={() => setShowConsultorio(false)}

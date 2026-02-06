@@ -131,18 +131,18 @@ const LoginComponents = () => {
                     <button id="submitbotao" type="submit">
                         Entrar
                     </button>
-
-                    <div className="errorsOrSuccess">
-                        {Error && <p style={{ color: "red" }}>{Error}</p>}
-                        {Sucess && <p style={{ color: "green" }}>{Sucess}</p>}
-                    </div>
-                    
                     <p>
                         Esqueceu a senha? <Link to="/forgot-password">Clique aqui</Link>
                     </p>
                     <p>
                         Não tem uma conta? <Link to="/register">Registre-se</Link>
                     </p>
+
+                    <div className="errorsOrSuccess">
+                        {Error && <p style={{ color: "red" }}>{Error}</p>}
+                        {Sucess && <p style={{ color: "green" }}>{Sucess}</p>}
+                    </div>
+                    
                 </form>
             </div>
             {isLoading && <LoadingSpin/>}

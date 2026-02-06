@@ -15,6 +15,7 @@ const ConsultorioUpdate = ({
   endereco,
   estado,
   descricao,
+  cep,
   onClose
 
 }) => {
@@ -25,6 +26,7 @@ const ConsultorioUpdate = ({
   const [newEndereco, setEndereco] = useState(endereco || "");
   const [newDescricao, setNewDescricao] = useState(descricao || "")
   const [newEstado, setNewEstado] = useState(estado || "");
+  const [newCep, setNewCep] = useState(cep || "");
   const [newImagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
   const [newRemove , setRemove] = useState(true)
@@ -110,6 +112,7 @@ const ConsultorioUpdate = ({
       dataDeFundacao: newDataDeFundacao,
       descricao: newDescricao,
       endereco: newEndereco,
+      cep: newCep,
       estado: newEstado
     };
     if (!document.getElementById("formsUpdateConsultorio").reportValidity()) {
@@ -252,6 +255,18 @@ const ConsultorioUpdate = ({
             required
           />
           <InputField
+            label="CEP"
+            placeholder={"Digite o CEP do consultório"}
+            name={"cep"}
+            idInput="newCep"
+            classNameDiv="inputCep"
+            value={newCep}
+            onChange={(e) => {
+              setNewCep(e.target.value);
+              isValid(e);
+            }}
+          />
+          <InputField
             label="Data de Fundação"
             placeholder={"Digite a data de Fundação do Consultorio"}
             name={"DataDeFundacao"}
@@ -272,7 +287,7 @@ const ConsultorioUpdate = ({
           <label htmlFor="newEstado">Estado</label>
           <select
             id="newEstado"
-            value={estado}
+            value={newEstado}
             onChange={(e) => setNewEstado(e.target.value)}
             required
           >

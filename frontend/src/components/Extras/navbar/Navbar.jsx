@@ -1,7 +1,7 @@
 import './Navbar.css'
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrayOptions from "./arrayOptions/arrayOptions";
-import Header from "../Header/header";
+import Header from "../header/header";
 
 const Navbar = (User) => {
 
@@ -10,6 +10,7 @@ const Navbar = (User) => {
     const options = ArrayOptions(User) || []
 
     return (
+        <>
         <div className='navigationBar'>
             <div className='navigationBarOptions'>
                 {
@@ -23,10 +24,11 @@ const Navbar = (User) => {
                     )
                     )}
             </div>
-            <div id="header">
+            <div id="headerVetHelp">
                 <Header />
             </div>
         </div>
+        </>
     )
 }
 
