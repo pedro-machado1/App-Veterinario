@@ -1,6 +1,9 @@
 package com.dto.cliente;
 
+import com.dto.cidade.CidadeSimpleDto;
+import com.dto.estado.EstadoSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.Cidade;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +22,12 @@ public class ClienteSimpleDto {
     private String cpf;
 
     private String nome;
+
+    private String cep;
+
+    private CidadeSimpleDto cidade;
+
+    private EstadoSimpleDto estado;
 
     private String endereco;
 

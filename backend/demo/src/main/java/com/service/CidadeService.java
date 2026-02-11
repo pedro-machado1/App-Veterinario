@@ -18,13 +18,14 @@ public class CidadeService {
     @Autowired
     private CidadeRepository cidadeRepository;
 
-    public List<CidadeSimpleDto> listarCidadesPorUf(String uf) {
-        String ufNorm = (uf == null) ? "" : uf.trim();
-        if (ufNorm.length() != 2) {
-            throw new IllegalArgumentException("UF deve conter 2 caracteres");
+    public List<CidadeSimpleDto> listarCidadesPorUfId(Integer ufId) {
+
+        if (ufId == null) {
+            throw new IllegalArgumentException("UF ID não pode ser nulo");
         }
 
-        return cidadeRepository.findAllByEstado_UfIgnoreCaseOrderByNomeAsc(ufNorm)
+        return cidadeRepository
+                .findAllByEstado_CodigoUfOrderByNomeAsc(ufId)
                 .stream()
                 .map(cidade -> convertToEntity(cidade, CidadeSimpleDto.class))
                 .toList();

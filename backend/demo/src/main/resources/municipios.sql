@@ -1,5 +1,5 @@
 CREATE TABLE tb_cidade(
-    codigo_ibge INT NOT NULL,
+    id_ibge INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
     latitude FLOAT(8) NOT NULL,
     longitude FLOAT(8) NOT NULL,
@@ -8,12 +8,12 @@ CREATE TABLE tb_cidade(
     siafi_id VARCHAR(4) NOT NULL UNIQUE,
     ddd INT NOT NULL,
     fuso_horario VARCHAR(32) NOT NULL,
-    PRIMARY KEY (codigo_ibge),
+    PRIMARY KEY (id_ibge),
     FOREIGN KEY (codigo_uf) REFERENCES tb_estados (codigo_uf)
 );
 
 
-INSERT INTO tb_cidade (codigo_ibge, nome, latitude, longitude, capital, codigo_uf, siafi_id, ddd, fuso_horario)
+INSERT INTO tb_cidade (id_ibge, nome, latitude, longitude, capital, codigo_uf, siafi_id, ddd, fuso_horario)
 VALUES
 (5200050,'Abadia de Goiás',-16.7573,-49.4412,0,52,'1050',62,'America/Sao_Paulo'),
 (3100104,'Abadia dos Dourados',-18.4831,-47.3916,0,31,'4001',34,'America/Sao_Paulo'),

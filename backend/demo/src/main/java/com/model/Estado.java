@@ -1,12 +1,11 @@
 package com.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -22,7 +21,6 @@ public class Estado {
     private String uf;
 
     @NotBlank(message = "Nome não pode ser vazio")
-    @Column(length = 100)
     private String nome;
 
     @NotNull(message = "Latitude não pode ser nula")
@@ -32,6 +30,14 @@ public class Estado {
     private Double longitude;
 
     @NotBlank(message = "Região não pode ser vazia")
-    @Column(length = 12)
     private String regiao;
+
+    @OneToMany(mappedBy = "estado")
+    private List<Consultorio> consultorio;
+
+    @OneToMany(mappedBy = "estado")
+    private List<Cliente> cliente;
+
+    @OneToMany(mappedBy = "estado")
+    private List<Veterinario> veterinario;
 }

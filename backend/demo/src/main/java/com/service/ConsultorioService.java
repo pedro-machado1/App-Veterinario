@@ -2,14 +2,11 @@ package com.service;
 
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.consultorio.ConsultorioDto;
-import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
-import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
-import com.enums.Estado;
 import com.model.*;
 import com.repository.ConsultorioRepository;
-import com.repository.VeterinarioRepository;
+import com.repository.EstadoRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.extras.Converters.*;
@@ -49,6 +43,9 @@ public class ConsultorioService {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private EstadoRepository estadoRepository;
 
     @Transactional
     public ConsultorioDto insert(ConsultorioDto consultorioDto, MultipartFile imagem) {
@@ -101,21 +98,32 @@ public class ConsultorioService {
     }
 
     @Transactional
-    public Page<ConsultorioDto> findAllByFilters(String estado, Long cidadeId, Pageable pages){
+    public Page<ConsultorioDto> findAllByFilters(Integer estadoCodigo, Long cidadeId, Pageable pages) {
         Page<Consultorio> consultorios;
-        
-        if (estado != null && !estado.isEmpty() && cidadeId != null) {
-            Estado estadoEnum = Estado.valueOf(estado);
-            consultorios = consultorioRepository.findAllByEstadoAndCidadeId(estadoEnum, cidadeId, pages);
+        if (estadoCodigo != null && cidadeId != null) {
+            Optional<Estado> estadoOpt = estadoRepository.findByCodigoUf(estadoCodigo);
+            if (estadoOpt.isPresent()) {
+                consultorios = consultorioRepository.findAllByEstadoAndCidadeId(estadoOpt.get(), cidadeId, pages);
+            } else {
+                consultorios = Page.empty();
+            }
+
         } else if (cidadeId != null) {
+
             consultorios = consultorioRepository.findAllByCidadeId(cidadeId, pages);
-        } else if (estado != null && !estado.isEmpty()) {
-            Estado estadoEnum = Estado.valueOf(estado);
-            consultorios = consultorioRepository.findAllByEstado(estadoEnum, pages);
+        } else if (estadoCodigo != null) {
+
+            Optional<Estado> estadoOpt = estadoRepository.findByCodigoUf(estadoCodigo);
+            if (estadoOpt.isPresent()) {
+                consultorios = consultorioRepository.findAllByEstado(estadoOpt.get(), pages);
+            } else {
+                consultorios = Page.empty();
+            }
+
         } else {
             consultorios = consultorioRepository.findAll(pages);
         }
-        
+
         return consultorios.map(consultorio -> convertToDto(consultorio, ConsultorioDto.class));
     }
 

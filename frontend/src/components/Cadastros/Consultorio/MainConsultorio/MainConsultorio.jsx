@@ -25,6 +25,13 @@ const MainConsultorio = () => {
 
     const ufs = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
 
+    const ufToCodigo = {
+        AC: 12, AL: 27, AP: 16, AM: 13, BA: 29, CE: 23, DF: 53,
+        ES: 32, GO: 52, MA: 21, MT: 51, MS: 50, MG: 31, PA: 15,
+        PB: 25, PR: 41, PE: 26, PI: 22, RJ: 33, RN: 24, RS: 43,
+        RO: 11, RR: 14, SC: 42, SP: 35, SE: 28, TO: 17
+    };
+
     const ToggleshowMore = (consultorioid) => {
         if (showMore === consultorioid) {
             setShowMore(null);
@@ -45,6 +52,7 @@ const MainConsultorio = () => {
                 const cidadesList = await listarCidadesPorUf(uf);
                 setCidades(Array.isArray(cidadesList) ? cidadesList : []);
             } catch (err) {
+                console.error("Erro ao carregar cidades:", err);
                 setCidades([]);
             }
             setLoadingCidades(false);
@@ -57,24 +65,31 @@ const MainConsultorio = () => {
         let url = `${apiUrl}/api/consultorio`;
         const params = [];
 
-        if (estado !== "") params.push(`estado=${estado}`);
-        if (cidadeId !== "") params.push(`cidade_id=${cidadeId}`);
-
-        if (params.length > 0) url += `?${params.join("&")}`;
+        if (estado && estado.trim() !== "") {
+            const codigoEstado = ufToCodigo[estado];
+            params.push(`estado=${codigoEstado}&`);
+        }
+        if (cidadeId && cidadeId.toString().trim() !== "") {
+            params.push(`cidade_id=${cidadeId}`);
+        }
 
         try {
             const response = await axios.get(url);
-            if (response.data.content.length === 0) {
-                if (cidadeId !== "") {
-                    const cidadeObj = cidades.find(c => String(c.id) === String(cidadeId));
+            
+            const consultorios = response.data?.content || response.data || [];
+            
+            if (consultorios.length === 0) {
+                if (cidadeId) {
+                    const cidadeObj = cidades.find(c => String(c.idIbge) === String(cidadeId));
                     const cidadeNome = cidadeObj ? cidadeObj.nome : null;
-                    setError(cidadeNome ? `A cidade ${cidadeNome} não possui nenhum consultório cadastrado` : "Nenhum Consultório cadastrado");
+                    setError(cidadeNome ? `A cidade ${cidadeNome} não possui nenhum consultório cadastrado` : "Nenhum Consultório cadastrado nesta cidade");
+                } else if (estado) {
+                    setError(`O estado ${estado} não possui nenhum consultório cadastrado`);
                 } else {
                     setError("Nenhum Consultório cadastrado");
                 }
                 setNewConsultorio([]);
             } else {
-                const consultorios = response.data.content;
                 const consultorioComImagens = await Promise.all(consultorios.map(async (item) => {
                     try {
                         const imageResponse = await axios.get(`${apiUrl}/api/consultorio/${item.id}/imagem`, { responseType: 'blob' });
@@ -87,7 +102,22 @@ const MainConsultorio = () => {
                 setNewConsultorio(consultorioComImagens);
             }
         } catch (err) {
-            setError("Erro ao carregar os consultórios");
+            console.error("Erro na requisição:", err);
+            
+            if (err.response?.status === 404 || err.response?.data?.content?.length === 0) {
+                if (cidadeId) {
+                    const cidadeObj = cidades.find(c => String(c.idIbge) === String(cidadeId));
+                    const cidadeNome = cidadeObj ? cidadeObj.nome : null;
+                    setError(cidadeNome ? `A cidade ${cidadeNome} não possui nenhum consultório cadastrado` : "Nenhum Consultório cadastrado nesta cidade");
+                } else if (estado) {
+                    setError(`O estado ${estado} não possui nenhum consultório cadastrado`);
+                } else {
+                    setError("Nenhum Consultório cadastrado");
+                }
+                setNewConsultorio([]);
+            } else {
+                setError("Erro ao conectar com o servidor. Tente novamente.");
+            }
         }
         setIsLoading(false);
     };
@@ -132,7 +162,7 @@ const MainConsultorio = () => {
                             >
                                 <option value="">Selecione uma cidade</option>
                                 {cidades.map(cidade => (
-                                    <option key={cidade.id} value={cidade.id}>
+                                    <option key={cidade.idIbge} value={cidade.idIbge}>
                                         {cidade.nome}
                                     </option>
                                 ))}

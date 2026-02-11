@@ -1,8 +1,8 @@
 package com.dto.consultorio;
 
-import com.enums.Estado;
+import com.dto.cidade.CidadeSimpleDto;
+import com.dto.estado.EstadoSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.model.Users;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -35,9 +34,13 @@ public class ConsultorioSimpleDto {
 
     private String cep;
 
+    private EstadoSimpleDto estado;
+
+    private CidadeSimpleDto cidade;
+
     private LocalDate dataDeCadastro;
 
-    private Estado estado;
+
 
     private String imagem;
 

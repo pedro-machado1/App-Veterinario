@@ -1,6 +1,5 @@
 package com.fixtures;
 
-import com.enums.Estado;
 import com.model.Veterinario;
 
 import java.time.LocalDate;

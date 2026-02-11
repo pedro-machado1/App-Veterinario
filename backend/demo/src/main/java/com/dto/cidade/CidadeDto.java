@@ -1,5 +1,6 @@
 package com.dto.cidade;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,9 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CidadeDto {
 
-    @NotNull(message = "id")
-    private Long id;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @NotNull(message = "IBGE")
     private Long idIbge;
 

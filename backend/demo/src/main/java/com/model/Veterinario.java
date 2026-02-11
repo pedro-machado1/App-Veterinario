@@ -1,7 +1,6 @@
 package com.model;
 
 
-import com.enums.Estado;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,7 +23,8 @@ public class Veterinario {
 
     private String telefone;
 
-    @Enumerated(EnumType.STRING)
+
+    @ManyToOne()
     private Estado estado;
 
     private String endereco;

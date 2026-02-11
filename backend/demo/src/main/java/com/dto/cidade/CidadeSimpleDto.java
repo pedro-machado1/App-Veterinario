@@ -1,5 +1,6 @@
 package com.dto.cidade;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CidadeSimpleDto {
-
-    private Long id;
 
     private Long idIbge;
 

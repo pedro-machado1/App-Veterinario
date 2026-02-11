@@ -16,9 +16,11 @@ public class CidadeController {
     private CidadeService cidadeService;
 
 
-    @GetMapping("/uf/{uf}")
-    public ResponseEntity<List<CidadeSimpleDto>> listarPorUf(@PathVariable String uf) {
-        List<CidadeSimpleDto> cidades = cidadeService.listarCidadesPorUf(uf);
+    @GetMapping("/uf/{ufId}")
+    public ResponseEntity<List<CidadeSimpleDto>> listarPorUfId(@PathVariable Integer ufId) {
+
+        List<CidadeSimpleDto> cidades = cidadeService.listarCidadesPorUfId(ufId);
+
         return ResponseEntity.ok(cidades);
     }
 

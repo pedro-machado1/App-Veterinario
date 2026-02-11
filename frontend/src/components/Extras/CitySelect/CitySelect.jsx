@@ -33,7 +33,7 @@ function CitySelect({
   const loadCities = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/cidades');
+      const response = await fetch('http://localhost:8080/api/cidades/uf/${codigoUf}');
       if (!response.ok) throw new Error('Erro ao carregar cidades');
       const data = await response.json();
       setCities(data);
@@ -71,7 +71,7 @@ function CitySelect({
     setSearchTerm('');
   };
 
-  const selectedCity = cities.find(c => c.id === value);
+  const selectedCity = cities.find(c => c.idIbge === value);
 
   return (
     <div className="citySelectContainer">

@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface EstadoRepository extends JpaRepository<Estado, Integer> {
     Optional<Estado> findByUfIgnoreCase(String uf);
+
+    Optional<Estado> findByCodigoUf(int codigoUF);
 }

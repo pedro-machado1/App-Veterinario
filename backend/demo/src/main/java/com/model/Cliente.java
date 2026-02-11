@@ -30,7 +30,6 @@ public class Cliente {
     private LocalDate dataDeNascimento;
 
     @ManyToOne()
-    @JoinColumn(name = "cidade_codigo_ibge", referencedColumnName = "codigo_ibge")
     private Cidade cidade;
 
     private LocalDate dataDeCriacao;
@@ -59,6 +58,8 @@ public class Cliente {
     @OneToMany ( mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<ClienteVeterinario> veterinariosPermitidos;
 
+    @ManyToOne()
+    private Estado estado;
 
 
 }

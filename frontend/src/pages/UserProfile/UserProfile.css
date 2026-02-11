@@ -4,15 +4,14 @@
     padding-top: 6rem;
     padding : 6rem 1rem 2rem 1rem;
     min-height: 100vh; 
-    min-width: 100vw;
     background-color: #f8f9fa;
+    overflow-x: hidden;
 }
 
 .ClienteContainer,
 .ConsultorioContainer,
 .VeterinarioContainer {
-    width: 100%;
-    max-width: 700px; 
+    width: 50vw; 
     
     background-color: white;
     border-radius: 1rem;
@@ -23,10 +22,10 @@
     align-items: center; 
 }
 
-.cliente-image,
-.veterinario-image {
-    width: 10rem;
-    height: 10rem;
+.clienteImage,
+.veterinarioImage {
+    width: 16rem;
+    height: 16rem;
     border-radius: 50%; 
     object-fit: cover;
     margin-bottom: 1.5rem; 
@@ -52,7 +51,7 @@
     margin: 0;
     border-bottom: 1px solid #eeeeee; 
     color: #495057; 
-    font-size: 1rem;
+    font-size: 1.3rem;
 }
 
 .ClienteContainer strong,
@@ -62,22 +61,14 @@
     min-width: 8rem; 
 }
 
-
-.ClienteContainer button,
-.ConsultorioContainer button,
-.VeterinarioContainer button {
+.Bluebutton {
     width: 100%;
     padding: 0.8rem 1.8rem;
     margin-top: 1rem;
     border-radius: 0.5rem;
     border: none;
-    font-size: 1rem;
+    font-size: 1.3rem;
     cursor: pointer;
-}
-
-.ClienteContainer button,
-.ConsultorioContainer button,
-.VeterinarioContainer button {
     background-color: #4a90e2; 
     color: white;
     font-weight: 600;
@@ -88,6 +79,14 @@
 .VeterinarioContainer .consulta {
     background-color: #e9ecef; 
     color: #495057;
+    width: 100%;
+    padding: 0.8rem 1.8rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    font-weight: 600;    
 }
 
 .ClienteContainer button:hover,

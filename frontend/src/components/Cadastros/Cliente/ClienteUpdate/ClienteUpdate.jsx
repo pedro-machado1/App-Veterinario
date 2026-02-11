@@ -1,13 +1,10 @@
-// fzr com que vire um pop up na tela 
-
-
-import "./ClienteUpdate.css"
-import { useState, useEffect } from 'react';
+import "./ClienteUpdate.css";
+import { useState, useEffect } from "react";
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
-import notLogin from "../../../../assets/images/notLogin.png";
+import { listarCidadesPorUf } from "../../../../services/locationService.js";
 
 const ClienteUpdate = ({
   id,
@@ -16,328 +13,186 @@ const ClienteUpdate = ({
   phone,
   dataDeNascimento,
   endereco,
+  estadoUf,
+  cidadeId, 
   onClose
-
 }) => {
 
-  const [newId, setId] = useState(id || "")
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
   const [newName, setName] = useState(name || "");
   const [newCpf, setCpf] = useState(cpf || "");
   const [newPhone, setPhone] = useState(phone || "");
   const [newDataDeNascimento, setDataDeNascimento] = useState(dataDeNascimento || "");
   const [newEndereco, setEndereco] = useState(endereco || "");
-  const [newImagem, setImagem] = useState("");
-  const [previewImg, setPreviewImg] = useState(null);
-  const [newRemove , setRemove] = useState(true)
-  const [Error, setError] = useState(null);
-  const [Success, setSuccess] = useState(null);
+  const [newEstado, setNewEstado] = useState(estadoUf || "");
+  const [newCidade, setNewCidade] = useState(cidadeId || ""); 
+  const [cidades, setCidades] = useState([]);
+  const [loadingCidades, setLoadingCidades] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const navigate = useNavigate();
+  const ufs = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 
-  const toggleRemove = () => {
-    setRemove((prev) => !prev)
-  }
+  const ufToCodigo = {
+    AC: 12, AL: 27, AP: 16, AM: 13, BA: 29, CE: 23, DF: 53,
+    ES: 32, GO: 52, MA: 21, MT: 51, MS: 50, MG: 31, PA: 15,
+    PB: 25, PR: 41, PE: 26, PI: 22, RJ: 33, RN: 24, RS: 43,
+    RO: 11, RR: 14, SC: 42, SP: 35, SE: 28, TO: 17
+  };
 
+  const handleUfChange = async (e) => {
+    const uf = e.target.value;
+    setNewEstado(uf);
+    setNewCidade("");
+    setCidades([]);
+
+    if (uf) {
+      setLoadingCidades(true);
+      try {
+        const cidadesList = await listarCidadesPorUf(uf);
+        setCidades(Array.isArray(cidadesList) ? cidadesList : []);
+      } catch (err) {
+        console.error("Erro ao carregar cidades:", err);
+        setCidades([]);
+      }
+      setLoadingCidades(false);
+    }
+  };
 
   useEffect(() => {
-
-    const fetchInitialData = async () => {
-      
-      setIsLoading(true);
-      const imageResponse = await axios.get(
-            `${apiUrl}/api/cliente/${id}/imagem`,
-            { responseType: 'blob' }
-          );
-          if (imageResponse.data.size > 0) {
-            let currentImageUrl = URL.createObjectURL(imageResponse.data);
-            setPreviewImg(currentImageUrl);
-          } else {
-            setPreviewImg(null);
-          }
+    const loadInitialData = async () => {
+      if (estadoUf) { // 
+        setLoadingCidades(true);
+        try {
+          const cidadesList = await listarCidadesPorUf(estadoUf);
+          setCidades(Array.isArray(cidadesList) ? cidadesList : []);
+        } catch (err) {
+          console.error("Erro ao carregar cidades:", err);
+          setCidades([]);
         }
+        setLoadingCidades(false);
+      }
+    };
+    
+    loadInitialData();
+  }, []); 
 
-    fetchInitialData()
-    setIsLoading(false)
-  }, [id, newRemove])
-
-  const isInvalid = (e) => {
-    e.target.classList.add("isInvalid");
-  };
-
-  const isValid = (e) => {
-    if (e.target.value && e.target.className.indexOf("isInvalid") != -1) {
-      console.log(e.target.className)
-      e.target.classList.remove("isInvalid");
-    }
-  };
+  const CheckCpf = (CPF) => CPF.replace(/\D/g, "").length === 11;
 
   const CheckPhone = (PHONE) => {
-    const onlyDigits = PHONE.replace(/\D/g, '');
-    if (onlyDigits.length === 10 || onlyDigits.length === 11) {
-      setError(null);
-      return true;
-    }
-    else {
-      setError('Formato de Telefone Inválido!');
-      return false;
-    }
-  }
-
-  const CheckCpf = (CPF) => {
-    const onlyDigits = CPF.replace(/\D/g, '');
-    if (onlyDigits.length === 11) {
-      setError(null);
-      return true;
-    } else {
-      setError('Formato de Cpf Inválido!');
-      return false;
-    }
-  }
-
-  const CheckDate = (DATE) => {
-    const today = new Date();
-    const inputDate = new Date(DATE);
-    if (inputDate > today) {
-      setError('Data de Nascimento não pode ser futura!');
-      return false;
-    } else {
-      setError(null);
-      return true;
-    }
-  }
+    const digits = PHONE.replace(/\D/g, "");
+    return digits.length === 10 || digits.length === 11;
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if (
-      !CheckCpf(newCpf) ||
-      !CheckPhone(newPhone) ||
-      !CheckDate(newDataDeNascimento)
-    ) return;
+
+    if (!CheckCpf(newCpf) || !CheckPhone(newPhone)) {
+      setError("CPF ou Telefone inválido");
+      return;
+    }
+
+    if (!newEstado || !newCidade) {
+      setError("Selecione estado e cidade");
+      return;
+    }
 
     const newClient = {
       nome: newName,
-      cpf: parseInt(newCpf.replace(/\D/g, "")),
-      telefone: parseInt(newPhone.replace(/\D/g, "")),
+      cpf: newCpf.replace(/\D/g, ""),
+      telefone: newPhone.replace(/\D/g, ""),
       dataDeNascimento: newDataDeNascimento,
-      endereco: newEndereco
+      endereco: newEndereco,
+      estado: { codigoUf: ufToCodigo[newEstado] },
+      cidade: { idIbge: newCidade } 
     };
-    if (!document.getElementById("formsNewClient").reportValidity()) {
-      setError("Preencha todos os campos!");
-      return;
-    }
-    setIsLoading(true);
-
-    
-    const formData = new FormData();
-
-    const clienteBlob = new Blob([JSON.stringify(newClient)], { type: 'application/json' });
-    formData.append("cliente", clienteBlob);
-    
-    if (newImagem) {
-      formData.append("imagem", newImagem);
-    }
 
     try {
-      const response = await axios.put(
-        `${apiUrl}/api/cliente`,
-        formData,
+      setIsLoading(true);
+
+      const formData = new FormData();
+      formData.append(
+        "cliente",
+        new Blob([JSON.stringify(newClient)], {
+          type: "application/json"
+        })
       );
-      console.log('New Client:', response.data);
-      setSuccess("Cliente adicionado com sucesso!");
-      setIsLoading(false);
+
+      await axios.put(`${apiUrl}/api/cliente`, formData);
+
+      setSuccess("Cliente atualizado!");
+      setTimeout(() => onClose(), 1500);
+
     } catch (err) {
+      console.error("Erro ao atualizar:", err);
+      setError(err.response?.data?.message || "Erro ao atualizar");
+    } finally {
       setIsLoading(false);
-      console.error(err);
-      if (err.response && err.response.data) {
-        setIsLoading(false);
-        setError(`${err.response.data.message}`);
-      }
     }
-    onClose()
   };
 
-  function maskCpf(value) {
+  const maskPhone = (value) => {
     return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  }
-
-  function maskPhone(value) {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{5})(\d)/, '$1-$2')
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d)/, "$1-$2")
       .slice(0, 15);
-  }
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagem(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImg(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImagem(null);
-      setPreviewImg(null);
-    }
   };
-
-  const handleRemove =  async () => {
-    setIsLoading(true)
-    try {
-      const response = await axios.delete(
-        `${apiUrl}/api/cliente/imagem`
-      )
-      console.log(response.data)
-      toggleRemove()
-      setPreviewImg(null)
-    }catch(err){
-      console.log(err)
-    }
-    setIsLoading(false)
-  }
 
   return (
-    <div className="cliente-container ">
-      <form
-        id="formsNewClient"
-        onSubmit={handleUpdate}>
-          <InputField
-          label="URL da Imagem"
-          placeholder={"Coloque a Imagem de perfil do cliente"}
-          idInput="newImagem"
-          classNameDiv="inputImagem"
-          type="file"
-          onChange={handleImageChange}
-        />
-        {previewImg ? (
-          <img
-            src={previewImg}
-            alt="Preview"
-            className="cliente-image"
-          />
-        ) : (
-          <img
-            src={notLogin}
-            alt="Sem imagem"
-            className="cliente-image"
-          />
+    <div className="cliente-wrapper">
+      <form className="cliente-form" onSubmit={handleUpdate}>
+
+        <InputField label="Nome" value={newName} onChange={(e)=>setName(e.target.value)} required />
+        <InputField label="CPF" value={newCpf} onChange={(e)=>setCpf(e.target.value)} required />
+        <InputField label="Telefone" value={maskPhone(newPhone)} onChange={(e)=>setPhone(maskPhone(e.target.value))} required />
+
+        <div className="custom-field">
+          <label>Estado</label>
+          <select value={newEstado} onChange={handleUfChange} required>
+            <option value="">Selecione</option>
+            {ufs.map(uf => (
+              <option key={uf} value={uf}>{uf}</option>
+            ))}
+          </select>
+        </div>
+
+        {newEstado && (
+          <div className="custom-field">
+            <label>Cidade</label>
+            {loadingCidades ? (
+              <p className="loading-text">Carregando cidades...</p>
+            ) : (
+              <select value={newCidade} onChange={(e)=>setNewCidade(e.target.value)} required>
+                <option value="">Selecione</option>
+                {cidades.map(city => (
+                  <option key={city.idIbge} value={city.idIbge}>{city.nome}</option>
+                ))}
+              </select>
+            )}
+          </div>
         )}
-        <button
-          onClick={handleRemove}
-          type="button"
-          className="removeImagem"
-        >
-          Remover imagem
-        </button>
-        <div className="line1">
-          <InputField
-            label="Nome"
-            placeholder={"Digite o nome do cliente"}
-            name={"name"}
-            idInput="newName"
-            classNameDiv="inputName"
-            value={newName}
-            onChange={(e) => {
-              setName(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-          <InputField
-            label="CPF"
-            placeholder={"Digite o CPF do cliente"}
-            name={"cpf"}
-            idInput="newCpf"
-            classNameDiv="inputCpf"
-            value={maskCpf(newCpf)}
-            onChange={(e) => {
-              const masked = maskCpf(e.target.value);
-              setCpf(masked);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-        </div>
-        <div className="line2">
-          <InputField
-            label="Telefone"
-            placeholder={"Digite o telefone do cliente"}
-            name={"phone"}
-            idInput="newPhone"
-            classNameDiv="inputPhone"
-            value={maskPhone(newPhone)}
-            onChange={(e) => {
-              const masked = maskPhone(e.target.value);
-              setPhone(masked);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-          <InputField
-            label="Data de Nascimento"
-            placeholder={"Digite a data de nascimento do cliente"}
-            name={"dataDeNascimento"}
-            idInput="newDataDeNascimento"
-            classNameDiv="inputdataDeNascimento"
-            type="date"
-            value={newDataDeNascimento}
-            onChange={(e) => {
-              setDataDeNascimento(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-        </div>
-        <div className="line3"></div>
-        <InputField
-          label="Endereço"
-          placeholder={"Digite o endereço do cliente"}
-          idInput="newendereco"
-          classNameDiv="inputendereco"
-          value={newEndereco}
-          onChange={(e) => {
-            setEndereco(e.target.value);
-            isValid(e);
-          }}
-          onInvalid={(e) => isInvalid(e)}
-          required
-        />
-        
-        <button className="NovoAnimal"
-          type="button"
-          onClick={() => navigate('/newAnimal')}>
-          Adicionar Animal</button>
 
-        <div className="errorsOrSuccess">
-          <p style={{ color: "red" }}>{Error && Error}</p>
-          <p style={{ color: "green" }}>{Success && Success}</p>
-        </div>
-        <button
-          type="submit"
-          onClick={handleUpdate}
-          className="submit">
-          Atualizar
+        <InputField label="Data Nascimento" type="date" value={newDataDeNascimento} onChange={(e)=>setDataDeNascimento(e.target.value)} required />
+        <InputField label="Endereço" value={newEndereco} onChange={(e)=>setEndereco(e.target.value)} required />
+
+        <button className="btn-secondary" type="button" onClick={()=>navigate('/newAnimal')}>
+          Adicionar Animal
         </button>
+
+        <div className="feedback">
+          {error && <p className="error-text">{error}</p>}
+          {success && <p className="success-text">{success}</p>}
+        </div>
+
+        <button type="submit" className="btn-primary">Atualizar</button>
+
       </form>
-      <button
-        type="buttom"
-        className="fechar"
-        onClick={onClose}>
-        Fechar
-      </button>
 
+      <button className="ButtonFechar" onClick={onClose}>Fechar</button>
       {isLoading && <LoadingSpin />}
     </div>
   );

@@ -103,6 +103,19 @@ const ShowCliente = ({
                 <p>
                     Endereço: {newCliente?.endereco || "Endereço não encontrada"}
                 </p>
+
+                <p>
+                    CEP: {newCliente?.cep || "CEP não encontrado"}
+                </p>
+
+                <p>
+                    Cidade: {newCliente?.cidade?.nome || "Cidade não encontrada"}
+                </p>
+
+                <p>
+                    CPF : {maskCpf(newCliente?.cpf) || "CPF não encontrada"}
+                </p>
+
                 <p>
                     CPF : {maskCpf(newCliente?.cpf) || "CPF não encontrada"}
                 </p>

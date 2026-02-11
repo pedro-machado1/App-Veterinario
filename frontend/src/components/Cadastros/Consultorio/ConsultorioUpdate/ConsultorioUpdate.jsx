@@ -1,11 +1,9 @@
-import "./ConsultorioUpdate.css"
-import { useState, useEffect } from 'react';
+import "./ConsultorioUpdate.css";
+import { useState, useEffect } from "react";
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
-import { useNavigate } from "react-router-dom";
-import notLogin from "../../../../assets/images/notLogin.png";
-
+import { listarCidadesPorUf } from "../../../../services/locationService.js";
 
 const ConsultorioUpdate = ({
   id,
@@ -15,356 +13,225 @@ const ConsultorioUpdate = ({
   endereco,
   estado,
   descricao,
-  cep,
+  cidade,
   onClose
-
 }) => {
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [newName, setName] = useState(name || "");
   const [newPhone, setPhone] = useState(phone || "");
   const [newDataDeFundacao, setDataDeFundacao] = useState(dataDeFundacao || "");
   const [newEndereco, setEndereco] = useState(endereco || "");
-  const [newDescricao, setNewDescricao] = useState(descricao || "")
-  const [newEstado, setNewEstado] = useState(estado || "");
-  const [newCep, setNewCep] = useState(cep || "");
-  const [newImagem, setImagem] = useState("");
-  const [previewImg, setPreviewImg] = useState(null);
-  const [newRemove , setRemove] = useState(true)
-  const [Error, setError] = useState(null);
-  const [Success, setSuccess] = useState(null);
+  const [newDescricao, setDescricao] = useState(descricao || "");
+
+  const [newEstado, setNewEstado] = useState(estado?.uf || "");
+  const [newCidade, setNewCidade] = useState(cidade?.id || "");
+
+  const [cidades, setCidades] = useState([]);
+  const [loadingCidades, setLoadingCidades] = useState(false);
+
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const navigate = useNavigate();
+  const ufs = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 
-  const toggleRemove = () => {
-    setRemove((prev) => !prev)
-  }
+  const carregarCidades = async (uf, manterCidade = false) => {
+    if (!uf) return;
 
+    setLoadingCidades(true);
+
+    try {
+      const cidadesList = await listarCidadesPorUf(uf);
+      setCidades(Array.isArray(cidadesList) ? cidadesList : []);
+
+      if (!manterCidade) {
+        setNewCidade("");
+      }
+    } catch {
+      setCidades([]);
+    }
+
+    setLoadingCidades(false);
+  };
+
+  const handleUfChange = async (e) => {
+    const uf = e.target.value;
+    setNewEstado(uf);
+    await carregarCidades(uf);
+  };
 
   useEffect(() => {
-    
-    const fetchInitialData = async () => {
-      
-      setIsLoading(true);
-      const imageResponse = await axios.get(
-            `${apiUrl}/api/consultorio/${id}/imagem`,
-            { responseType: 'blob' }
-          );
-          if (imageResponse.data.size > 0) {
-            let currentImageUrl = URL.createObjectURL(imageResponse.data);
-            setPreviewImg(currentImageUrl);
-          } else {
-            setPreviewImg(null);
-          }
-        }
-
-    fetchInitialData()
-    setIsLoading(false)
-
-  }, [id, newRemove])
-
-  const isInvalid = (e) => {
-    e.target.classList.add("isInvalid");
-  };
-
-  const isValid = (e) => {
-    if (e.target.value && e.target.className.indexOf("isInvalid") != -1) {
-      console.log(e.target.className)
-      e.target.classList.remove("isInvalid");
+    if (newEstado) {
+      carregarCidades(newEstado, true);
     }
-  };
+  }, []);
 
   const CheckPhone = (PHONE) => {
-    const onlyDigits = PHONE.replace(/\D/g, '');
-    if (onlyDigits.length === 10 || onlyDigits.length === 11) {
-      setError(null);
-      return true;
-    }
-    else {
-      setError('Formato de Telefone Inválido!');
-      return false;
-    }
-  }
-
-  const CheckDate = (DATE) => {
-    const today = new Date();
-    const inputDate = new Date(DATE);
-    if (inputDate > today) {
-      setError('Data de Nascimento não pode ser futura!');
-      return false;
-    } else {
-      setError(null);
-      return true;
-    }
-  }
+    const digits = PHONE.replace(/\D/g, "");
+    return digits.length === 10 || digits.length === 11;
+  };
 
   const handleUpdate = async (e) => {
+
     e.preventDefault();
-    if (
-      !CheckPhone(newPhone) ||
-      !CheckDate(newDataDeFundacao)
-    ) return;
+
+    if (!CheckPhone(newPhone)) {
+      setError("Telefone inválido");
+      return;
+    }
+
+    if (!newEstado || !newCidade) {
+      setError("Selecione estado e cidade");
+      return;
+    }
 
     const UpdateConsultorio = {
       nome: newName,
-      telefone: parseInt(newPhone.replace(/\D/g, "")),
+      telefone: newPhone,
       dataDeFundacao: newDataDeFundacao,
       descricao: newDescricao,
       endereco: newEndereco,
-      cep: newCep,
-      estado: newEstado
-    };
-    if (!document.getElementById("formsUpdateConsultorio").reportValidity()) {
-      setError("Preencha todos os campos!");
-      return;
-    }
-    setIsLoading(true);
-
-    const formData = new FormData();
-
-    const consultorioBlob = new Blob([JSON.stringify(UpdateConsultorio)], { type: 'application/json' });
-    formData.append("consultorio", consultorioBlob);
-    
-    if (newImagem) {
-      formData.append("imagem", newImagem);
-    }
-
-    try {
-      const response = await axios.put(
-        `${apiUrl}/api/consultorio`,
-        formData,
-        { withCredentials: true }
-      );
-      console.log('New Consultorio:', response.data);
-      setSuccess("Consultorio adicionado com sucesso!");
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      console.error(err);
-      if (err.response && err.response.data) {
-        setIsLoading(false);
-        setError(`${err.response.data.message}`);
+      estado: {
+        uf: newEstado
+      },
+      cidade: {
+        id: Number(newCidade)
       }
-    }
-    onClose()
-  };
+    };
 
-  function maskPhone(value) {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{5})(\d)/, '$1-$2')
-      .slice(0, 15);
-  }
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagem(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImg(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImagem(null);
-      setPreviewImg(null);
-    }
-  };
-
-  const handleRemove =  async () => {
-    setIsLoading(true)
     try {
-      const response = await axios.delete(
-        `${apiUrl}/api/consultorio/imagem`
-      )
-      console.log(response.data)
-      toggleRemove()
-      setPreviewImg(null)
-    }catch(err){
-      console.log(err)
+
+      setIsLoading(true);
+
+      const formData = new FormData();
+
+      formData.append(
+        "consultorio",
+        new Blob([JSON.stringify(UpdateConsultorio)], {
+          type: "application/json"
+        })
+      );
+
+      await axios.put(`${apiUrl}/api/consultorio`, formData, {
+        withCredentials: true
+      });
+
+      setSuccess("Consultório atualizado!");
+      onClose();
+
+    } catch (err) {
+
+      setError(err.response?.data?.message || "Erro ao atualizar");
+
+    } finally {
+
+      setIsLoading(false);
+
     }
-    setIsLoading(false)
-  }  
+  };
+
+  const maskPhone = (value) => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d)/, "$1-$2")
+      .slice(0, 15);
+  };
 
   return (
-    <div className="consultorio-container ">
-      <form
-        id="formsUpdateConsultorio"
-        onSubmit={handleUpdate}>
+    <div className="consultorio-container">
+      <form onSubmit={handleUpdate}>
+
         <InputField
-          label="URL da Imagem"
-          placeholder={"Coloque a Imagem de perfil do consultório"}
-          idInput="newImagem"
-          classNameDiv="inputImagem"
-          type="file"
-          onChange={handleImageChange}
+          label="Nome"
+          value={newName}
+          onChange={(e)=>setName(e.target.value)}
+          required
         />
-        {previewImg ? (
-          <img
-            src={previewImg}
-            alt="Preview"
-            className="consultorio-image"
-          />
-        ) : (
-          <img
-            src={notLogin}
-            alt="Sem imagem"
-            className="consultorio-image"
-          />
-        )}
-        <button
-          onClick={handleRemove}
-          type="button"
-          className="removeImagem"
-        >
-          Remover imagem
-        </button>
-        
-        <div className="line1">
-          <InputField
-            label="Nome"
-            placeholder={"Digite o nome do consultório"}
-            name={"name"}
-            idInput="newName"
-            classNameDiv="inputName"
-            value={newName}
-            onChange={(e) => {
-              setName(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-        </div>
-        <div className="line2">
-          <InputField
-            label="Telefone"
-            placeholder={"Digite o telefone do consultório"}
-            name={"phone"}
-            idInput="newPhone"
-            classNameDiv="inputPhone"
-            value={maskPhone(newPhone)}
-            onChange={(e) => {
-              const masked = maskPhone(e.target.value);
-              setPhone(masked);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-          <InputField
-            label="CEP"
-            placeholder={"Digite o CEP do consultório"}
-            name={"cep"}
-            idInput="newCep"
-            classNameDiv="inputCep"
-            value={newCep}
-            onChange={(e) => {
-              setNewCep(e.target.value);
-              isValid(e);
-            }}
-          />
-          <InputField
-            label="Data de Fundação"
-            placeholder={"Digite a data de Fundação do Consultorio"}
-            name={"DataDeFundacao"}
-            idInput="newDataDeFundacao"
-            classNameDiv="inputDataDeFundacao"
-            type="date"
-            value={newDataDeFundacao}
-            onChange={(e) => {
-              setDataDeFundacao(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
-        </div>
-        <div className="line3"></div>
-        <div className="inputEstado">
-          <label htmlFor="newEstado">Estado</label>
+
+        <InputField
+          label="Telefone"
+          value={maskPhone(newPhone)}
+          onChange={(e)=>setPhone(maskPhone(e.target.value))}
+          required
+        />
+
+        <label className="selectLabel">
+          Estado
           <select
-            id="newEstado"
             value={newEstado}
-            onChange={(e) => setNewEstado(e.target.value)}
+            onChange={handleUfChange}
             required
           >
-            <option value="" disabled>
-              Selecione...
-            </option>
-            <option value="Acre">Acre</option>
-            <option value="Amapá">Amapá</option>
-            <option value="Alagoas">Alagoas</option>
-            <option value="Amazonas">Amazonas</option>
-            <option value="Bahia">Bahia</option>
-            <option value="Ceará">Ceará</option>
-            <option value="Distrito Federal">Distrito Federal</option>
-            <option value="Espírito Santo">Espírito Santo</option>
-            <option value="Goiás">Goiás</option>
-            <option value="Maranhão">Maranhão</option>
-            <option value="Mato Grosso">Mato Grosso</option>
-            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
-            <option value="Minas Gerais">Minas Gerais</option>
-            <option value="Pará">Pará</option>
-            <option value="Paraíba">Paraíba</option>
-            <option value="Paraná">Paraná</option>
-            <option value="Pernambuco">Pernambuco</option>
-            <option value="Piauí">Piauí</option>
-            <option value="Rio de Janeiro">Rio de Janeiro</option>
-            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
-            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
-            <option value="Rondônia">Rondônia</option>
-            <option value="Roraima">Roraima</option>
-            <option value="Santa Catarina">Santa Catarina</option>
-            <option value="São Paulo">São Paulo</option>
-            <option value="Sergipe">Sergipe</option>
-            <option value="Tocantins">Tocantins</option>
+            <option value="">Selecione</option>
+            {ufs.map(uf => (
+              <option key={uf} value={uf}>{uf}</option>
+            ))}
           </select>
-        </div>
+        </label>
+
+        {newEstado && (
+          <label className="selectLabel">
+            Cidade
+
+            {loadingCidades ? (
+              <p>Carregando cidades...</p>
+            ) : (
+              <select
+                value={newCidade}
+                onChange={(e)=>setNewCidade(e.target.value)}
+                required
+              >
+                <option value="">Selecione</option>
+
+                {cidades.map(city => (
+                  <option key={city.id} value={city.id}>
+                    {city.nome}
+                  </option>
+                ))}
+
+              </select>
+            )}
+
+          </label>
+        )}
+
+        <InputField
+          label="Data Fundação"
+          type="date"
+          value={newDataDeFundacao}
+          onChange={(e)=>setDataDeFundacao(e.target.value)}
+          required
+        />
 
         <InputField
           label="Endereço"
-          placeholder={"Digite o endereço do consultório"}
-          idInput="newendereco"
-          classNameDiv="inputendereco"
           value={newEndereco}
-          onChange={(e) => {
-            setEndereco(e.target.value);
-            isValid(e);
-          }}
-          onInvalid={(e) => isInvalid(e)}
+          onChange={(e)=>setEndereco(e.target.value)}
           required
         />
+
         <InputField
           label="Descrição"
-          placeholder={"Digite o descrição do consultorio"}
-          idInput="newDescricao"
-          classNameDiv="inputDescricao"
           value={newDescricao}
-          onChange={(e) => {
-            setNewDescricao(e.target.value);
-            isValid(e);
-          }}
-          onInvalid={(e) => isInvalid(e)}
+          onChange={(e)=>setDescricao(e.target.value)}
           required
         />
+
         <div className="errorsOrSuccess">
-          <p style={{ color: "red" }}>{Error && Error}</p>
-          <p style={{ color: "green" }}>{Success && Success}</p>
+          <p style={{color:"red"}}>{error}</p>
+          <p style={{color:"green"}}>{success}</p>
         </div>
-        <button
-          type="submit"
-          onClick={handleUpdate}
-          className="submit">
+
+        <button type="submit" className="submit">
           Atualizar
         </button>
+
       </form>
-      <button
-        type="buttom"
-        className="fechar"
-        onClick={onClose}>
+
+      <button className="fechar" onClick={onClose}>
         Fechar
       </button>
 

@@ -5,7 +5,6 @@ import com.dto.consultorio.ConsultorioDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
-import com.enums.Estado;
 import com.model.Consultorio;
 import com.model.Users;
 import com.service.ConsultorioService;
@@ -55,12 +54,12 @@ public class ConsultorioController {
     @GetMapping()
     public ResponseEntity<Page<ConsultorioDto>> findAll(
             Pageable pages,
-            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) Integer estadoCodigo,
             @RequestParam(required = false) Long cidade_id,
             @RequestParam(required = false) String endereco){
         Page<ConsultorioDto> responsePages;
         try {
-            responsePages = consultorioService.findAllByFilters(estado, cidade_id, pages);
+            responsePages = consultorioService.findAllByFilters(estadoCodigo, cidade_id, pages);
         } catch (Exception e) {
             return ResponseEntity.status(400).build();
         }

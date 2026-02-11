@@ -2,14 +2,7 @@ package com.model;
 
 import com.model.Cliente;
 import com.model.Estado;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,11 +13,9 @@ import java.util.List;
 @Entity
 @Table(name = "tb_cidade")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Cidade {
 
     @Id
-    @Column(name = "codigo_ibge")
     private Long idIbge;
 
     @Column(name = "nome", nullable = false)
@@ -52,11 +43,6 @@ public class Cidade {
     @Column(name = "fuso_horario", nullable = false)
     private String fusoHorario;
 
-    @Transient
-    public String getUf() {
-        return (estado == null) ? null : estado.getUf();
-    }
-
-    @Transient
-    private List<Cliente> clientes;
+    @OneToMany(mappedBy = "cidade")
+    private List<Cliente> cliente;
 }

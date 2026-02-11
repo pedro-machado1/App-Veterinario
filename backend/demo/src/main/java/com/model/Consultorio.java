@@ -1,6 +1,5 @@
 package com.model;
 
-import com.enums.Estado;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,7 +20,7 @@ public class Consultorio {
 
     private String telefone;
 
-        private String cep;
+    private String cep;
 
     @Lob
     @Column(columnDefinition = "TEXT")
@@ -31,13 +30,14 @@ public class Consultorio {
 
     private LocalDate dataDeCadastro;
 
-    private Estado estado;
 
     private String imagem;
 
-    @ManyToOne
-    @JoinColumn(name = "cidade_id")
+    @ManyToOne()
     private Cidade cidade;
+
+    @ManyToOne()
+    private Estado estado;
 
     @OneToOne(mappedBy = "consultorio", cascade = CascadeType.ALL)
     private Users users;
