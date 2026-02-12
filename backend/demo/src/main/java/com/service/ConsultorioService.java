@@ -98,27 +98,28 @@ public class ConsultorioService {
     }
 
     @Transactional
-    public Page<ConsultorioDto> findAllByFilters(Integer estadoCodigo, Long cidadeId, Pageable pages) {
+    public Page<ConsultorioDto> findAllByFilters(Integer estadoCodigo, Long cidadeId, Pageable pages, String nome) {
         Page<Consultorio> consultorios;
+
+        String buscaNome = (nome == null) ? "" : nome;
+
         if (estadoCodigo != null && cidadeId != null) {
             Optional<Estado> estadoOpt = estadoRepository.findByCodigoUf(estadoCodigo);
-            if (estadoOpt.isPresent()) {
-                consultorios = consultorioRepository.findAllByEstadoAndCidadeId(estadoOpt.get(), cidadeId, pages);
-            } else {
-                consultorios = Page.empty();
-            }
+            consultorios = estadoOpt.map(estado ->
+                    consultorioRepository.findByEstadoAndCidadeIdIbgeAndNomeStartingWith(estado, cidadeId, buscaNome, pages)
+            ).orElse(Page.empty());
 
         } else if (cidadeId != null) {
+            consultorios = consultorioRepository.findByCidadeIdIbgeAndNomeStartingWith(cidadeId, buscaNome, pages);
 
-            consultorios = consultorioRepository.findAllByCidadeId(cidadeId, pages);
         } else if (estadoCodigo != null) {
-
             Optional<Estado> estadoOpt = estadoRepository.findByCodigoUf(estadoCodigo);
-            if (estadoOpt.isPresent()) {
-                consultorios = consultorioRepository.findAllByEstado(estadoOpt.get(), pages);
-            } else {
-                consultorios = Page.empty();
-            }
+            consultorios = estadoOpt.map(estado ->
+                    consultorioRepository.findByEstadoAndNomeStartingWith(estado, buscaNome, pages)
+            ).orElse(Page.empty());
+
+        } else if (nome != null && !nome.isEmpty()) {
+            consultorios = consultorioRepository.findByNomeStartingWith(nome, pages);
 
         } else {
             consultorios = consultorioRepository.findAll(pages);
@@ -126,7 +127,6 @@ public class ConsultorioService {
 
         return consultorios.map(consultorio -> convertToDto(consultorio, ConsultorioDto.class));
     }
-
     @Transactional
     public ConsultorioDto update(ConsultorioUpdateDto consultorioDto, MultipartFile imagem){
         String imagemString = fileStorageService.saveFile(imagem);

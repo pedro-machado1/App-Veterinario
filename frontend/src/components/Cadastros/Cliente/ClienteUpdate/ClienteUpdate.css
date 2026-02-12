@@ -1,128 +1,104 @@
-.cliente-wrapper {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.35);
-    z-index: 10000;
-    padding: 1rem;
-}
-
-.cliente-form {
-    background: #fff;
-    padding: 2rem;
+.clienteContainer {
+    width: 80vw;
+    max-height: 88vh;
+    background: white;
     border-radius: 1rem;
-    width: 100%;
-    max-width: 42rem;
-    max-height: 90vh;
+    padding: 1rem;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
-.custom-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.custom-field label {
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 1.5rem;
-}
-
-.custom-field select {
-    padding: 0.55rem 0.7rem;
-    border-radius: 0.5rem;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-    background-color: white;
-    color: black;
-    transition: 0.2s;
-    cursor: pointer;
-}
-
-.custom-field select option {
-    color: black;
-    background-color: white;
-}
-
-.custom-field select:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
-}
-
-.custom-field select:hover {
-    border-color: #3498db;
-}
-
-.loading-text {
-    font-size: 0.85rem;
-    color: #666;
-}
-
-.btn-secondary {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 0.75rem;
-    border-radius: 0.6rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-secondary:hover {
-    background: #2980b9;
-}
-
-.btn-primary {
-    background: #2ecc71;
-    color: white;
-    border: none;
-    padding: 0.8rem;
-    border-radius: 0.6rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-primary:hover {
-    background: #27ae60;
-}
-
-.ButtonFechar{
-    width: 30vw;
-    height: 5vh;
-    margin-top: 0.5rem;
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 0.6rem;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.ButtonFechar:hover {
-    background: #c0392b;
-}
-
-.feedback {
+.clienteContainer .title {
+    margin-top: 1.5rem;
     text-align: center;
-    min-height: 1.2rem;
+    font-size: 4rem;
+    font-weight: 600;
+    border-bottom: 0.3rem solid #ecf0f1;
+    padding-bottom: 1rem;
 }
 
-.error-text {
-    color: #e74c3c;
+.line1,
+.line2,
+.line3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
-.success-text {
-    color: #2ecc71;
+.line1 > div,
+.line2 > div,
+.line3 > div {
+    flex: 1;
+    min-width: 200px;
+}
+
+.inputEstado select,
+.inputCidade select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 0.1rem solid #bdc3c7;
+    background-color: #d4cdcd;
+    border-radius: 0.3rem;
+}
+
+.imagePreview {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem;
+    border: 2px dashed #bdc3c7;
+    border-radius: 0.8rem;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.imagePreview:hover {
+    border-color: #3498db;
+    background-color: #ecf0f1;
+}
+
+.cliente-image {
+    width: 18rem;
+    height: 18rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.dragDropText {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.botoesPrincipais {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+}
+
+.submit,
+.cancelar {
+    color: white;
+    border: none;
+    padding: 1.3rem 2.2rem;
+    border-radius: 0.7rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.submit {
+    background-color: #2ecc71;
+}
+
+.submit:hover {
+    background-color: #27ae60;
+}
+
+.cancelar {
+    background-color: #999595;
+}
+
+.cancelar:hover {
+    background-color: #8f9091;
 }

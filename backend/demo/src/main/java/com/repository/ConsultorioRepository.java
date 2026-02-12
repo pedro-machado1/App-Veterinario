@@ -18,12 +18,6 @@ public interface ConsultorioRepository extends JpaRepository<Consultorio, Long> 
 
     Page<Consultorio> findAllByEstado(Estado estado, Pageable pageable);
 
-    @Query("SELECT DISTINCT c FROM Consultorio c WHERE c.cidade.idIbge = :cidadeId")
-    Page<Consultorio> findAllByCidadeId(@Param("cidadeId") Long cidadeId, Pageable pageable);
-
-    @Query("SELECT DISTINCT c FROM Consultorio c WHERE c.estado = :estado AND c.cidade.idIbge = :cidadeId")
-    Page<Consultorio> findAllByEstadoAndCidadeId(@Param("estado") Estado estado, @Param("cidadeId") Long cidadeId, Pageable pageable);
-
     @Query("SELECT DISTINCT cl FROM Consultorio c JOIN c.cliente cl WHERE c.id = :consultorioId")
     Page<Cliente> findAllClienteByConsultorioId(@Param("consultorioId") Long consultorioId, Pageable pageable);
 
@@ -36,4 +30,11 @@ public interface ConsultorioRepository extends JpaRepository<Consultorio, Long> 
     @Query("SELECT DISTINCT cl FROM Consultorio c JOIN c.cliente cl WHERE c.id = :consultorioId AND cl.cpf LIKE CONCAT('%', :cpf, '%') AND cl.cidade.idIbge = :cidadeId")
     Page<Cliente> findAllClienteByConsultorioIdAndCpfAndCidadeId(@Param("consultorioId") Long consultorioId, @Param("cpf") String cpf, @Param("cidadeId") Long cidadeId, Pageable pageable);
 
+    Page<Consultorio> findByNomeStartingWith(String nome, Pageable pageable);
+
+    Page<Consultorio> findByEstadoAndNomeStartingWith(Estado estado, String nome, Pageable pageable);
+
+    Page<Consultorio> findByCidadeIdIbgeAndNomeStartingWith(Long idIbge, String nome, Pageable pageable);
+
+    Page<Consultorio> findByEstadoAndCidadeIdIbgeAndNomeStartingWith(Estado estado, Long idIbge, String nome, Pageable pageable);
 }

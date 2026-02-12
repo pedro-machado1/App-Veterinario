@@ -7,6 +7,7 @@ import { useAuth } from "../../../Security/Context/AuthContext";
 import { useEffect, useState, useRef } from "react";
 import notLogin from "../../../../assets/images/notLogin.png";
 import { listarCidadesPorUf } from "../../../../services/locationService.js";
+import InputField from "../../../Extras/InputField/InputField.jsx";
 
 const MainConsultorio = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -19,10 +20,12 @@ const MainConsultorio = () => {
     const [showMore, setShowMore] = useState(null);
     const [searchEstado, setSearchEstado] = useState("");
     const [searchCidade, setSearchCidade] = useState("");
+    const [searchName, setSearchName] = useState("");
+
     const [cidades, setCidades] = useState([]);
     const [loadingCidades, setLoadingCidades] = useState(false);
     const [Error, setError] = useState(null);
-
+ 
     const ufs = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
 
     const ufToCodigo = {
@@ -59,18 +62,21 @@ const MainConsultorio = () => {
         }
     };
 
-    const asyncFunction = async (estado, cidadeId) => {
+    const asyncFunction = async (estado, cidadeId, name) => {
         setIsLoading(true);
         setError(null);
         let url = `${apiUrl}/api/consultorio`;
-        const params = [];
+
+            if (name !== "") {
+                url += `?nome=${name}`
+            }
 
         if (estado && estado.trim() !== "") {
             const codigoEstado = ufToCodigo[estado];
-            params.push(`estado=${codigoEstado}&`);
+            url += `estado=${codigoEstado}&`
         }
         if (cidadeId && cidadeId.toString().trim() !== "") {
-            params.push(`cidade_id=${cidadeId}`);
+            url += `cidade_id=${cidadeId}`
         }
 
         try {
@@ -123,7 +129,7 @@ const MainConsultorio = () => {
     };
 
     useEffect(() => {
-        asyncFunction(searchEstado, searchCidade);
+        asyncFunction(searchEstado, searchCidade, searchName);
     }, [show]);
 
     const navigate = useNavigate();
@@ -152,7 +158,7 @@ const MainConsultorio = () => {
                     <div className="filterGroup">
                         <label htmlFor="cidadeSelect">Cidade:</label>
                         {loadingCidades ? (
-                            <p className="loadingText">Carregando cidades...</p>
+                            <p className="loadingText">Carregando cidades...</p>    
                         ) : (
                             <select
                                 id="cidadeSelect"
@@ -170,10 +176,17 @@ const MainConsultorio = () => {
                         )}
                     </div>
                 )}
+            <div id="SearchConsultorios">
+                <InputField
+                        placeholder="Pesquisar por nome"
+                        value={searchName}
+                        onChange={(e) => setSearchName(e.target.value)}
+                />
+            </div>
 
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                     <button
-                        onClick={() => asyncFunction(searchEstado, searchCidade)}
+                        onClick={() => asyncFunction(searchEstado, searchCidade, searchName)}
                         className="botaoEstado"
                     >
                         Pesquisar
@@ -181,8 +194,9 @@ const MainConsultorio = () => {
                     <button className="botaoLimpar" onClick={() => {
                         setSearchEstado("");
                         setSearchCidade("");
+                        setSearchName("")
                         setCidades([]);
-                        asyncFunction("", "");
+                        asyncFunction("", "", "");
                     }}>
                         Limpar Filtro
                     </button>
@@ -214,11 +228,11 @@ const MainConsultorio = () => {
                         <p className="consultorioNome">
                             <strong>Nome:</strong> {consultorio.nome || "Não encontrado"}
                         </p>
+                        <p className="estado">
+                            Localização: {consultorio.estado.nome || "Não encontrado"}, {consultorio.cidade.nome || "Não encontrado"}
+                        </p>
                         <p className="endereco">
                             Endereço: {consultorio.endereco || "Não encontrado"}
-                        </p>
-                        <p className="cep">
-                            CEP: {consultorio.cep || "Não encontrado"}
                         </p>
                         {newSwitch && <p>Estado: {consultorio.estado}</p>}
                         

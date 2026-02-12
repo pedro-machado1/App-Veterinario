@@ -102,15 +102,3 @@
     background-color: #dee2e6;
     color: #212529;
 }
-
-.userContainer > div:last-child h1 {
-    text-align: center;
-    color: #495057;
-    margin-top: 3rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 1.5rem;
-    border: 1px dashed #ced4da;
-    border-radius: 0.5rem;
-    background-color: #fff;
-}

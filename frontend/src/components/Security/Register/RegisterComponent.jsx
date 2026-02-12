@@ -107,10 +107,6 @@ const RegisterComponent = () => {
             }
         }
     }
-    
-    const voltar = () => {
-        navigate('/Login')
-    }        
 
     return (
         <div className="loginContainer">

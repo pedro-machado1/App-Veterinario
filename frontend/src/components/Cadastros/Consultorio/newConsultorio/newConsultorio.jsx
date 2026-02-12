@@ -1,4 +1,3 @@
-
 import "./newConsultorio.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import InputField from "../../../Extras/InputField/InputField.jsx";
 import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin.jsx";
 import NewVeterinario from "../../Veterinario/newVeterinario/newVeterinario.jsx";
+import { listarCidadesPorUf } from "../../../../services/locationService.js";
 
 const NewConsultorio = () => {
   const [nome, setNome] = useState("");
@@ -14,7 +14,10 @@ const NewConsultorio = () => {
   const [cep, setCep] = useState("");
   const [descricao, setDescricao] = useState("");
   const [dataDeFundacao, setDataDeFundacao] = useState("");
-  const [estado, setEstado] = useState("")
+  const [estado, setEstado] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [cidades, setCidades] = useState([]);
+  const [loadingCidades, setLoadingCidades] = useState(false);
   const [imagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
 
@@ -25,6 +28,34 @@ const NewConsultorio = () => {
 
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  const ufs = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+
+  const ufToCodigo = {
+    AC: 12, AL: 27, AP: 16, AM: 13, BA: 29, CE: 23, DF: 53,
+    ES: 32, GO: 52, MA: 21, MT: 51, MS: 50, MG: 31, PA: 15,
+    PB: 25, PR: 41, PE: 26, PI: 22, RJ: 33, RN: 24, RS: 43,
+    RO: 11, RR: 14, SC: 42, SP: 35, SE: 28, TO: 17
+  };
+
+  const handleUfChange = async (e) => {
+    const uf = e.target.value;
+    setEstado(uf);
+    setCidade("");
+    setCidades([]);
+    isValid(e);
+
+    if (uf) {
+      setLoadingCidades(true);
+      try {
+        const cidadesList = await listarCidadesPorUf(uf);
+        setCidades(Array.isArray(cidadesList) ? cidadesList : []);
+      } catch (err) {
+        setCidades([]);
+      }
+      setLoadingCidades(false);
+    }
+  };
 
   const isInvalid = (e) => e.target.classList.add("isInvalid");
   const isValid = (e) => {
@@ -69,6 +100,8 @@ const NewConsultorio = () => {
     setCep("");
     setDescricao("");
     setEstado("");
+    setCidade("");
+    setCidades([]);
     setImagem("");
     setPreviewImg(null);
     setError(null);
@@ -78,6 +111,10 @@ const NewConsultorio = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!CheckDate(dataDeFundacao) || !CheckPhone(telefone)) return;
+    if (!estado || !cidade) {
+      setError("Selecione Estado e Cidade!");
+      return;
+    }
     if (!document.getElementById("formsNewConsultorio").reportValidity()) {
       setError("Preencha todos os campos!");
       return;
@@ -89,32 +126,26 @@ const NewConsultorio = () => {
       cep,
       descricao,
       dataDeFundacao,
-      estado
+      estado: { codigoUf: ufToCodigo[estado] },
+      cidade: { idIbge: cidade }
     };
     setIsLoading(true);
 
     const formData = new FormData();
-
     const consultorioBlob = new Blob([JSON.stringify(newConsultorio)], { type: 'application/json' });
     formData.append("consultorio", consultorioBlob);
-    
     if (imagem) {
       formData.append("imagem", imagem);
     }
 
-
     try {
-      const response = await axios.post(`${apiUrl}/api/consultorio`,
-         formData
-        );
-      console.log("New Consultorio:", response.data);
+      const response = await axios.post(`${apiUrl}/api/consultorio`, formData);
       handleReset();
       setSuccess("Consultório adicionado com sucesso!");
       setIsLoading(false);  
       navigate('/login')
     } catch (err) {
       setIsLoading(false);
-      console.error(err);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
       }
@@ -176,47 +207,42 @@ const NewConsultorio = () => {
           value={cep}
           onChange={(e)=> { setCep(e.target.value); isValid(e); }}
         />
-        <div className="inputEstado">
-          <label htmlFor="newEstado">Estado</label>
-          <select
-            id="newEstado"
-            value={estado}
-            onChange={(e) => setEstado(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              Selecione...
-            </option>
-            <option value="Acre">Acre</option>
-            <option value="Amapá">Amapá</option>
-            <option value="Alagoas">Alagoas</option>
-            <option value="Amazonas">Amazonas</option>
-            <option value="Bahia">Bahia</option>
-            <option value="Ceará">Ceará</option>
-            <option value="Distrito Federal">Distrito Federal</option>
-            <option value="Espírito Santo">Espírito Santo</option>
-            <option value="Goiás">Goiás</option>
-            <option value="Maranhão">Maranhão</option>
-            <option value="Mato Grosso">Mato Grosso</option>
-            <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
-            <option value="Minas Gerais">Minas Gerais</option>
-            <option value="Pará">Pará</option>
-            <option value="Paraíba">Paraíba</option>
-            <option value="Paraná">Paraná</option>
-            <option value="Pernambuco">Pernambuco</option>
-            <option value="Piauí">Piauí</option>
-            <option value="Rio de Janeiro">Rio de Janeiro</option>
-            <option value="Rio Grande do Norte">Rio Grande do Norte</option>
-            <option value="Rio Grande do Sul">Rio Grande do Sul</option>
-            <option value="Rondônia">Rondônia</option>
-            <option value="Roraima">Roraima</option>
-            <option value="Santa Catarina">Santa Catarina</option>
-            <option value="São Paulo">São Paulo</option>
-            <option value="Sergipe">Sergipe</option>
-            <option value="Tocantins">Tocantins</option>
-          </select>
+
+        <div style={{ display: "flex", gap: "10px" }}>
+          <div style={{ flex: 0.5, display: 'flex', flexDirection: 'column' }}>
+            <label>UF</label>
+            <select
+              value={estado}
+              onChange={handleUfChange}
+              required
+              className="input-padrao"
+              onInvalid={(e) => isInvalid(e)}
+            >
+              <option value="">UF</option>
+              {ufs.map(uf => (
+                <option key={uf} value={uf}>{uf}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <label>Cidade</label>
+            <select
+              value={cidade}
+              onChange={(e) => { setCidade(e.target.value); isValid(e); }}
+              required
+              disabled={!estado || loadingCidades}
+              className="input-padrao"
+              onInvalid={(e) => isInvalid(e)}
+            >
+              <option value="">{loadingCidades ? "Carregando..." : "Selecione"}</option>
+              {cidades.map(city => (
+                <option key={city.idIbge} value={city.idIbge}>{city.nome}</option>
+              ))}
+            </select>
+          </div>
         </div>
-        
+
         <InputField
           label="Telefone"
           placeholder="Informe o telefone do consultório"
@@ -225,10 +251,10 @@ const NewConsultorio = () => {
           classNameDiv="inputTelefone"
           value={maskPhone(telefone)}
           onChange={(e)=> {
-             const masked = maskPhone(e.target.value);
-             setTelefone(masked);
-             isValid(e);
-            }}
+            const masked = maskPhone(e.target.value);
+            setTelefone(masked);
+            isValid(e);
+          }}
           onInvalid={(e)=> isInvalid(e)}
           required
         />
@@ -289,9 +315,7 @@ const NewConsultorio = () => {
       </form>
       {showVeterinario && (
         <div id="targetElement">
-          <NewVeterinario 
-            onClose={() => setShowVeterinario(false)}
-          />
+          <NewVeterinario onClose={() => setShowVeterinario(false)} />
         </div>
       )}
       {isLoading && <LoadingSpin />}

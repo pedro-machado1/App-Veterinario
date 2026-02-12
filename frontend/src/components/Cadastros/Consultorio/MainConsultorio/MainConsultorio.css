@@ -7,6 +7,7 @@
 .consultorioContainer h1 {
     text-align: center;
     color: #2c3e50;
+    margin-top: 1rem;
     margin-bottom: 2rem;
     font-size: 4rem;
     font-weight: 600;
@@ -18,12 +19,13 @@
 
 .filterSection {
     display: flex;
-    gap: 1.5rem;
+    flex-direction:row;
+    gap: 0.5rem;
     flex-wrap: wrap;
     padding: 1.25rem;
     background-color: #f7f9fb;
     border-radius: 0.5rem;
-    align-items: flex-end;
+    align-items:end;
     margin-bottom: 2.5rem;
 }
 
@@ -41,7 +43,7 @@
 }
 
 .filterSelect {
-    padding: 0.75rem;
+    padding: 1rem 1.75rem;
     border: 1px solid #c7d0d9;
     border-radius: 0.35rem;
     font-size: 0.95rem;
@@ -60,49 +62,10 @@
     border-color: #3498db;
 }
 
-.loadingText {
-    color: #666;
-    font-size: 0.85rem;
-    font-style: italic;
-}
 
 .autocompleteWrapper {
     position: relative;
     width: 100%;
-}
-
-.suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid #c7d0d9;
-    border-top: none;
-    border-radius: 0 0 0.35rem 0.35rem;
-    max-height: 220px;
-    overflow-y: auto;
-    z-index: 1000;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.suggestionItem {
-    padding: 0.75rem;
-    cursor: pointer;
-    color: #000;
-    background: #fff;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.suggestionItem:hover {
-    background: #e8f4fd;
-}
-
-.suggestionItem:last-child {
-    border-bottom: none;
 }
 
 .botaoEstado {
@@ -198,11 +161,6 @@
     border-bottom: 0.01rem dashed #f0f0f0;
 }
 
-.Consultorio p:last-of-type {
-    border-bottom: none;
-    margin-bottom: 1rem;
-}
-
 .Consultorio button {
     width: 100%;
     padding: 0.6rem 1rem;
@@ -229,21 +187,12 @@
     margin: 0 auto 1.5rem auto;
     padding: 0.75rem 1.5rem;
     background-color: #3498db; 
-    color: white;
-    border: none;
     border-radius: 0.35rem;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
 }
 
-.displayDeConsultoriosLista {
-    display: flex;
-    flex-direction: column; 
-    gap: 0;
-    border: 0.05rem solid #ddd; 
-    overflow: hidden;
-}
 
 .ConsultorioCard {
     display: flex;
@@ -279,4 +228,24 @@
     flex-basis: 20%;
     font-family: monospace;
     text-align: left; 
+}
+
+#SearchConsultorios {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    border-radius: 0.5rem;
+    background-color: #f7f9fb;
+}
+
+#SearchConsultorios input {
+    display: flex;
+    align-items: left;
+    margin-right: 0.5;
+    padding: 1rem 1.75rem;
+    border-radius: 0.5rem;
+    flex-grow: 0; 
+    min-width: 50vw; 
 }

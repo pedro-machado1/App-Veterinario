@@ -163,7 +163,7 @@ const MainVeterinario = () => {
       )}
 
       {newSwitch && (
-        <div className="displayDeVeterinariosSecond">
+        <div>
           {veterinarios.map((veterinario) => (
             <div key={veterinario.id} className="VeterinarioCard">
               <p className="veterinarioNome">

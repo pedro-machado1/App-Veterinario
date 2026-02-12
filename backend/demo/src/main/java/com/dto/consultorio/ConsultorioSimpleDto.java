@@ -40,8 +40,6 @@ public class ConsultorioSimpleDto {
 
     private LocalDate dataDeCadastro;
 
-
-
     private String imagem;
 
 

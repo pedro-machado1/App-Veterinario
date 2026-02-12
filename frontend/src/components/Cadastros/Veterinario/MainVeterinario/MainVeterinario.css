@@ -82,14 +82,6 @@
     font-weight: 600;
 }
 
-.displayDeVeterinariosSecond {
-    display: flex;
-    flex-direction: column; 
-    gap: 0;
-    border: 0.05rem solid #ddd; 
-    overflow: hidden;
-}
-
 .VeterinarioCard {
     display: flex;
     align-items: center;

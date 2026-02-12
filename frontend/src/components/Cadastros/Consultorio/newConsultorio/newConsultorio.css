@@ -1,8 +1,147 @@
+.consultorio-container-new {
+    width: 95vw;
+    min-height: 95vh;
+    background-color: #ffffff;
+    border-radius: 0;
+    padding: 2rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+}
 
-.h1 {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid var(--primary-dark);
-  font-size: 16px;
+.consultorio-container-new .title {
+    text-align: center;
+    font-size: 4.5rem;
+    margin-top: 1.5rem;
+    border-bottom: 0.3rem solid #ecf0f1;
+    color: #2c3e50;
+    padding-bottom: 1rem;
+}
+
+#formsNewConsultorio {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.consultorio-container-new .line1,
+.consultorio-container-new .line2,
+.consultorio-container-new .line3 {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1.5rem;
+}
+
+.consultorio-container-new .line1 > div,
+.consultorio-container-new .line2 > div,
+.consultorio-container-new .line3 > div {
+    flex: 1;
+    min-width: 13rem;
+}
+
+.consultorio-container-new input,
+.consultorio-container-new select {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #d4cdcd;
+    color: #000000;
+    border-radius: 0.3rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.consultorio-container-new label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+
+.imagePreview {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    padding: 1.5rem;
+    border: 0.2rem dashed #bdc3c7;
+    border-radius: 0.8rem;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.imagePreview:hover {
+    border-color: #3498db;
+    background-color: #ecf0f1;
+}
+
+.imagePreview.dragging {
+    border-color: #3498db;
+    background-color: #d6eaf8;
+}
+
+.consultorio-image {
+    width: 18rem;
+    height: 18rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+
+.botoesPrincipais {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: flex-end;
+}
+
+.submit,
+.cancelar,
+.cadastrarVeterinario {
+    color: white;
+    border: none;
+    padding: 1.3rem 2.2rem;
+    border-radius: 0.7rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 10rem;
+}
+
+.submit {
+    background-color: #2ecc71;
+}
+
+.submit:hover {
+    background-color: #27ae60;
+}
+
+.cancelar {
+    background-color: #999595;
+}
+
+.cancelar:hover {
+    background-color: #8f9091;
+}
+
+.cadastrarVeterinario {
+    background-color: #3498db;
+}
+
+.cadastrarVeterinario:hover {
+    background-color: #2980b9;
+}
+
+
+.errorsOrSuccess {
+    text-align: center;
+    min-height: 2rem;
+    font-weight: 600;
+}
+
+.isInvalid {
+    border-color: #e74c3c !important;
+    background-color: #fadbd8 !important;
 }
