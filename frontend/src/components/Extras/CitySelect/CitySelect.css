@@ -1,0 +1,157 @@
+.citySelectContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
+.citySelectLabel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.citySelectLabelText {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.citySelectLabelText.active {
+    color: #333;
+}
+
+.citySelectWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.citySelectInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    border: 2px solid #bdc3c7;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.citySelectInput:hover {
+    border-color: #999;
+}
+
+.citySelectInput:focus-within {
+    outline: none;
+    border-color: #3498db;
+}
+
+.citySelectPlaceholder {
+    color: #999;
+}
+
+.citySelectPlaceholder.selected {
+    color: #000;
+}
+
+.citySelectArrow {
+    color: #666;
+}
+
+.citySelectArrow.open {
+    transform: rotate(180deg);
+}
+
+.citySelectDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 2px solid #3498db;
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.citySelectSearchInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem;
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.95rem;
+    background-color: #f9f9f9;
+}
+
+.citySelectSearchInput:focus {
+    outline: none;
+    background-color: #fff;
+}
+
+.citySelectOptions {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.citySelectOption {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.citySelectOption:hover {
+    background-color: #f0f0f0;
+}
+
+.citySelectOption.active {
+    background-color: #e3f2fd;
+    color: #3498db;
+    font-weight: 600;
+}
+
+.cityName {
+    flex: 1;
+}
+
+.cityUf {
+    margin-left: 1rem;
+    font-weight: 600;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.citySelectOption.active .cityUf {
+    color: #3498db;
+}
+
+.citySelectLoading,
+.citySelectEmpty {
+    padding: 1rem;
+    text-align: center;
+    color: #999;
+    font-size: 0.95rem;
+}
+
+.citySelectError {
+    margin-top: 0.5rem;
+    color: #e74c3c;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.required {
+    color: #e74c3c;
+    margin-left: 0.3rem;
+}

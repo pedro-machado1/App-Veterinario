@@ -204,3 +204,45 @@
     height: 100%;
     resize: vertical;
 }
+
+.cliente-container-new .line3 select {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #d4cdcd;
+    color: #000000;
+    border-radius: 0.3rem;
+    border: 1px solid #b5b5b5;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cliente-container-new .line3 select:hover {
+    background-color: #c9c2c2;
+}
+
+.cliente-container-new .line3 select:focus {
+    outline: none;
+    border-color: #3498db;
+    background-color: #ffffff;
+}
+
+.cliente-container-new .line3 select option {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.cliente-container-new .line3 select:disabled {
+    background-color: #e5e5e5;
+    color: #7a7a7a;
+    cursor: not-allowed;
+}
+
+.cliente-container-new .line3 label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}

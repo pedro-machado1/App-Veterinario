@@ -1,7 +1,8 @@
 package com.dto.veterinario;
 
-import com.enums.Estado;
+import com.dto.estado.EstadoSimpleDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.model.Estado;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -30,7 +31,7 @@ public class VeterinarioSimpleDto {
 
     @NotNull(message = "Informe o estado em atual")
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private EstadoSimpleDto estado;
 
     @NotBlank(message = "Informe o seu telefone")
     private String telefone;

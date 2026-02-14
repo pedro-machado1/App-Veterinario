@@ -5,6 +5,7 @@ import axios from "axios";
 import LoadingSpin from "../../../Extras/LoadingSpin/LoadingSpin";
 import { useNavigate } from "react-router-dom";
 import notLogin from "../../../../assets/images/notLogin.png";
+import { listarCidadesPorUf } from "../../../../services/locationService.js";
 
 const NewCliente = () => {
 
@@ -13,6 +14,12 @@ const NewCliente = () => {
   const [newPhone, setPhone] = useState("");
   const [newdataDeNascimento, setdataDeNascimento] = useState("");
   const [newEndereco, setEndereco] = useState("");
+  
+  const [newEstado, setNewEstado] = useState("");
+  const [newCidade, setNewCidade] = useState("");
+  const [cidades, setCidades] = useState([]);
+  const [loadingCidades, setLoadingCidades] = useState(false);
+
   const [imagem, setImagem] = useState("");
   const [previewImg, setPreviewImg] = useState(null);
   const [Error, setError] = useState(null);
@@ -23,6 +30,35 @@ const NewCliente = () => {
   const fileInputRef = useRef(null);
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+
+  const ufs = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+
+  const ufToCodigo = {
+    AC: 12, AL: 27, AP: 16, AM: 13, BA: 29, CE: 23, DF: 53,
+    ES: 32, GO: 52, MA: 21, MT: 51, MS: 50, MG: 31, PA: 15,
+    PB: 25, PR: 41, PE: 26, PI: 22, RJ: 33, RN: 24, RS: 43,
+    RO: 11, RR: 14, SC: 42, SP: 35, SE: 28, TO: 17
+  };
+
+  const handleUfChange = async (e) => {
+    const uf = e.target.value;
+    setNewEstado(uf);
+    setNewCidade("");
+    setCidades([]);
+    isValid(e);
+
+    if (uf) {
+      setLoadingCidades(true);
+      try {
+        const cidadesList = await listarCidadesPorUf(uf);
+        setCidades(Array.isArray(cidadesList) ? cidadesList : []);
+      } catch (err) {
+        console.error("Erro ao carregar cidades:", err);
+        setCidades([]);
+      }
+      setLoadingCidades(false);
+    }
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -119,6 +155,9 @@ const NewCliente = () => {
     setPhone("");
     setdataDeNascimento("");
     setEndereco("");
+    setNewEstado("");
+    setNewCidade("");
+    setCidades([]);
     setImagem("");
     setPreviewImg(null);
     setError(null);
@@ -133,13 +172,21 @@ const NewCliente = () => {
       !CheckDate(newdataDeNascimento)
     ) return;
 
+    if (!newEstado || !newCidade) {
+        setError("Selecione Estado e Cidade!");
+        return;
+    }
+
     const newClient = {
       nome: newName,
       cpf: newCpf.replace(/\D/g, ""),
       telefone: newPhone.replace(/\D/g, ""),
       dataDeNascimento: newdataDeNascimento,
-      endereco: newEndereco
+      endereco: newEndereco,
+      estado: { codigoUf: ufToCodigo[newEstado] },
+      cidade: { idIbge: newCidade }
     };
+
     if (!document.getElementById("formsNewClient").reportValidity()) {
       setError("Preencha todos os campos!");
       return;
@@ -276,21 +323,62 @@ const NewCliente = () => {
             required
           />
         </div>
-        <div className="line3">
-          <InputField
-            label="Endereço"
-            placeholder={"Digite o endereço do cliente"}
-            idInput="newendereco"
-            classNameDiv="inputendereco"
-            value={newEndereco}
-            onChange={(e) => {
-              setEndereco(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-            required
-          />
+
+        <div className="line3" >
+          <div>
+            <InputField
+              label="Endereço"
+              placeholder={"Digite o endereço"}
+              idInput="newendereco"
+              classNameDiv="inputendereco"
+              value={newEndereco}
+              onChange={(e) => {
+                setEndereco(e.target.value);
+                isValid(e);
+              }}
+              onInvalid={(e) => isInvalid(e)}
+              required
+            />
+          </div>
+
+          <div style={{ flex: 0.5, display: 'flex', flexDirection: 'column' }}>
+            <label style={{ fontSize: '14px', marginBottom: '5px', color: 'var(--text-color)' }}>UF</label>
+            <select
+                value={newEstado}
+                onChange={handleUfChange}
+                required
+                className="input-padrao"
+                style={{ height: '45px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                onInvalid={(e) => isInvalid(e)}
+            >
+                <option value="">UF</option>
+                {ufs.map(uf => (
+                    <option key={uf} value={uf}>{uf}</option>
+                ))}
+            </select>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <label style={{ fontSize: '14px', marginBottom: '5px', color: 'var(--text-color)' }}>Cidade</label>
+            <select 
+                value={newCidade} 
+                onChange={(e) => {
+                    setNewCidade(e.target.value);
+                    isValid(e);
+                }} 
+                required
+                disabled={!newEstado || loadingCidades}
+                style={{ height: '45px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                onInvalid={(e) => isInvalid(e)}
+            >
+                <option value="">{loadingCidades ? "Carregando..." : "Selecione"}</option>
+                {cidades.map(city => (
+                    <option key={city.idIbge} value={city.idIbge}>{city.nome}</option>
+                ))}
+            </select>
+          </div>
         </div>
+
         <div
           className={`imagePreview ${isDragging ? 'dragging' : ''}`}
           onDragOver={handleDragOver}

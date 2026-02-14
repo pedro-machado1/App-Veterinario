@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dto.animal.AnimalDto;
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.cep.CepResponseDto;
 import com.dto.cliente.ClienteDto;
 import com.dto.cliente.ClienteSimpleDto;
 import com.dto.cliente.ClienteUpdateDto;
@@ -11,7 +12,9 @@ import com.dto.consulta.ConsultaSimpleDto;
 import com.dto.users.Usersdto;
 import com.model.*;
 import com.repository.AnimalRepository;
+import com.repository.CidadeRepository;
 import com.repository.ClienteRepository;
+import com.repository.EstadoRepository;
 import com.security.UsersRepository;
 import com.service.exceptions.DataBaseException;
 import com.service.exceptions.ResourceNotFoundException;
@@ -47,6 +50,11 @@ public class ClienteService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private EstadoRepository estadoRepository;
+
+    @Autowired
+    private CidadeRepository cidadeRepository;
 
     @Transactional
     public ClienteDto insert(ClienteDto clienteDTO, MultipartFile imagem){
@@ -104,21 +112,53 @@ public class ClienteService {
 
     @Transactional
     public ClienteDto update(ClienteUpdateDto clienteDto, MultipartFile imagem) {
-            String imagemString = fileStorageService.saveFile(imagem);
-            Users user  =usersService.findUsers();
-            long id = user.getCliente().getId();
-            existsById(id);
-            Cliente cliente = clienteRepository.getReferenceById(id);
-            if (imagemString == null ) imagemString = cliente.getImagem();
-            else fileStorageService.deleteFile(cliente.getImagem());
-            cliente.setDataDeAlteracao(LocalDate.now());
-            convertToEntityVoid(clienteDto, cliente);
-            cliente.setImagem(imagemString);
-            cliente = clienteRepository.save(cliente);
-            return convertToDto(cliente, ClienteDto.class);
+        String imagemString = fileStorageService.saveFile(imagem);
+        Users user = usersService.findUsers();
+        long id = user.getCliente().getId();
+        existsById(id);
+
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+
+        if (imagemString == null) {
+            imagemString = cliente.getImagem();
+        } else {
+            if (cliente.getImagem() != null) {
+                fileStorageService.deleteFile(cliente.getImagem());
+            }
+        }
+
+        cliente.setDataDeAlteracao(LocalDate.now());
+
+        cliente.setNome(clienteDto.getNome());
+        cliente.setCpf(clienteDto.getCpf());
+        cliente.setTelefone(clienteDto.getTelefone());
+        cliente.setDataDeNascimento(clienteDto.getDataDeNascimento());
+        cliente.setEndereco(clienteDto.getEndereco());
+
+        if (clienteDto.getCidade() != null && clienteDto.getCidade().getIdIbge() != null) {
+            Cidade cidade = cidadeRepository.findById(clienteDto.getCidade().getIdIbge())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Cidade não encontrada com ID: " + clienteDto.getCidade().getIdIbge()
+                    ));
+            cliente.setCidade(cidade);
+        }
+
+        if (clienteDto.getEstado() != null && clienteDto.getEstado().getCodigoUf() != null) {
+            Estado estado = estadoRepository.findById(clienteDto.getEstado().getCodigoUf())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Estado não encontrado com código: " + clienteDto.getEstado().getCodigoUf()
+                    ));
+            cliente.setEstado(estado);
+        }
+
+        cliente.setImagem(imagemString);
+        cliente = clienteRepository.save(cliente);
+        return convertToDto(cliente, ClienteDto.class);
     }
 
-        @Transactional
+
+    @Transactional
     public void delete(Long id) {
         existsById(id);
         try {

@@ -8,12 +8,13 @@ import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.veterinario.VeterinarioDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
 import com.dto.veterinario.VeterinarioUpdateDto;
-import com.extras.EmailToVeterinario;
+
 import com.model.Animal;
 import com.model.Users;
 import com.model.Veterinario;
 import com.security.dto.AuthenticationDto;
 import com.security.service.AuthenticationService;
+import com.security.service.EmailService;
 import com.security.service.TokenService;
 import com.service.ConsultorioService;
 import com.service.UsersService;
@@ -52,7 +53,7 @@ public class VeterinarioController {
     private ConsultorioService consultorioService;
 
     @Autowired
-    private EmailToVeterinario emailToVeterinario;
+    private EmailService emailService;
 
     @Autowired
     private UsersService usersService;
@@ -83,7 +84,7 @@ public class VeterinarioController {
         Users users = usersService.findUsers();
         long consultorioId = users.getConsultorio().getId();
         String token =tokenService.generateTokenForVeterinario(veterinariodto.getEmail(), consultorioId);
-        emailToVeterinario.sendEmail(veterinariodto.getEmail(), token);
+        emailService.sendEmailVeterinario(veterinariodto.getEmail(), token);
         return ResponseEntity.ok().body("O e-mail foi enviado");
     }
 

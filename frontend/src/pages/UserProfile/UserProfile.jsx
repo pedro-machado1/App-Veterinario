@@ -61,6 +61,23 @@ const UserProfile = () => {
     setShowVeterinario((prev) => !prev)
   }
 
+  function maskPhone(value) {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+      .slice(0, 15);
+  }
+
+  function maskCpf(value) {
+    return value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      }
+
+
   const formatDateForDisplay = (dateStr) => {
     if (!dateStr) return "Data de nascimento não encontrado";
     const [year, month, day] = dateStr.split("-");
@@ -141,35 +158,46 @@ const UserProfile = () => {
       {hasCliente && (
         <div className="ClienteContainer">
           {imagem ? (
-            <img src={imagem} alt={`Foto de ${newUser?.cliente?.nome}`} className="cliente-image" />
+            <img src={imagem} alt={`Foto de ${newUser?.cliente?.nome}`} className="clienteImage" />
           ) : (
-            <img src={notLogin} className="cliente-image" />
+            <img src={notLogin} className="clienteImage" />
           )}
           <p className="text-gray-600">
             E-mail: {newUser?.email || "E-mail não encontrado"}
           </p>
 
           <p className="text-gray-600">
-            CPF: {newUser?.cliente?.cpf || "CPF não encontrado"}
+            CPF: {maskCpf(newUser?.cliente?.cpf) || "CPF não encontrado"}
           </p>
           <p className="text-gray-600">
             Data de Nascimento: {formatDateForDisplay(newUser?.cliente?.dataDeNascimento) || "Data de nascimento não encontrado"}
           </p>
           <p className="text-gray-600">
-            Telefone: {newUser?.cliente?.telefone || "Telefone não encontrado"}
+            Telefone: {maskPhone(newUser?.cliente?.telefone) || "Telefone não encontrado"}
           </p>
           <p className="text-gray-600">
             Endereço: {newUser?.cliente?.endereco || "Endereço não encontrado"}
           </p>
+
+          <p className="text-gray-600">
+            Estado: {newUser?.cliente?.estado?.nome || "Estado não encontrado"}
+          </p>
+
+          <p className="text-gray-600">
+            Cidade: {newUser?.cliente?.cidade?.nome || "Cidade não encontrada"}
+          </p>
+
           <p className="text-gray-600">
             Primeiro Acesso: {newUser?.cliente?.dataDeCriacao || "Primeiro Acesso não encontrado"}
           </p>
           <button
+            className="Bluebutton"
             onClick={toggleConsultasCliente}
           >
             Ver Consultas
           </button>
           <button
+            className="Bluebutton"
             onClick={toggleCliente}
             >
             Editar Informações
@@ -190,6 +218,8 @@ const UserProfile = () => {
                 phone={newUser.cliente.telefone}
                 dataDeNascimento={newUser.cliente.dataDeNascimento}
                 endereco={newUser.cliente.endereco}
+                estadoUf={newUser.cliente.estado?.uf}
+                cidadeId={newUser.cliente.cidade?.idIbge}
                 onClose={() => setShowCliente(false)}
                 />
             </div>
@@ -214,14 +244,20 @@ const UserProfile = () => {
             E-mail: {newUser?.email || "E-mail não encontrado"}
           </p>
           <p className="text-gray-600">
-            Telefone: {newUser?.consultorio?.telefone || "Telefone não encontrado"}
+            Telefone: {maskPhone(newUser?.consultorio?.telefone) || "Telefone não encontrado"}
           </p>
-          <p className="text-gray-600">
+         <p className="text-gray-600">
             Endereço: {newUser?.consultorio?.endereco || "Endereço não encontrado"}
           </p>
+
           <p className="text-gray-600">
-            Endereço: {newUser?.consultorio?.estado || "Estado não encontrado"}
+            Cidade: {newUser?.consultorio?.cidade?.nome || "Cidade não encontrada"}
           </p>
+
+          <p className="text-gray-600">
+            Estado: {newUser?.consultorio?.estado?.nome || "Estado não encontrado"}
+          </p>
+
           <p className="text-gray-600">
             Descrição: {newUser?.consultorio?.descricao || "Descrição não encontrada"}
           </p>
@@ -232,17 +268,21 @@ const UserProfile = () => {
             Data de Cadastro: {formatDateForDisplay(newUser?.consultorio?.dataDeCadastro) || "Primeiro Acesso não encontrado"}
           </p>
           <button
+          className="Bluebutton"
             onClick={toggleConsultorio}
           >
             Editar Informações
           </button>
           <button
+            className="Bluebutton"
             onClick={toggleEditVeterinario}
           >
             Gerencinar os veterinarios do Consultorio
           </button>
           <button
             onClick={toggleEditCliente}
+            className="Bluebutton"
+
           >
             Gerenciar clientes
           </button>
@@ -254,6 +294,7 @@ const UserProfile = () => {
                 phone={newUser.consultorio.telefone}
                 dataDeFundacao={newUser.consultorio.dataDeFundacao}
                 endereco={newUser.consultorio.endereco}
+                cep={newUser.consultorio.cep}
                 estado={newUser.consultorio.estado}
                 descricao={newUser.consultorio.descricao}
                 onClose={() => setShowConsultorio(false)}
@@ -282,15 +323,15 @@ const UserProfile = () => {
       {hasVeterinario && (
         <div className="VeterinarioContainer">
           {imagem ? (
-            <img src={imagem} alt={`Foto de ${newUser?.veterinario?.nome}`} className="veterinario-image" />
+            <img src={imagem} alt={`Foto de ${newUser?.veterinario?.nome}`} className="veterinarioImage" />
           ) : (
-            <img src={notLogin} className="veterinario-image" />
+            <img src={notLogin} className="veterinarioImage" />
           )}
           <p>
             E-mail: {newUser?.email || "E-mail não encontrado"}
           </p>
           <p>
-            CPF: {newUser?.veterinario?.cpf || "CPF não encontrado"}
+            CPF: {maskCpf(newUser?.veterinario?.cpf) || "CPF não encontrado"}
           </p>
           <p>
             CRVM: {newUser?.veterinario?.crvm || "CRVM não encontrado"}
@@ -302,7 +343,7 @@ const UserProfile = () => {
             Estado: {newUser?.veterinario?.estado || "Estado não encontrado"}
           </p>
           <p>
-            Telefone: {newUser?.veterinario?.telefone || "Telefone não encontrado"}
+            Telefone: {maskPhone(newUser?.veterinario?.telefone) || "Telefone não encontrado"}
           </p>
           <p>
             Endereço: {newUser?.veterinario?.endereco || "Endereço não encontrado"}

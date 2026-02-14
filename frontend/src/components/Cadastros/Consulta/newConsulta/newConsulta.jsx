@@ -1,4 +1,4 @@
-import "./NewConsulta.css";
+import "./newConsulta.css";
 import { useState } from "react";
 import InputField from "../../../Extras/InputField/InputField";
 import axios from "axios";

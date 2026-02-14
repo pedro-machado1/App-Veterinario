@@ -1,7 +1,9 @@
 package com.dto.cliente;
 
 import com.dto.animal.AnimalSimpleDto;
+import com.dto.cidade.CidadeSimpleDto;
 import com.dto.consulta.ConsultaSimpleDto;
+import com.dto.estado.EstadoSimpleDto;
 import com.dto.users.UpdateUsersdto;
 import com.dto.users.UsersSimpleDto;
 import com.dto.users.UsersWithoutPassword;
@@ -37,6 +39,10 @@ public class ClienteUpdateDto {
     private LocalDate dataDeAlteracao;
 
     private String imagem;
+
+    private CidadeSimpleDto cidade;
+
+    private EstadoSimpleDto estado;
 
     private List<AnimalSimpleDto> animal;
 

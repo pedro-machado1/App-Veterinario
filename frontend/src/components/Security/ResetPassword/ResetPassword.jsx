@@ -5,7 +5,7 @@ import LoadingSpin from '../../Extras/LoadingSpin/LoadingSpin.jsx';
 import InputField from '../../Extras/InputField/InputField.jsx';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect} from 'react';
-import "./ResetPassword.css"
+import "./Resetpassword.css"
 
 const ResetPassword = () => {
 

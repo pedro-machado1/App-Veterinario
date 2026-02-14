@@ -5,7 +5,6 @@ import com.dto.consultorio.ConsultorioDto;
 import com.dto.consultorio.ConsultorioSimpleDto;
 import com.dto.consultorio.ConsultorioUpdateDto;
 import com.dto.veterinario.VeterinarioSimpleDto;
-import com.enums.Estado;
 import com.model.Consultorio;
 import com.model.Users;
 import com.service.ConsultorioService;
@@ -53,20 +52,16 @@ public class ConsultorioController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<ConsultorioDto>> findAll(Pageable pages,
-                                                        @RequestParam(required = false) String estado,
-                                                        @RequestParam(required = false) String endereco){
+    public ResponseEntity<Page<ConsultorioDto>> findAll(
+            Pageable pages,
+            @RequestParam(required = false) Integer estadoCodigo,
+            @RequestParam(required = false) Long cidade_id,
+            @RequestParam(required = false) String endereco){
         Page<ConsultorioDto> responsePages;
-        if (estado != null ) {
-            try {
-            Estado estadoConsulta = Estado.valueOf(estado);
-            responsePages = consultorioService.findAll(pages, estadoConsulta);
-            }catch (Exception e){
-                return ResponseEntity.status(400).build();
-            }
-        }
-        else {
-            responsePages = consultorioService.findAll(pages, null);
+        try {
+            responsePages = consultorioService.findAllByFilters(estadoCodigo, cidade_id, pages);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).build();
         }
         return ResponseEntity.ok().body(responsePages);
     }
@@ -149,8 +144,12 @@ public class ConsultorioController {
     }
 
     @GetMapping("{id}/cliente")
-    public ResponseEntity<Page<ClienteSimpleDto>> findAllCliente(@PathVariable Long id, Pageable pages) {
-        Page<ClienteSimpleDto> clientesPage = consultorioService.findAllCliente(id, pages);
+    public ResponseEntity<Page<ClienteSimpleDto>> findAllCliente(
+            @PathVariable Long id, 
+            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) Long cidade_id,
+            Pageable pages) {
+        Page<ClienteSimpleDto> clientesPage = consultorioService.findAllClienteByFilters(id, cpf, cidade_id, pages);
         return ResponseEntity.ok().body(clientesPage);
     }
 

@@ -109,8 +109,8 @@ const RegisterConsultorio = () => {
        
 
     return (
-        <div className="registerContainer">
-            <div className="registerForms">
+        <div className="loginContainer">
+            <div className="loginForms">
                 <h1>Cadastrar Novo Consultório</h1>
                 <form
                 id='formsRegister' 

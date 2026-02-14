@@ -25,7 +25,12 @@ public class Cliente {
 
     private String telefone;
 
+    private String cep;
+
     private LocalDate dataDeNascimento;
+
+    @ManyToOne()
+    private Cidade cidade;
 
     private LocalDate dataDeCriacao;
 
@@ -53,6 +58,8 @@ public class Cliente {
     @OneToMany ( mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<ClienteVeterinario> veterinariosPermitidos;
 
+    @ManyToOne()
+    private Estado estado;
 
 
 }
